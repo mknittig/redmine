@@ -6,6 +6,41 @@ ActionController::Routing::Routes.draw do |map|
   # map.connect 'products/:id', :controller => 'catalog', :action => 'view'
   # Keep in mind you can assign values other than :controller and :action
 
+  map.resources :projects, :member => { :activity => :get, :roadmap => :get, :changelog => :get, :list_files => :get, :settings => :get }, :shallow => true do |project|
+    project.resources :issues, :member => { :preview => :post }
+    project.resources :news, :member => { :preview => :post }
+    project.resources :documents
+    project.resources :boards
+    project.resources :timelog, :collection => { :details => :get, :report => :get }
+    project.resources :reports, :collection => { :issue_report => :get }
+    project.resources :members
+  end
+
+  map.resources :account, :member => { :my => :get }
+
+  map.resources :news
+
+  map.resources :versions
+
+  map.resources :watchers, :collection => { :watch => :post, :unwatch => :post }
+
+  map.resource :wiki
+
+  map.resources :repositories
+
+  map.resources :issues, :collection => { :calendar => :get, :gantt => :get, :preview => :post } do |project|
+    project.resources :relations
+    project.resources :statuses
+  end
+
+  map.resources :boards do |project|
+    project.resources :messages, :as => 'topics', :member => { :preview => :post }
+  end
+
+  map.resources :attachments
+
+  map.resources :enumerations
+
   map.home '', :controller => 'welcome'
   map.signin 'login', :controller => 'account', :action => 'login'
   map.signout 'logout', :controller => 'account', :action => 'logout'
