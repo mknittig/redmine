@@ -50,7 +50,7 @@ class IssueStatusesController < ApplicationController
   end
 
   def update
-    @issue_status = IssueStatus.find(params[:id])
+    edit
     if @issue_status.update_attributes(params[:issue_status])
       flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'index'

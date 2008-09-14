@@ -58,6 +58,7 @@ class RolesController < ApplicationController
   end
   
   def update
+    edit
     if @role.update_attributes(params[:role])
       flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'index'

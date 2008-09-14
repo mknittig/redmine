@@ -32,6 +32,7 @@ class SettingsController < ApplicationController
   end
   
   def update
+    edit
    if params[:settings] && params[:settings].is_a?(Hash)
       settings = (params[:settings] || {}).dup.symbolize_keys
       settings.each do |name, value|

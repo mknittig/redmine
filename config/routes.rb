@@ -6,6 +6,23 @@ ActionController::Routing::Routes.draw do |map|
   # map.connect 'products/:id', :controller => 'catalog', :action => 'view'
   # Keep in mind you can assign values other than :controller and :action
 
+  map.home '', :controller => 'welcome'
+  map.signin 'login', :controller => 'account', :action => 'login'
+  map.signout 'logout', :controller => 'account', :action => 'logout'
+
+  map.with_options :controller => 'repositories' do |omap|
+    omap.repositories_show 'repositories/browse/:id/*path', :action => 'browse'
+    omap.repositories_changes 'repositories/changes/:id/*path', :action => 'changes'
+    omap.repositories_diff 'repositories/diff/:id/*path', :action => 'diff'
+    omap.repositories_entry 'repositories/entry/:id/*path', :action => 'entry'
+    omap.repositories_entry 'repositories/annotate/:id/*path', :action => 'annotate'
+    omap.repositories_revision 'repositories/revision/:id/:rev', :action => 'revision'
+  end
+  
+  #map.connect 'attachments/:id', :controller => 'attachments', :action => 'show', :id => /\d+/
+  map.connect 'attachments/:id/:filename', :controller => 'attachments', :action => 'show', :id => /\d+/, :filename => /.*/
+  map.connect 'attachments/download/:id/:filename', :controller => 'attachments', :action => 'download', :id => /\d+/, :filename => /.*/
+
   map.resources :projects, :collection => { :activity => :get, :add => :get, :add_file => :any, :add_version => :any, :add_issue_category => :any }, :member => { :activity => :get, :roadmap => :get, :changelog => :get, :list_files => :get, :settings => :any, :modules => :any, :archive => :post, :archive => :post, :unarchive => :post, :add_issue_category => :post }, :shallow => true do |project|
     project.resources :issues, :new => { :preview => :post }, :member => { :preview => :post, :move => :any, :reply => :post, :quote => :post, :destroy_attachment => :post, :update_from => :post }, :collection => { :calendar => :get, :gantt => :get, :context_menu => :any, :changes => :get, :bulk_edit => :any, :move => :any }
     project.resources :news, :new => { :preview => :post }, :member => { :preview => :post, :add_comment => :post, :destroy_comment => :post }
@@ -78,7 +95,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :enumerations, :member => { :move => :post }
 
   map.resources :issues do |issue|
-    issue.resources :issue_relations
+    issue.resources :issue_relations, :as => 'relations'
     issue.resources :issue_statuses
     issue.resources :attachment
   end
@@ -86,36 +103,19 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :boards do |project|
     project.resources :messages, :as => 'topics', :new => { :preview => :post }, :member => { :preview => :post, :reply => :post, :quote => :post }, :except => :index
   end
-
-  map.home '', :controller => 'welcome'
-  map.signin 'login', :controller => 'account', :action => 'login'
-  map.signout 'logout', :controller => 'account', :action => 'logout'
   
   map.connect 'wiki/:id/:page/:action', :controller => 'wiki', :page => nil
   map.connect 'roles/workflow/:id/:role_id/:tracker_id', :controller => 'roles', :action => 'workflow'
   map.connect 'help/:ctrl/:page', :controller => 'help'
   #map.connect ':controller/:action/:id/:sort_key/:sort_order'
   
-  map.connect 'issues/:issue_id/relations/:action/:id', :controller => 'issue_relations'
+  #map.connect 'issues/:issue_id/relations/:action/:id', :controller => 'issue_relations'
   #map.connect 'projects/:project_id/issues/:action', :controller => 'issues'
   #map.connect 'projects/:project_id/news/:action', :controller => 'news'
   #map.connect 'projects/:project_id/documents/:action', :controller => 'documents'
   #map.connect 'projects/:project_id/boards/:action/:id', :controller => 'boards'
   #map.connect 'projects/:project_id/timelog/:action/:id', :controller => 'timelog', :project_id => /.+/
   #map.connect 'boards/:board_id/topics/:action/:id', :controller => 'messages'
-
-  map.with_options :controller => 'repositories' do |omap|
-    omap.repositories_show 'repositories/browse/:id/*path', :action => 'browse'
-    omap.repositories_changes 'repositories/changes/:id/*path', :action => 'changes'
-    omap.repositories_diff 'repositories/diff/:id/*path', :action => 'diff'
-    omap.repositories_entry 'repositories/entry/:id/*path', :action => 'entry'
-    omap.repositories_entry 'repositories/annotate/:id/*path', :action => 'annotate'
-    omap.repositories_revision 'repositories/revision/:id/:rev', :action => 'revision'
-  end
-  
-  map.connect 'attachments/:id', :controller => 'attachments', :action => 'show', :id => /\d+/
-  map.connect 'attachments/:id/:filename', :controller => 'attachments', :action => 'show', :id => /\d+/, :filename => /.*/
-  map.connect 'attachments/download/:id/:filename', :controller => 'attachments', :action => 'download', :id => /\d+/, :filename => /.*/
    
   # Allow downloading Web Service WSDL as a file with an extension
   # instead of a file named 'wsdl'

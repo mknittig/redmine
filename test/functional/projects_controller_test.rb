@@ -90,7 +90,7 @@ class ProjectsControllerTest < Test::Unit::TestCase
   
   def test_edit
     @request.session[:user_id] = 2 # manager
-    post :edit, :id => 1, :project => {:name => 'Test changed name',
+    put :update, :id => 1, :project => {:name => 'Test changed name',
                                        :issue_custom_field_ids => ['']}
     assert_redirected_to 'projects/settings/ecookbook'
     project = Project.find(1)
@@ -107,7 +107,7 @@ class ProjectsControllerTest < Test::Unit::TestCase
 
   def test_post_destroy
     @request.session[:user_id] = 1 # admin
-    post :destroy, :id => 1, :confirm => 1
+    delete :destroy, :id => 1, :confirm => 1
     assert_redirected_to 'admin/projects'
     assert_nil Project.find_by_id(1)
   end

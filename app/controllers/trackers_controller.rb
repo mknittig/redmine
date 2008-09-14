@@ -32,12 +32,12 @@ class TrackersController < ApplicationController
   end
   
   def new
-    @tracker = Tracker.new
+    @tracker = Tracker.new(params[:tracker])
     @trackers = Tracker.find :all, :order => 'position'
   end
 
   def create
-    @tracker = Tracker.new(params[:tracker])
+    new
     if request.post? and @tracker.save
       # workflow copy
       if !params[:copy_workflow_from].blank? && (copy_from = Tracker.find_by_id(params[:copy_workflow_from]))
@@ -46,7 +46,6 @@ class TrackersController < ApplicationController
       flash[:notice] = l(:notice_successful_create)
       redirect_to(trackers_url)
     end
-    @trackers = Tracker.find :all, :order => 'position'
   end
   
   def edit
@@ -54,7 +53,7 @@ class TrackersController < ApplicationController
   end
 
   def update
-    @tracker = Tracker.find(params[:id])
+    edit
     if @tracker.update_attributes(params[:tracker])
       flash[:notice] = l(:notice_successful_update)
       redirect_to(trackers_url)

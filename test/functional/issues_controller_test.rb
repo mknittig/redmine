@@ -378,7 +378,7 @@ class IssuesControllerTest < Test::Unit::TestCase
     
     assert_difference('Journal.count') do
       assert_difference('JournalDetail.count', 2) do
-        post :edit, :id => 1, :issue => {:subject => new_subject,
+        put :update, :id => 1, :issue => {:subject => new_subject,
                                          :priority_id => '6',
                                          :category_id => '1' # no change
                                         }
@@ -424,7 +424,7 @@ class IssuesControllerTest < Test::Unit::TestCase
     assert_equal 1, issue.status_id
     @request.session[:user_id] = 2
     assert_difference('TimeEntry.count', 0) do
-      post :edit,
+      put :update,
            :id => 1,
            :issue => { :status_id => 2, :assigned_to_id => 3 },
            :notes => 'Assigned to dlopper',
@@ -444,7 +444,7 @@ class IssuesControllerTest < Test::Unit::TestCase
   def test_post_edit_with_note_only
     notes = 'Note added by IssuesControllerTest#test_update_with_note_only'
     # anonymous user
-    post :edit,
+    put :update,
          :id => 1,
          :notes => notes
     assert_redirected_to 'issues/1'
@@ -461,7 +461,7 @@ class IssuesControllerTest < Test::Unit::TestCase
     @request.session[:user_id] = 2
     spent_hours_before = Issue.find(1).spent_hours
     assert_difference('TimeEntry.count') do
-      post :edit,
+      put :update,
            :id => 1,
            :notes => '2.5 hours added',
            :time_entry => { :hours => '2.5', :comments => '', :activity_id => Enumeration.get_values('ACTI').first }
@@ -484,7 +484,7 @@ class IssuesControllerTest < Test::Unit::TestCase
     set_tmp_attachments_directory
     
     # anonymous user
-    post :edit,
+    put :update,
          :id => 1,
          :notes => '',
          :attachments => {'1' => {'file' => test_uploaded_file('testfile.txt', 'text/plain')}}
@@ -504,7 +504,7 @@ class IssuesControllerTest < Test::Unit::TestCase
     issue.journals.clear
     ActionMailer::Base.deliveries.clear
     
-    post :edit,
+    put :update,
          :id => 1,
          :notes => ''
     assert_redirected_to 'issues/1'
@@ -568,25 +568,25 @@ class IssuesControllerTest < Test::Unit::TestCase
     assert_response :success
     assert_template 'context_menu'
     assert_tag :tag => 'a', :content => 'Edit',
-                            :attributes => { :href => '/issues/edit/1',
+                            :attributes => { :href => '/projects/ecookbook/issues/edit/1',
                                              :class => 'icon-edit' }
     assert_tag :tag => 'a', :content => 'Closed',
-                            :attributes => { :href => '/issues/edit/1?issue%5Bstatus_id%5D=5',
+                            :attributes => { :href => '/projects/ecookbook/issues/edit/1?issue%5Bstatus_id%5D=5',
                                              :class => '' }
     assert_tag :tag => 'a', :content => 'Immediate',
-                            :attributes => { :href => '/issues/bulk_edit?ids%5B%5D=1&amp;priority_id=8',
+                            :attributes => { :href => '/projects/ecookbook/issues/bulk_edit?ids%5B%5D=1&amp;priority_id=8',
                                              :class => '' }
     assert_tag :tag => 'a', :content => 'Dave Lopper',
-                            :attributes => { :href => '/issues/bulk_edit?assigned_to_id=3&amp;ids%5B%5D=1',
+                            :attributes => { :href => '/projects/ecookbook/issues/bulk_edit?assigned_to_id=3&amp;ids%5B%5D=1',
                                              :class => '' }
     assert_tag :tag => 'a', :content => 'Copy',
                             :attributes => { :href => '/projects/ecookbook/issues/new?copy_from=1',
                                              :class => 'icon-copy' }
     assert_tag :tag => 'a', :content => 'Move',
-                            :attributes => { :href => '/issues/move?ids%5B%5D=1',
+                            :attributes => { :href => '/projects/ecookbook/issues/move?ids%5B%5D=1',
                                              :class => 'icon-move' }
     assert_tag :tag => 'a', :content => 'Delete',
-                            :attributes => { :href => '/issues/destroy?ids%5B%5D=1',
+                            :attributes => { :href => '/projects/ecookbook/issues/destroy?ids%5B%5D=1',
                                              :class => 'icon-del' }
   end
 
@@ -605,19 +605,19 @@ class IssuesControllerTest < Test::Unit::TestCase
     assert_response :success
     assert_template 'context_menu'
     assert_tag :tag => 'a', :content => 'Edit',
-                            :attributes => { :href => '/issues/bulk_edit?ids%5B%5D=1&amp;ids%5B%5D=2',
+                            :attributes => { :href => '/projects/ecookbook/issues/bulk_edit?ids%5B%5D=1&amp;ids%5B%5D=2',
                                              :class => 'icon-edit' }
     assert_tag :tag => 'a', :content => 'Immediate',
-                            :attributes => { :href => '/issues/bulk_edit?ids%5B%5D=1&amp;ids%5B%5D=2&amp;priority_id=8',
+                            :attributes => { :href => '/projects/ecookbook/issues/bulk_edit?ids%5B%5D=1&amp;ids%5B%5D=2&amp;priority_id=8',
                                              :class => '' }
     assert_tag :tag => 'a', :content => 'Dave Lopper',
-                            :attributes => { :href => '/issues/bulk_edit?assigned_to_id=3&amp;ids%5B%5D=1&amp;ids%5B%5D=2',
+                            :attributes => { :href => '/projects/ecookbook/issues/bulk_edit?assigned_to_id=3&amp;ids%5B%5D=1&amp;ids%5B%5D=2',
                                              :class => '' }
     assert_tag :tag => 'a', :content => 'Move',
-                            :attributes => { :href => '/issues/move?ids%5B%5D=1&amp;ids%5B%5D=2',
+                            :attributes => { :href => '/projects/ecookbook/issues/move?ids%5B%5D=1&amp;ids%5B%5D=2',
                                              :class => 'icon-move' }
     assert_tag :tag => 'a', :content => 'Delete',
-                            :attributes => { :href => '/issues/destroy?ids%5B%5D=1&amp;ids%5B%5D=2',
+                            :attributes => { :href => '/projects/ecookbook/issues/destroy?ids%5B%5D=1&amp;ids%5B%5D=2',
                                              :class => 'icon-del' }
   end
 
@@ -634,14 +634,14 @@ class IssuesControllerTest < Test::Unit::TestCase
   def test_destroy_issue_with_no_time_entries
     assert_nil TimeEntry.find_by_issue_id(2)
     @request.session[:user_id] = 2
-    post :destroy, :id => 2
+    delete :destroy, :id => 2
     assert_redirected_to 'projects/ecookbook/issues'
     assert_nil Issue.find_by_id(2)
   end
 
   def test_destroy_issues_with_time_entries
     @request.session[:user_id] = 2
-    post :destroy, :ids => [1, 3]
+    delete :destroy, :ids => [1, 3]
     assert_response :success
     assert_template 'destroy'
     assert_not_nil assigns(:hours)
@@ -650,7 +650,7 @@ class IssuesControllerTest < Test::Unit::TestCase
 
   def test_destroy_issues_and_destroy_time_entries
     @request.session[:user_id] = 2
-    post :destroy, :ids => [1, 3], :todo => 'destroy'
+    delete :destroy, :ids => [1, 3], :todo => 'destroy'
     assert_redirected_to 'projects/ecookbook/issues'
     assert !(Issue.find_by_id(1) || Issue.find_by_id(3))
     assert_nil TimeEntry.find_by_id([1, 2])
@@ -658,7 +658,7 @@ class IssuesControllerTest < Test::Unit::TestCase
 
   def test_destroy_issues_and_assign_time_entries_to_project
     @request.session[:user_id] = 2
-    post :destroy, :ids => [1, 3], :todo => 'nullify'
+    delete :destroy, :ids => [1, 3], :todo => 'nullify'
     assert_redirected_to 'projects/ecookbook/issues'
     assert !(Issue.find_by_id(1) || Issue.find_by_id(3))
     assert_nil TimeEntry.find(1).issue_id
@@ -667,7 +667,7 @@ class IssuesControllerTest < Test::Unit::TestCase
   
   def test_destroy_issues_and_reassign_time_entries_to_another_issue
     @request.session[:user_id] = 2
-    post :destroy, :ids => [1, 3], :todo => 'reassign', :reassign_to_id => 2
+    delete :destroy, :ids => [1, 3], :todo => 'reassign', :reassign_to_id => 2
     assert_redirected_to 'projects/ecookbook/issues'
     assert !(Issue.find_by_id(1) || Issue.find_by_id(3))
     assert_equal 2, TimeEntry.find(1).issue_id

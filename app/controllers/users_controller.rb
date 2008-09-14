@@ -49,39 +49,41 @@ class UsersController < ApplicationController
   end
 
   def add
-    if request.get?
-      @user = User.new(:language => Setting.default_language)
-    else
-      @user = User.new(params[:user])
-      @user.admin = params[:user][:admin] || false
-      @user.login = params[:user][:login]
-      @user.password, @user.password_confirmation = params[:password], params[:password_confirmation] unless @user.auth_source_id
-      if @user.save
-        Mailer.deliver_account_information(@user, params[:password]) if params[:send_information]
-        flash[:notice] = l(:notice_successful_create)
-        redirect_to :action => 'list'
-      end
-    end
+    @user = User.new(:language => Setting.default_language)
     @auth_sources = AuthSource.find(:all)
+  end
+  
+  def create
+    @user = User.new(params[:user])
+    @user.admin = params[:user][:admin] || false
+    @user.login = params[:user][:login]
+    @user.password, @user.password_confirmation = params[:password], params[:password_confirmation] unless @user.auth_source_id
+    if @user.save
+      Mailer.deliver_account_information(@user, params[:password]) if params[:send_information]
+      flash[:notice] = l(:notice_successful_create)
+      redirect_to :action => 'list'
+    end
   end
 
   def edit
     @user = User.find(params[:id])
-    if request.post?
-      @user.admin = params[:user][:admin] if params[:user][:admin]
-      @user.login = params[:user][:login] if params[:user][:login]
-      @user.password, @user.password_confirmation = params[:password], params[:password_confirmation] unless params[:password].nil? or params[:password].empty? or @user.auth_source_id
-      if @user.update_attributes(params[:user])
-        flash[:notice] = l(:notice_successful_update)
-        # Give a string to redirect_to otherwise it would use status param as the response code
-        redirect_to(url_for(:action => 'list', :status => params[:status], :page => params[:page]))
-      end
-    end
     @auth_sources = AuthSource.find(:all)
     @roles = Role.find_all_givable
     @projects = Project.find(:all, :order => 'name', :conditions => "status=#{Project::STATUS_ACTIVE}") - @user.projects
     @membership ||= Member.new
     @memberships = @user.memberships
+  end
+  
+  def update
+    edit
+    @user.admin = params[:user][:admin] if params[:user][:admin]
+    @user.login = params[:user][:login] if params[:user][:login]
+    @user.password, @user.password_confirmation = params[:password], params[:password_confirmation] unless params[:password].nil? or params[:password].empty? or @user.auth_source_id
+    if @user.update_attributes(params[:user])
+      flash[:notice] = l(:notice_successful_update)
+      # Give a string to redirect_to otherwise it would use status param as the response code
+      redirect_to(url_for(:action => 'list', :status => params[:status], :page => params[:page]))
+    end 
   end
   
   def edit_membership

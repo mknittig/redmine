@@ -49,7 +49,7 @@ class VersionsControllerTest < Test::Unit::TestCase
   
   def test_post_edit
     @request.session[:user_id] = 2
-    post :edit, :id => 2, 
+    put :update, :id => 2, 
                 :version => { :name => 'New version name', 
                               :effective_date => Date.today.strftime("%Y-%m-%d")}
     assert_redirected_to 'projects/settings/ecookbook'
@@ -60,7 +60,7 @@ class VersionsControllerTest < Test::Unit::TestCase
 
   def test_destroy
     @request.session[:user_id] = 2
-    post :destroy, :id => 3
+    delete :destroy, :id => 3
     assert_redirected_to 'projects/settings/ecookbook'
     assert_nil Version.find_by_id(3)
   end

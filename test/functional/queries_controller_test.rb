@@ -127,7 +127,7 @@ class QueriesControllerTest < Test::Unit::TestCase
 
   def test_edit_global_public_query
     @request.session[:user_id] = 1
-    post :edit,
+    put :update,
          :id => 4, 
          :confirm => '1',
          :default_columns => '1',
@@ -158,7 +158,7 @@ class QueriesControllerTest < Test::Unit::TestCase
   
   def test_edit_global_private_query
     @request.session[:user_id] = 3
-    post :edit,
+    put :update,
          :id => 3, 
          :confirm => '1',
          :default_columns => '1',
@@ -204,7 +204,7 @@ class QueriesControllerTest < Test::Unit::TestCase
   
   def test_destroy
     @request.session[:user_id] = 2
-    post :destroy, :id => 1
+    delete :destroy, :id => 1
     assert_redirected_to :controller => 'issues', :action => 'index', :project_id => 'ecookbook', :set_filter => 1, :query_id => nil
     assert_nil Query.find_by_id(1)
   end

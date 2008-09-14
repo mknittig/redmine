@@ -95,7 +95,7 @@ class MessagesControllerTest < Test::Unit::TestCase
   
   def test_post_edit
     @request.session[:user_id] = 2
-    post :edit, :board_id => 1, :id => 1,
+    put :update, :board_id => 1, :id => 1,
                 :message => { :subject => 'New subject',
                               :content => 'New body'}
     assert_redirected_to 'messages/show'
@@ -113,7 +113,7 @@ class MessagesControllerTest < Test::Unit::TestCase
   
   def test_destroy_topic
     @request.session[:user_id] = 2
-    post :destroy, :board_id => 1, :id => 1
+    delete :destroy, :board_id => 1, :id => 1
     assert_redirected_to 'boards/show'
     assert_nil Message.find_by_id(1)
   end

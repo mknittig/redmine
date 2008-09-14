@@ -17,8 +17,8 @@
 
 class QueriesController < ApplicationController
   menu_item :issues
-  before_filter :find_query, :except => :new
-  before_filter :find_optional_project, :only => :new
+  before_filter :find_query, :except => [:new, :create]
+  before_filter :find_optional_project, :only => [:new, :create]
   
   def new
     @query = Query.new(params[:query])
@@ -31,29 +31,34 @@ class QueriesController < ApplicationController
       @query.add_filter(field, params[:operators][field], params[:values][field])
     end if params[:fields]
     
-    if request.post? && params[:confirm] && @query.save
+    render :layout => false if request.xhr?
+  end
+  
+  def create
+    new
+    if params[:confirm] && @query.save
       flash[:notice] = l(:notice_successful_create)
       redirect_to :controller => 'issues', :action => 'index', :project_id => @project, :query_id => @query
       return
     end
-    render :layout => false if request.xhr?
   end
   
   def edit
-    if request.post?
-      @query.filters = {}
-      params[:fields].each do |field|
-        @query.add_filter(field, params[:operators][field], params[:values][field])
-      end if params[:fields]
-      @query.attributes = params[:query]
-      @query.project = nil if params[:query_is_for_all]
-      @query.is_public = false unless (@query.project && current_role.allowed_to?(:manage_public_queries)) || User.current.admin?
-      @query.column_names = nil if params[:default_columns]
-      
-      if @query.save
-        flash[:notice] = l(:notice_successful_update)
-        redirect_to :controller => 'issues', :action => 'index', :project_id => @project, :query_id => @query
-      end
+  end
+  
+  def update
+    @query.filters = {}
+    params[:fields].each do |field|
+      @query.add_filter(field, params[:operators][field], params[:values][field])
+    end if params[:fields]
+    @query.attributes = params[:query]
+    @query.project = nil if params[:query_is_for_all]
+    @query.is_public = false unless (@query.project && current_role.allowed_to?(:manage_public_queries)) || User.current.admin?
+    @query.column_names = nil if params[:default_columns]
+    
+    if @query.save
+      flash[:notice] = l(:notice_successful_update)
+      redirect_to :controller => 'issues', :action => 'index', :project_id => @project, :query_id => @query
     end
   end
 

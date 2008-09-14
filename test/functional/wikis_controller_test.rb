@@ -34,7 +34,7 @@ class WikisControllerTest < Test::Unit::TestCase
   def test_create
     @request.session[:user_id] = 1
     assert_nil Project.find(3).wiki
-    post :edit, :id => 3, :wiki => { :start_page => 'Start page' }
+    put :update, :id => 3, :wiki => { :start_page => 'Start page' }
     assert_response :success
     wiki = Project.find(3).wiki
     assert_not_nil wiki
@@ -43,7 +43,7 @@ class WikisControllerTest < Test::Unit::TestCase
   
   def test_destroy
     @request.session[:user_id] = 1
-    post :destroy, :id => 1, :confirm => 1
+    delete :destroy, :id => 1, :confirm => 1
     assert_redirected_to 'projects/settings/ecookbook'
     assert_nil Project.find(1).wiki
   end

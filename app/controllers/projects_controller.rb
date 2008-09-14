@@ -25,7 +25,7 @@ class ProjectsController < ApplicationController
   
   before_filter :find_project, :except => [ :index, :list, :add, :create, :activity ]
   before_filter :find_optional_project, :only => :activity
-  before_filter :authorize, :except => [ :index, :list, :add, :archive, :unarchive, :destroy, :activity ]
+  before_filter :authorize, :except => [ :index, :list, :add, :create, :archive, :unarchive, :destroy, :activity ]
   before_filter :require_admin, :only => [ :add, :create, :update, :archive, :unarchive, :destroy ]
   accept_key_auth :activity
   

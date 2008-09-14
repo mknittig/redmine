@@ -39,7 +39,7 @@ class SettingsControllerTest < Test::Unit::TestCase
   end
   
   def test_post_edit_notifications
-    post :edit, :settings => {:mail_from => 'functional@test.foo',
+    put :update, :settings => {:mail_from => 'functional@test.foo',
                               :bcc_recipients  => '0',
                               :notified_events => %w(issue_added issue_updated news_added),
                               :emails_footer => 'Test footer'

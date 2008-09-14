@@ -3,7 +3,7 @@
 <div class="box"><center>
 <p><strong><%= @project.name %></strong><br /><%=l(:text_wiki_destroy_confirmation)%></p>
 
-<% form_tag({:controller => 'wikis', :action => 'destroy', :id => @project}) do %>
+<% form_tag(project_wikis_path(@project), :method => :delete, :confirm => 1) do %>
 <%= hidden_field_tag "confirm", 1 %>
 <%= submit_tag l(:button_delete) %>
 <% end %>

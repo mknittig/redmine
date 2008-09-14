@@ -23,7 +23,10 @@ class VersionsController < ApplicationController
   end
   
   def edit
-    if request.post? and @version.update_attributes(params[:version])
+  end
+  
+  def update
+    if @version.update_attributes(params[:version])
       flash[:notice] = l(:notice_successful_update)
       redirect_to :controller => 'projects', :action => 'settings', :tab => 'versions', :id => @project
     end

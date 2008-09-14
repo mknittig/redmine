@@ -22,10 +22,6 @@ class IssueCategoriesController < ApplicationController
   #verify :method => :post, :only => :destroy
 
   def edit
-#    if request.post? and @category.update_attributes(params[:category])
-#      flash[:notice] = l(:notice_successful_update)
-#      redirect_to :controller => 'projects', :action => 'settings', :tab => 'categories', :id => @project
-#    end
   end
   
   def update

@@ -44,7 +44,7 @@ class NewsController < ApplicationController
   end
   
   def create
-    @news = News.new(:project => @project, :author => User.current)
+    new
     @news.attributes = params[:news]
     if @news.save
       flash[:notice] = l(:notice_successful_create)

@@ -51,7 +51,7 @@ class AuthSourcesController < ApplicationController
   end
 
   def update
-    @auth_source = AuthSource.find(params[:id])
+    edit
     if @auth_source.update_attributes(params[:auth_source])
       flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'list'

@@ -49,7 +49,7 @@ class EnumerationsController < ApplicationController
   end
 
   def update
-    @enumeration = Enumeration.find(params[:id])
+    edit
     if @enumeration.update_attributes(params[:enumeration])
       flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'index', :opt => @enumeration.opt

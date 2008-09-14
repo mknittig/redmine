@@ -37,19 +37,12 @@ class RepositoriesController < ApplicationController
       @repository = Repository.factory(params[:repository_scm])
       @repository.project = @project if @repository
     end
-    if request.post? && @repository
-      @repository.attributes = params[:repository]
-      @repository.save
-    end
-    render(:update) {|page| page.replace_html "tab-content-repository", :partial => 'projects/settings/repository'}
+    
+    render(:update) {|page| page.replace_html "tab-content-repository", :partial => 'projects/settings/repository'} if request.get?
   end
   
   def update
-    @repository = @project.repository
-    if !@repository
-      @repository = Repository.factory(params[:repository_scm])
-      @repository.project = @project if @repository
-    end
+    edit
     if @repository
       @repository.attributes = params[:repository]
       @repository.save

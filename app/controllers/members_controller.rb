@@ -16,12 +16,16 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class MembersController < ApplicationController
-  before_filter :find_member, :except => :new
-  before_filter :find_project, :only => :new
+  before_filter :find_member, :except => [:new, :create]
+  before_filter :find_project, :only => [:new, :create]
   before_filter :authorize
 
   def new
-    @project.members << Member.new(params[:member]) if request.post?
+  end
+  
+  def create
+    @project.members << Member.new(params[:member])
+    
     respond_to do |format|
       format.html { redirect_to :action => 'settings', :tab => 'members', :id => @project }
       format.js { render(:update) {|page| page.replace_html "tab-content-members", :partial => 'projects/settings/members'} }
@@ -29,8 +33,11 @@ class MembersController < ApplicationController
   end
   
   def edit
-    if request.post? and @member.update_attributes(params[:member])
-  	 respond_to do |format|
+  end
+  
+  def update
+    if @member.update_attributes(params[:member])
+      respond_to do |format|
         format.html { redirect_to :controller => 'projects', :action => 'settings', :tab => 'members', :id => @project }
         format.js { render(:update) {|page| page.replace_html "tab-content-members", :partial => 'projects/settings/members'} }
       end

@@ -92,7 +92,7 @@ class RolesControllerTest < Test::Unit::TestCase
   end
 
   def test_post_edit
-    post :edit, :id => 1,
+    put :update, :id => 1,
                 :role => {:name => 'Manager',
                           :permissions => ['edit_project', ''],
                           :assignable => '0'}
@@ -106,13 +106,13 @@ class RolesControllerTest < Test::Unit::TestCase
     r = Role.new(:name => 'ToBeDestroyed', :permissions => [:view_wiki_pages])
     assert r.save
     
-    post :destroy, :id => r
+    delete :destroy, :id => r
     assert_redirected_to 'roles/list'
     assert_nil Role.find_by_id(r.id)
   end
   
   def test_destroy_role_in_use
-    post :destroy, :id => 1
+    delete :destroy, :id => 1
     assert_redirected_to 'roles'
     assert flash[:error] == 'This role is in use and can not be deleted.'
     assert_not_nil Role.find_by_id(1)

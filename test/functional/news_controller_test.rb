@@ -88,7 +88,7 @@ class NewsControllerTest < Test::Unit::TestCase
   
   def test_post_edit
     @request.session[:user_id] = 2
-    post :edit, :id => 1, :news => { :description => 'Description changed by test_post_edit' }
+    put :update, :id => 1, :news => { :description => 'Description changed by test_post_edit' }
     assert_redirected_to 'news/1'
     news = News.find(1)
     assert_equal 'Description changed by test_post_edit', news.description
@@ -129,7 +129,7 @@ class NewsControllerTest < Test::Unit::TestCase
   
   def test_destroy
     @request.session[:user_id] = 2
-    post :destroy, :id => 1
+    delete :destroy, :id => 1
     assert_redirected_to 'projects/ecookbook/news'
     assert_nil News.find_by_id(1)
   end

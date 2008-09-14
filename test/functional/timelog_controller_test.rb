@@ -42,7 +42,7 @@ class TimelogControllerTest < Test::Unit::TestCase
   
   def test_post_edit
     @request.session[:user_id] = 3
-    post :edit, :project_id => 1,
+    put :update, :project_id => 1,
                 :time_entry => {:comments => 'Some work on TimelogControllerTest',
                                 # Not the default activity
                                 :activity_id => '11',
@@ -67,7 +67,7 @@ class TimelogControllerTest < Test::Unit::TestCase
     assert_equal 2, entry.user_id
     
     @request.session[:user_id] = 1
-    post :edit, :id => 1,
+    put :update, :id => 1,
                 :time_entry => {:issue_id => '2',
                                 :hours => '8'}
     assert_redirected_to 'projects/ecookbook/timelog/details'
@@ -80,7 +80,7 @@ class TimelogControllerTest < Test::Unit::TestCase
   
   def test_destroy
     @request.session[:user_id] = 2
-    post :destroy, :id => 1
+    delete :destroy, :id => 1
     assert_redirected_to 'projects/ecookbook/timelog/details'
     assert_nil TimeEntry.find_by_id(1)
   end

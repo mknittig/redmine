@@ -17,7 +17,7 @@
 
 class TimelogController < ApplicationController
   menu_item :issues
-  before_filter :find_project, :authorize, :only => [:edit, :destroy]
+  before_filter :find_project, :authorize, :only => [:edit, :update, :destroy]
   before_filter :find_optional_project, :only => [:report, :details]
 
   verify :method => :post, :only => :destroy, :redirect_to => { :action => :details }
@@ -195,6 +195,7 @@ class TimelogController < ApplicationController
   end
   
   def update
+    edit
     if @time_entry.save
       flash[:notice] = l(:notice_successful_update)
       redirect_to(params[:back_url].blank? ? {:action => 'details', :project_id => @time_entry.project} : params[:back_url])

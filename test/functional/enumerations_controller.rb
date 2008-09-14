@@ -38,13 +38,13 @@ class EnumerationsControllerTest < Test::Unit::TestCase
   end
   
   def test_destroy_enumeration_not_in_use
-    post :destroy, :id => 7
+    delete :destroy, :id => 7
     assert_redirected_to :controller => 'enumerations', :action => 'index'
     assert_nil Enumeration.find_by_id(7)
   end
   
   def test_destroy_enumeration_in_use
-    post :destroy, :id => 4
+    delete :destroy, :id => 4
     assert_response :success
     assert_template 'destroy'
     assert_not_nil Enumeration.find_by_id(4)
