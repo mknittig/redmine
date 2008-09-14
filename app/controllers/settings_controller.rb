@@ -31,9 +31,10 @@ class SettingsController < ApplicationController
     @deliveries = ActionMailer::Base.perform_deliveries
   end
   
-  def update
+  # POST update
+  def modify
     edit
-   if params[:settings] && params[:settings].is_a?(Hash)
+    if params[:settings] && params[:settings].is_a?(Hash)
       settings = (params[:settings] || {}).dup.symbolize_keys
       settings.each do |name, value|
         # remove blank values in array settings
@@ -41,7 +42,7 @@ class SettingsController < ApplicationController
         Setting[name] = value
       end
       flash[:notice] = l(:notice_successful_update)
-      redirect_to :action => 'edit', :tab => params[:tab]
+      redirect_to settings_path(:tab => params[:tab])
       return
     end
   end

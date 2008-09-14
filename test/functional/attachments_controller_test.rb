@@ -42,7 +42,7 @@ class AttachmentsControllerTest < Test::Unit::TestCase
   
   def test_recognizes
     assert_recognizes({:controller => 'attachments', :action => 'show', :id => '1'}, '/attachments/1')
-    #assert_recognizes({:controller => 'attachments', :action => 'show', :id => '1'}, '/attachments/show/1')
+    assert_recognizes({:controller => 'attachments', :action => 'show', :id => '1'}, '/attachments/show/1')
     assert_recognizes({:controller => 'attachments', :action => 'show', :id => '1', :filename => 'filename.ext'}, '/attachments/1/filename.ext')
     assert_recognizes({:controller => 'attachments', :action => 'download', :id => '1'}, '/attachments/download/1')
     assert_recognizes({:controller => 'attachments', :action => 'download', :id => '1', :filename => 'filename.ext'},'/attachments/download/1/filename.ext')
