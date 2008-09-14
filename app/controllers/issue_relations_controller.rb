@@ -21,7 +21,7 @@ class IssueRelationsController < ApplicationController
   def new
     @relation = IssueRelation.new(params[:relation])
     @relation.issue_from = @issue
-    @relation.save if request.post?
+
     respond_to do |format|
       format.html { redirect_to :controller => 'issues', :action => 'show', :id => @issue }
       format.js do
@@ -34,6 +34,12 @@ class IssueRelationsController < ApplicationController
         end
       end
     end
+  end
+  
+  def create
+    @relation = IssueRelation.new(params[:relation])
+    @relation.issue_from = @issue
+    @relation.save
   end
   
   def destroy

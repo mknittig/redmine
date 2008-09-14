@@ -23,10 +23,10 @@ class ProjectsController < ApplicationController
   menu_item :settings, :only => :settings
   menu_item :issues, :only => [:changelog]
   
-  before_filter :find_project, :except => [ :index, :list, :add, :activity ]
+  before_filter :find_project, :except => [ :index, :list, :add, :create, :activity ]
   before_filter :find_optional_project, :only => :activity
   before_filter :authorize, :except => [ :index, :list, :add, :archive, :unarchive, :destroy, :activity ]
-  before_filter :require_admin, :only => [ :add, :archive, :unarchive, :destroy ]
+  before_filter :require_admin, :only => [ :add, :create, :update, :archive, :unarchive, :destroy ]
   accept_key_auth :activity
   
   helper :sort
@@ -68,18 +68,19 @@ class ProjectsController < ApplicationController
                                   :conditions => "parent_id IS NULL AND status = #{Project::STATUS_ACTIVE}",
                                   :order => 'name')
     @project = Project.new(params[:project])
-    if request.get?
-      @project.identifier = Project.next_identifier if Setting.sequential_project_identifiers?
-      @project.trackers = Tracker.all
-      @project.is_public = Setting.default_projects_public?
-      @project.enabled_module_names = Redmine::AccessControl.available_project_modules
-    else
-      @project.enabled_module_names = params[:enabled_modules]
-      if @project.save
-        flash[:notice] = l(:notice_successful_create)
-        redirect_to :controller => 'admin', :action => 'projects'
-	  end		
-    end	
+
+    @project.identifier = Project.next_identifier if Setting.sequential_project_identifiers?
+    @project.trackers = Tracker.all
+    @project.is_public = Setting.default_projects_public?
+    @project.enabled_module_names = Redmine::AccessControl.available_project_modules
+  end
+  
+  def create
+    @project.enabled_module_names = params[:enabled_modules]
+    if @project.save
+      flash[:notice] = l(:notice_successful_create)
+      redirect_to :controller => 'admin', :action => 'projects'
+    end   
   end
 	
   # Show @project
@@ -120,15 +121,16 @@ class ProjectsController < ApplicationController
   
   # Edit @project
   def edit
-    if request.post?
-      @project.attributes = params[:project]
-      if @project.save
-        flash[:notice] = l(:notice_successful_update)
-        redirect_to :action => 'settings', :id => @project
-      else
-        settings
-        render :action => 'settings'
-      end
+  end
+  
+  def update
+    @project.attributes = params[:project]
+    if @project.save
+      flash[:notice] = l(:notice_successful_update)
+      redirect_to :action => 'settings', :id => @project
+    else
+      settings
+      render :action => 'settings'
     end
   end
   

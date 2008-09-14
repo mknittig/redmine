@@ -24,14 +24,19 @@ class TrackersController < ApplicationController
   end
 
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  verify :method => :post, :only => [ :destroy, :move ], :redirect_to => { :action => :list }
+  #verify :method => :post, :only => [ :destroy, :move ], :redirect_to => { :action => :list }
 
   def list
     @tracker_pages, @trackers = paginate :trackers, :per_page => 10, :order => 'position'
-    render :action => "list", :layout => false if request.xhr?
+    render :action => "index", :layout => false if request.xhr?
+  end
+  
+  def new
+    @tracker = Tracker.new
+    @trackers = Tracker.find :all, :order => 'position'
   end
 
-  def new
+  def create
     @tracker = Tracker.new(params[:tracker])
     if request.post? and @tracker.save
       # workflow copy
@@ -39,16 +44,22 @@ class TrackersController < ApplicationController
         @tracker.workflows.copy(copy_from)
       end
       flash[:notice] = l(:notice_successful_create)
-      redirect_to :action => 'list'
+      redirect_to(trackers_url)
     end
     @trackers = Tracker.find :all, :order => 'position'
   end
-
+  
   def edit
     @tracker = Tracker.find(params[:id])
-    if request.post? and @tracker.update_attributes(params[:tracker])
+  end
+
+  def update
+    @tracker = Tracker.find(params[:id])
+    if @tracker.update_attributes(params[:tracker])
       flash[:notice] = l(:notice_successful_update)
-      redirect_to :action => 'list'
+      redirect_to(trackers_url)
+    else
+      render :action => 'edit'
     end
   end
 
@@ -64,7 +75,7 @@ class TrackersController < ApplicationController
     when 'lowest'
       @tracker.move_to_bottom
     end if params[:position]
-    redirect_to :action => 'list'
+    redirect_to(trackers_url)
   end
   
   def destroy
@@ -74,6 +85,6 @@ class TrackersController < ApplicationController
     else
       @tracker.destroy
     end
-    redirect_to :action => 'list'
+    redirect_to(trackers_url)
   end  
 end

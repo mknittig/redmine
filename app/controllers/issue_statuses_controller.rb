@@ -18,8 +18,8 @@
 class IssueStatusesController < ApplicationController
   before_filter :require_admin
 
-  verify :method => :post, :only => [ :destroy, :create, :update, :move ],
-         :redirect_to => { :action => :list }
+  #verify :method => :post, :only => [ :destroy, :create, :update, :move ],
+  #       :redirect_to => { :action => :list }
          
   def index
     list
@@ -39,9 +39,9 @@ class IssueStatusesController < ApplicationController
     @issue_status = IssueStatus.new(params[:issue_status])
     if @issue_status.save
       flash[:notice] = l(:notice_successful_create)
-      redirect_to :action => 'list'
+      redirect_to :action => 'index'
     else
-      render :action => 'new'
+      render :action => 'list'
     end
   end
 
@@ -53,9 +53,9 @@ class IssueStatusesController < ApplicationController
     @issue_status = IssueStatus.find(params[:id])
     if @issue_status.update_attributes(params[:issue_status])
       flash[:notice] = l(:notice_successful_update)
-      redirect_to :action => 'list'
+      redirect_to :action => 'index'
     else
-      render :action => 'edit'
+      render :action => 'list'
     end
   end
   
@@ -71,14 +71,14 @@ class IssueStatusesController < ApplicationController
     when 'lowest'
       @issue_status.move_to_bottom
     end if params[:position]
-    redirect_to :action => 'list'
+    redirect_to :action => 'index'
   end
 
   def destroy
     IssueStatus.find(params[:id]).destroy
-    redirect_to :action => 'list'
+    redirect_to :action => 'index'
   rescue
     flash[:error] = "Unable to delete issue status"
-    redirect_to :action => 'list'
+    redirect_to :action => 'index'
   end  	
 end

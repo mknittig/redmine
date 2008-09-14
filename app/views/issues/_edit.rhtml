@@ -1,8 +1,9 @@
 <% labelled_tabular_form_for :issue, @issue,
-                             :url => {:action => 'edit', :id => @issue},
+                             :url => issue_path(@issue),
                              :html => {:id => 'issue-form',
                                        :class => nil,
-                                       :multipart => true} do |f| %>
+                                       :multipart => true,
+                                       :method => :put} do |f| %>
     <%= error_messages_for 'issue' %>
     <%= error_messages_for 'time_entry' %>
     <div class="box">
@@ -43,7 +44,7 @@
     <%= f.hidden_field :lock_version %>
     <%= submit_tag l(:button_submit) %>
     <%= link_to_remote l(:label_preview), 
-                       { :url => { :controller => 'issues', :action => 'preview', :project_id => @project, :id => @issue },
+                       { :url => preview_project_issue_path(@project, @issue),
                          :method => 'post',
                          :update => 'preview',
                          :with => 'Form.serialize("issue-form")',

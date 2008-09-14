@@ -44,7 +44,12 @@ class DocumentsController < ApplicationController
 
   def new
     @document = @project.documents.build(params[:document])    
-    if request.post? and @document.save	
+    
+  end
+  
+  def create
+    new
+    if @document.save 
       attach_files(@document, params[:attachments])
       flash[:notice] = l(:notice_successful_create)
       Mailer.deliver_document_added(@document) if Setting.notified_events.include?('document_added')
@@ -54,11 +59,15 @@ class DocumentsController < ApplicationController
   
   def edit
     @categories = Enumeration::get_values('DCAT')
-    if request.post? and @document.update_attributes(params[:document])
+  end
+  
+  def update
+    edit
+    if @document.update_attributes(params[:document])
       flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'show', :id => @document
     end
-  end  
+  end
 
   def destroy
     @document.destroy

@@ -44,6 +44,18 @@ class RepositoriesController < ApplicationController
     render(:update) {|page| page.replace_html "tab-content-repository", :partial => 'projects/settings/repository'}
   end
   
+  def update
+    @repository = @project.repository
+    if !@repository
+      @repository = Repository.factory(params[:repository_scm])
+      @repository.project = @project if @repository
+    end
+    if @repository
+      @repository.attributes = params[:repository]
+      @repository.save
+    end
+  end
+  
   def destroy
     @repository.destroy
     redirect_to :controller => 'projects', :action => 'settings', :id => @project, :tab => 'repository'

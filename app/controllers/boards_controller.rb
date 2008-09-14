@@ -47,19 +47,26 @@ class BoardsController < ApplicationController
     render :action => 'show', :layout => !request.xhr?
   end
   
-  verify :method => :post, :only => [ :destroy ], :redirect_to => { :action => :index }
+  #verify :method => :post, :only => [ :destroy ], :redirect_to => { :action => :index }
 
   def new
     @board = Board.new(params[:board])
     @board.project = @project
-    if request.post? && @board.save
+  end
+  
+  def create
+   new
+   if @board.save
       flash[:notice] = l(:notice_successful_create)
       redirect_to :controller => 'projects', :action => 'settings', :id => @project, :tab => 'boards'
     end
   end
 
   def edit
-    if request.post? && @board.update_attributes(params[:board])
+  end
+  
+  def update
+    if @board.update_attributes(params[:board])
       case params[:position]
       when 'highest'; @board.move_to_top
       when 'higher'; @board.move_higher

@@ -25,7 +25,14 @@ class SettingsController < ApplicationController
 
   def edit
     @notifiables = %w(issue_added issue_updated news_added document_added file_added message_posted)
-    if request.post? && params[:settings] && params[:settings].is_a?(Hash)
+
+    @options = {}
+    @options[:user_format] = User::USER_FORMATS.keys.collect {|f| [User.current.name(f), f.to_s] }
+    @deliveries = ActionMailer::Base.perform_deliveries
+  end
+  
+  def update
+   if params[:settings] && params[:settings].is_a?(Hash)
       settings = (params[:settings] || {}).dup.symbolize_keys
       settings.each do |name, value|
         # remove blank values in array settings
@@ -36,9 +43,6 @@ class SettingsController < ApplicationController
       redirect_to :action => 'edit', :tab => params[:tab]
       return
     end
-    @options = {}
-    @options[:user_format] = User::USER_FORMATS.keys.collect {|f| [User.current.name(f), f.to_s] }
-    @deliveries = ActionMailer::Base.perform_deliveries
   end
   
   def plugin

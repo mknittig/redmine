@@ -2,7 +2,7 @@
 
 <ul><%= @issues.collect {|i| content_tag('li', link_to(h("#{i.tracker} ##{i.id}"), { :action => 'show', :id => i }) + h(": #{i.subject}")) }.join("\n") %></ul>
 
-<% form_tag() do %>
+<% form_tag(:method => :put) do %>
 <%= @issues.collect {|i| hidden_field_tag('ids[]', i.id)}.join %>
 <div class="box">
 <fieldset>

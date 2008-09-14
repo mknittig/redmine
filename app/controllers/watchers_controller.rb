@@ -35,7 +35,7 @@ class WatchersController < ApplicationController
   def new
     @watcher = Watcher.new(params[:watcher])
     @watcher.watchable = @watched
-    @watcher.save if request.post?
+
     respond_to do |format|
       format.html { redirect_to :back }
       format.js do
@@ -46,6 +46,12 @@ class WatchersController < ApplicationController
     end
   rescue ::ActionController::RedirectBackError
     render :text => 'Watcher added.', :layout => true
+  end
+  
+  def create
+    @watcher = Watcher.new(params[:watcher])
+    @watcher.watchable = @watched
+    @watcher.save
   end
   
 private

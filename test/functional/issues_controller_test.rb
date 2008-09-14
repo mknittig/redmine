@@ -384,7 +384,7 @@ class IssuesControllerTest < Test::Unit::TestCase
                                         }
       end
     end
-    assert_redirected_to 'issues/show/1'
+    assert_redirected_to 'issues/1'
     issue.reload
     assert_equal new_subject, issue.subject
     # Make sure custom fields were not cleared
@@ -410,7 +410,7 @@ class IssuesControllerTest < Test::Unit::TestCase
                                         }
       end
     end
-    assert_redirected_to 'issues/show/1'
+    assert_redirected_to 'issues/1'
     issue.reload
     assert_equal 'New custom value', issue.custom_value_for(2).value
     
@@ -430,7 +430,7 @@ class IssuesControllerTest < Test::Unit::TestCase
            :notes => 'Assigned to dlopper',
            :time_entry => { :hours => '', :comments => '', :activity_id => Enumeration.get_values('ACTI').first }
     end
-    assert_redirected_to 'issues/show/1'
+    assert_redirected_to 'issues/1'
     issue.reload
     assert_equal 2, issue.status_id
     j = issue.journals.find(:first, :order => 'id DESC')
@@ -447,7 +447,7 @@ class IssuesControllerTest < Test::Unit::TestCase
     post :edit,
          :id => 1,
          :notes => notes
-    assert_redirected_to 'issues/show/1'
+    assert_redirected_to 'issues/1'
     j = Issue.find(1).journals.find(:first, :order => 'id DESC')
     assert_equal notes, j.notes
     assert_equal 0, j.details.size
@@ -466,7 +466,7 @@ class IssuesControllerTest < Test::Unit::TestCase
            :notes => '2.5 hours added',
            :time_entry => { :hours => '2.5', :comments => '', :activity_id => Enumeration.get_values('ACTI').first }
     end
-    assert_redirected_to 'issues/show/1'
+    assert_redirected_to 'issues/1'
     
     issue = Issue.find(1)
     
@@ -488,7 +488,7 @@ class IssuesControllerTest < Test::Unit::TestCase
          :id => 1,
          :notes => '',
          :attachments => {'1' => {'file' => test_uploaded_file('testfile.txt', 'text/plain')}}
-    assert_redirected_to 'issues/show/1'
+    assert_redirected_to 'issues/1'
     j = Issue.find(1).journals.find(:first, :order => 'id DESC')
     assert j.notes.blank?
     assert_equal 1, j.details.size
@@ -507,7 +507,7 @@ class IssuesControllerTest < Test::Unit::TestCase
     post :edit,
          :id => 1,
          :notes => ''
-    assert_redirected_to 'issues/show/1'
+    assert_redirected_to 'issues/1'
     
     issue.reload
     assert issue.journals.empty?
@@ -679,7 +679,7 @@ class IssuesControllerTest < Test::Unit::TestCase
     a = issue.attachments.size
     @request.session[:user_id] = 2
     post :destroy_attachment, :id => 3, :attachment_id => 1
-    assert_redirected_to 'issues/show/3'
+    assert_redirected_to 'issues/3'
     assert_nil Attachment.find_by_id(1)
     issue.reload
     assert_equal((a-1), issue.attachments.size)

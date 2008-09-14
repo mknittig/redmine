@@ -1,6 +1,6 @@
 <% if @issue.new_record? %>
 <p><%= f.select :tracker_id, @project.trackers.collect {|t| [t.name, t.id]}, :required => true %></p>
-<%= observe_field :issue_tracker_id, :url => { :action => :new },
+<%= observe_field :issue_tracker_id, :url => issue_path(@project),
                                      :update => :content,
                                      :with => "Form.serialize('issue-form')" %>
 <hr />
@@ -27,7 +27,7 @@
 <p><%= f.select :category_id, (@project.issue_categories.collect {|c| [c.name, c.id]}), :include_blank => true %>
 <%= prompt_to_remote(l(:label_issue_category_new),
                      l(:label_issue_category_new), 'category[name]', 
-                     {:controller => 'projects', :action => 'add_issue_category', :id => @project},
+                     add_issue_category_project_path(@project),
                      :class => 'small', :tabindex => 199) if authorize_for('projects', 'add_issue_category') %></p>
 <%= content_tag('p', f.select(:fixed_version_id, 
                               (@project.versions.sort.collect {|v| [v.name, v.id]}),

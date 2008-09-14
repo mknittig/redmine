@@ -67,7 +67,7 @@ end %>
 </div>
 
 <% if @issue.attachments.any? %>
-<%= link_to_attachments @issue.attachments, :delete_url => (authorize_for('issues', 'destroy_attachment') ? {:controller => 'issues', :action => 'destroy_attachment', :id => @issue} : nil) %>
+<%= link_to_attachments @issue.attachments, :delete_url => (authorize_for('issues', 'destroy_attachment') ? {:controller => 'issues', :action => 'destroy_attachment', :id => @issue, :method => :delete} : nil) %>
 <% end %>
 
 <% if authorize_for('issue_relations', 'new') || @issue.relations.any? %>

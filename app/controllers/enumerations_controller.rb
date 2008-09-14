@@ -24,8 +24,8 @@ class EnumerationsController < ApplicationController
   end
 
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  verify :method => :post, :only => [ :destroy, :create, :update ],
-         :redirect_to => { :action => :list }
+  #verify :method => :post, :only => [ :destroy, :create, :update ],
+  #       :redirect_to => { :action => :list }
 
   def list
   end
@@ -38,7 +38,7 @@ class EnumerationsController < ApplicationController
     @enumeration = Enumeration.new(params[:enumeration])
     if @enumeration.save
       flash[:notice] = l(:notice_successful_create)
-      redirect_to :action => 'list', :opt => @enumeration.opt
+      redirect_to :action => 'index', :opt => @enumeration.opt
     else
       render :action => 'new'
     end
@@ -52,7 +52,7 @@ class EnumerationsController < ApplicationController
     @enumeration = Enumeration.find(params[:id])
     if @enumeration.update_attributes(params[:enumeration])
       flash[:notice] = l(:notice_successful_update)
-      redirect_to :action => 'list', :opt => @enumeration.opt
+      redirect_to :action => 'index', :opt => @enumeration.opt
     else
       render :action => 'edit'
     end

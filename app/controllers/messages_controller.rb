@@ -21,7 +21,7 @@ class MessagesController < ApplicationController
   before_filter :find_message, :except => [:new, :preview]
   before_filter :authorize, :except => :preview
 
-  verify :method => :post, :only => [ :reply, :destroy ], :redirect_to => { :action => :show }
+  #verify :method => :post, :only => [ :reply, :destroy ], :redirect_to => { :action => :show }
   verify :xhr => true, :only => :quote
 
   
@@ -45,7 +45,11 @@ class MessagesController < ApplicationController
       @message.locked = params[:message]['locked']
       @message.sticky = params[:message]['sticky']
     end
-    if request.post? && @message.save
+  end
+  
+  def create
+    new
+    if @message.save
       attach_files(@message, params[:attachments])
       redirect_to :action => 'show', :id => @message
     end
@@ -69,7 +73,11 @@ class MessagesController < ApplicationController
       @message.locked = params[:message]['locked']
       @message.sticky = params[:message]['sticky']
     end
-    if request.post? && @message.update_attributes(params[:message])
+  end
+  
+  def update
+    edit
+    if @message.update_attributes(params[:message])
       attach_files(@message, params[:attachments])
       flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'show', :id => @topic

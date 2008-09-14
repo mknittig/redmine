@@ -41,18 +41,23 @@ class NewsController < ApplicationController
 
   def new
     @news = News.new(:project => @project, :author => User.current)
-    if request.post?
-      @news.attributes = params[:news]
-      if @news.save
-        flash[:notice] = l(:notice_successful_create)
-        Mailer.deliver_news_added(@news) if Setting.notified_events.include?('news_added')
-        redirect_to :controller => 'news', :action => 'index', :project_id => @project
-      end
+  end
+  
+  def create
+    @news = News.new(:project => @project, :author => User.current)
+    @news.attributes = params[:news]
+    if @news.save
+      flash[:notice] = l(:notice_successful_create)
+      Mailer.deliver_news_added(@news) if Setting.notified_events.include?('news_added')
+      redirect_to :controller => 'news', :action => 'index', :project_id => @project
     end
   end
   
   def edit
-    if request.post? and @news.update_attributes(params[:news])
+  end
+  
+  def update
+    if @news.update_attributes(params[:news])
       flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'show', :id => @news
     end

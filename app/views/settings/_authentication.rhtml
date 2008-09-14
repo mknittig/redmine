@@ -1,4 +1,4 @@
-<% form_tag({:action => 'edit', :tab => 'authentication'}) do %>
+<% form_tag(settings_path(:tab => 'authentication'), :method => :put) do %>
 
 <div class="box tabular settings">
 <p><label><%= l(:setting_login_required) %></label>
@@ -20,7 +20,7 @@
 </div>
 
 <div style="float:right;">
-    <%= link_to l(:label_ldap_authentication), :controller => 'auth_sources', :action => 'list' %>
+    <%= link_to l(:label_ldap_authentication), :controller => 'auth_sources', :action => 'index' %>
 </div>
 
 <%= submit_tag l(:button_save) %>

@@ -18,9 +18,9 @@
 class IssuesController < ApplicationController
   menu_item :new_issue, :only => :new
   
-  before_filter :find_issue, :only => [:show, :edit, :reply, :destroy_attachment]
+  before_filter :find_issue, :only => [:show, :edit, :update, :reply, :destroy_attachment]
   before_filter :find_issues, :only => [:bulk_edit, :move, :destroy]
-  before_filter :find_project, :only => [:new, :update_form, :preview, :gantt, :calendar]
+  before_filter :find_project, :only => [:new, :create, :update_form, :preview, :gantt, :calendar]
   before_filter :authorize, :except => [:index, :changes, :preview, :update_form, :context_menu]
   before_filter :find_optional_project, :only => [:index, :changes]
   accept_key_auth :index, :changes
@@ -135,20 +135,23 @@ class IssuesController < ApplicationController
     
     if request.get? || request.xhr?
       @issue.start_date ||= Date.today
-    else
-      requested_status = IssueStatus.find_by_id(params[:issue][:status_id])
-      # Check that the user is allowed to apply the requested status
-      @issue.status = (@allowed_statuses.include? requested_status) ? requested_status : default_status
-      if @issue.save
-        attach_files(@issue, params[:attachments])
-        flash[:notice] = l(:notice_successful_create)
-        Mailer.deliver_issue_add(@issue) if Setting.notified_events.include?('issue_added')
-        redirect_to :controller => 'issues', :action => 'show', :id => @issue
-        return
-      end		
+      @priorities = Enumeration::get_values('IPRI')
+      render :layout => !request.xhr?
     end	
-    @priorities = Enumeration::get_values('IPRI')
-    render :layout => !request.xhr?
+  end
+  
+  def create
+    new
+    requested_status = IssueStatus.find_by_id(params[:issue][:status_id])
+    # Check that the user is allowed to apply the requested status
+    @issue.status = (@allowed_statuses.include? requested_status) ? requested_status : default_status
+    if @issue.save
+      attach_files(@issue, params[:attachments])
+      flash[:notice] = l(:notice_successful_create)
+      Mailer.deliver_issue_add(@issue) if Setting.notified_events.include?('issue_added')
+      redirect_to :controller => 'issues', :action => 'show', :id => @issue
+      return
+    end   
   end
   
   # Attributes that can be updated on workflow transition (without :edit permission)
@@ -170,24 +173,25 @@ class IssuesController < ApplicationController
       attrs.delete(:status_id) unless @allowed_statuses.detect {|s| s.id.to_s == attrs[:status_id].to_s}
       @issue.attributes = attrs
     end
-
-    if request.post?
-      @time_entry = TimeEntry.new(:project => @project, :issue => @issue, :user => User.current, :spent_on => Date.today)
-      @time_entry.attributes = params[:time_entry]
-      attachments = attach_files(@issue, params[:attachments])
-      attachments.each {|a| journal.details << JournalDetail.new(:property => 'attachment', :prop_key => a.id, :value => a.filename)}
-      if (@time_entry.hours.nil? || @time_entry.valid?) && @issue.save
-        # Log spend time
-        if current_role.allowed_to?(:log_time)
-          @time_entry.save
-        end
-        if !journal.new_record?
-          # Only send notification if something was actually changed
-          flash[:notice] = l(:notice_successful_update)
-          Mailer.deliver_issue_edit(journal) if Setting.notified_events.include?('issue_updated')
-        end
-        redirect_to(params[:back_to] || {:action => 'show', :id => @issue})
+  end
+  
+  def update
+    edit
+    @time_entry = TimeEntry.new(:project => @project, :issue => @issue, :user => User.current, :spent_on => Date.today)
+    @time_entry.attributes = params[:time_entry]
+    attachments = attach_files(@issue, params[:attachments])
+    attachments.each {|a| journal.details << JournalDetail.new(:property => 'attachment', :prop_key => a.id, :value => a.filename)}
+    if (@time_entry.hours.nil? || @time_entry.valid?) && @issue.save
+      # Log spend time
+      if current_role.allowed_to?(:log_time)
+        @time_entry.save
       end
+      if !journal.new_record?
+        # Only send notification if something was actually changed
+        flash[:notice] = l(:notice_successful_update)
+        Mailer.deliver_issue_edit(journal) if Setting.notified_events.include?('issue_updated')
+      end
+      redirect_to(params[:back_to] || {:action => 'show', :id => @issue})
     end
   rescue ActiveRecord::StaleObjectError
     # Optimistic locking exception
