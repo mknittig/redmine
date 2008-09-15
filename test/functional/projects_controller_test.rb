@@ -31,7 +31,14 @@ class ProjectsControllerTest < Test::Unit::TestCase
     @response   = ActionController::TestResponse.new
     @request.session[:user_id] = nil
   end
-
+  
+  def test_index_routing
+    assert_routing(
+      {:method => :get, :path => '/projects'},
+      :controller => 'projects', :action => 'index'
+    )
+  end
+  
   def test_index
     get :index
     assert_response :success
@@ -43,12 +50,37 @@ class ProjectsControllerTest < Test::Unit::TestCase
     assert assigns(:project_tree)[Project.find(1)].include?(Project.find(3))
   end
   
+  def test_index_atom_routing
+    assert_routing(
+      {:method => :get, :path => '/projects.atom'},
+      :controller => 'projects', :action => 'index', :format => 'atom'
+    )
+  end
+  
   def test_index_atom
     get :index, :format => 'atom'
     assert_response :success
     assert_template 'common/feed.atom.rxml'
     assert_select 'feed>title', :text => 'Redmine: Latest projects'
     assert_select 'feed>entry', :count => Project.count(:conditions => Project.visible_by(User.current))
+  end
+  
+  def test_add_routing
+    assert_routing(
+      {:method => :get, :path => '/projects/new'},
+      :controller => 'projects', :action => 'add'
+    )
+    assert_recognizes(
+      {:controller => 'projects', :action => 'add'},
+      {:method => :post, :path => '/projects'}
+    )
+  end
+  
+  def test_show_routing
+    assert_routing(
+      {:method => :get, :path => '/projects/test'},
+      :controller => 'projects', :action => 'show', :id => 'test'
+    )
   end
   
   def test_show_by_id
@@ -81,6 +113,17 @@ class ProjectsControllerTest < Test::Unit::TestCase
     assert_tag :tag => 'a', :content => /Private child/
   end
   
+  def test_settings_routing
+    assert_routing(
+      {:method => :get, :path => '/projects/4223/settings'},
+      :controller => 'projects', :action => 'settings', :id => '4223'
+    )
+    assert_routing(
+      {:method => :get, :path => '/projects/4223/settings/members'},
+      :controller => 'projects', :action => 'settings', :id => '4223', :tab => 'members'
+    )
+  end
+  
   def test_settings
     @request.session[:user_id] = 2 # manager
     get :settings, :id => 1
@@ -95,6 +138,30 @@ class ProjectsControllerTest < Test::Unit::TestCase
     assert_redirected_to 'projects/settings/ecookbook'
     project = Project.find(1)
     assert_equal 'Test changed name', project.name
+  end
+  
+  def test_add_version_routing
+    assert_routing(
+      {:method => :get, :path => 'projects/64/versions/new'},
+      :controller => 'projects', :action => 'add_version', :id => '64'
+    )
+    assert_routing(
+    #TODO: use PUT
+      {:method => :post, :path => 'projects/64/versions/new'},
+      :controller => 'projects', :action => 'add_version', :id => '64'
+    )
+  end
+  
+  def test_add_issue_category_routing
+    assert_routing(
+      {:method => :get, :path => 'projects/test/categories/new'},
+      :controller => 'projects', :action => 'add_issue_category', :id => 'test'
+    )
+    assert_routing(
+    #TODO: use PUT
+      {:method => :post, :path => 'projects/64/categories/new'},
+      :controller => 'projects', :action => 'add_issue_category', :id => '64'
+    )
   end
   
   def test_get_destroy
@@ -112,18 +179,50 @@ class ProjectsControllerTest < Test::Unit::TestCase
     assert_nil Project.find_by_id(1)
   end
   
+  def test_list_files_routing
+    assert_routing(
+      {:method => :get, :path => '/projects/33/files'},
+      :controller => 'projects', :action => 'list_files', :id => '33'
+    )
+  end
+  
+  def test_add_file_routing
+    assert_routing(
+      {:method => :get, :path => '/projects/33/files/new'},
+      :controller => 'projects', :action => 'add_file', :id => '33'
+    )
+    assert_routing(
+      {:method => :post, :path => '/projects/33/files/new'},
+      :controller => 'projects', :action => 'add_file', :id => '33'
+    )
+  end
+  
   def test_list_files
     get :list_files, :id => 1
     assert_response :success
     assert_template 'list_files'
     assert_not_nil assigns(:versions)
   end
-
+  
+  def test_changelog_routing
+    assert_routing(
+      {:method => :get, :path => '/projects/44/changelog'},
+      :controller => 'projects', :action => 'changelog', :id => '44'
+    )
+  end
+  
   def test_changelog
     get :changelog, :id => 1
     assert_response :success
     assert_template 'changelog'
     assert_not_nil assigns(:versions)
+  end
+  
+  def test_roadmap_routing
+    assert_routing(
+      {:method => :get, :path => 'projects/33/roadmap'},
+      :controller => 'projects', :action => 'roadmap', :id => '33'
+    )
   end
   
   def test_roadmap
@@ -147,7 +246,21 @@ class ProjectsControllerTest < Test::Unit::TestCase
     # Completed version appears
     assert assigns(:versions).include?(Version.find(1))
   end
-
+  
+  def test_project_activity_routing
+    assert_routing(
+      {:method => :get, :path => '/projects/1/activity'},
+       :controller => 'projects', :action => 'activity', :id => '1'
+    )
+  end
+  
+  def test_project_activity_atom_routing
+    assert_routing(
+      {:method => :get, :path => '/projects/1/activity.atom'},
+       :controller => 'projects', :action => 'activity', :id => '1', :format => 'atom'
+    )    
+  end
+  
   def test_project_activity
     get :activity, :id => 1, :with_subprojects => 0
     assert_response :success
@@ -184,6 +297,10 @@ class ProjectsControllerTest < Test::Unit::TestCase
                }
   end
   
+  def test_global_activity_routing
+    assert_routing({:method => :get, :path => '/activity'}, :controller => 'projects', :action => 'activity')
+  end
+  
   def test_global_activity
     get :activity
     assert_response :success
@@ -200,6 +317,10 @@ class ProjectsControllerTest < Test::Unit::TestCase
                    }
                  }
                }
+  end
+  
+  def test_global_activity_atom_routing
+    assert_routing({:method => :get, :path => '/activity.atom'}, :controller => 'projects', :action => 'activity', :format => 'atom')
   end
   
   def test_activity_atom_feed

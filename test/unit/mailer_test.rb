@@ -31,12 +31,12 @@ class MailerTest < Test::Unit::TestCase
     mail = ActionMailer::Base.deliveries.last
     assert_kind_of TMail::Mail, mail
     # link to the main ticket
-    assert mail.body.include?('<a href="https://mydomain.foo/issues/show/1">Bug #1: Can\'t print recipes</a>')
+    assert mail.body.include?('<a href="https://mydomain.foo/issues/1">Bug #1: Can\'t print recipes</a>')
     
     # link to a referenced ticket
-    assert mail.body.include?('<a href="https://mydomain.foo/issues/show/2" class="issue" title="Add ingredients categories (Assigned)">#2</a>')
+    assert mail.body.include?('<a href="https://mydomain.foo/issues/2" class="issue" title="Add ingredients categories (Assigned)">#2</a>')
     # link to a changeset
-    assert mail.body.include?('<a href="https://mydomain.foo/repositories/revision/ecookbook/2" class="changeset" title="This commit fixes #1, #2 and references #1 &amp; #3">r2</a>')
+    assert mail.body.include?('<a href="https://mydomain.foo/projects/ecookbook/repository/revisions/2" class="changeset" title="This commit fixes #1, #2 and references #1 &amp; #3">r2</a>')
   end
   
   # test mailer methods for each language
