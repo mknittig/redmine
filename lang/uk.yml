@@ -368,7 +368,7 @@ label_sort_higher: Вгору
 label_sort_lower: Вниз
 label_sort_lowest: У кінець
 label_roadmap: Оперативний план
-label_roadmap_due_in: Строк
+label_roadmap_due_in: Строк %s
 label_roadmap_overdue: %s запізнення
 label_roadmap_no_issues: Немає питань для даної версії
 label_search: Пошук
@@ -639,3 +639,6 @@ label_issue_watchers: Watchers
 setting_commit_logs_encoding: Commit messages encoding
 button_quote: Quote
 setting_sequential_project_identifiers: Generate sequential project identifiers
+notice_unable_delete_version: Unable to delete version
+label_renamed: renamed
+label_copied: copied

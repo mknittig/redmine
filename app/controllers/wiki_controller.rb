@@ -38,6 +38,11 @@ class WikiController < ApplicationController
       end
       return
     end
+    if params[:version] && !User.current.allowed_to?(:view_wiki_edits, @project)
+      # Redirects user to the current version if he's not allowed to view previous versions
+      redirect_to :version => nil
+      return
+    end
     @content = @page.content_for_version(params[:version])
     if params[:export] == 'html'
       export = render_to_string :action => 'export', :layout => false
@@ -61,23 +66,24 @@ class WikiController < ApplicationController
     @content.text = "h1. #{@page.pretty_title}" if @content.text.blank?
     # don't keep previous comment
     @content.comments = nil
-  end
-  
-  def update
-    edit
-    if !@page.new_record? && @content.text == params[:content][:text]
-      # don't save if text wasn't changed
-      redirect_to :action => 'index', :id => @project, :page => @page.title
-      return
+    if request.get?
+      # To prevent StaleObjectError exception when reverting to a previous version
+      @content.version = @page.content.version
+    else
+      if !@page.new_record? && @content.text == params[:content][:text]
+        # don't save if text wasn't changed
+        redirect_to :action => 'index', :id => @project, :page => @page.title
+        return
+      end
+      #@content.text = params[:content][:text]
+      #@content.comments = params[:content][:comments]
+      @content.attributes = params[:content]
+      @content.author = User.current
+      # if page is new @page.save will also save content, but not if page isn't a new record
+      if (@page.new_record? ? @page.save : @content.save)
+        redirect_to :action => 'index', :id => @project, :page => @page.title
+      end
     end
-    #@content.text = params[:content][:text]
-    #@content.comments = params[:content][:comments]
-    @content.attributes = params[:content]
-    @content.author = User.current
-    # if page is new @page.save will also save content, but not if page isn't a new record
-    if (@page.new_record? ? @page.save : @content.save)
-      redirect_to :action => 'index', :id => @project, :page => @page.title
-    end 
   rescue ActiveRecord::StaleObjectError
     # Optimistic locking exception
     flash[:error] = l(:notice_locking_conflict)

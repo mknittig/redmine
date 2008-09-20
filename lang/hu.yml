@@ -407,7 +407,7 @@ label_sort_higher: Eggyel feljebb
 label_sort_lower: Eggyel lejjebb
 label_sort_lowest: Az aljára
 label_roadmap: Életút
-label_roadmap_due_in: Elkészültéig várhatóan még 
+label_roadmap_due_in: Elkészültéig várhatóan még %s
 label_roadmap_overdue: %s késésben
 label_roadmap_no_issues: Nincsenek feladatok ehhez a verzióhoz
 label_search: Keresés
@@ -633,8 +633,11 @@ label_generate_key: Kulcs generálása
 setting_mail_handler_api_enabled: Web Service engedélyezése a beérkezett levelekhez
 setting_mail_handler_api_key: API kulcs
 text_email_delivery_not_configured: "Az E-mail küldés nincs konfigurálva, és az értesítések ki vannak kapcsolva.\nÁllítsd be az SMTP szervert a config/email.yml fájlban és indítsd újra az alkalmazást, hogy érvénybe lépjen."
-field_parent_title: Parent page
-label_issue_watchers: Watchers
-setting_commit_logs_encoding: Commit messages encoding
-button_quote: Quote
-setting_sequential_project_identifiers: Generate sequential project identifiers
+field_parent_title: Szülő oldal
+label_issue_watchers: Megfigyelők
+setting_commit_logs_encoding: Commit üzenetek kódlapja
+button_quote: Idézet
+setting_sequential_project_identifiers: Szekvenciális projekt azonosítók generálása
+notice_unable_delete_version: A verziót nem lehet törölni
+label_renamed: átnevezve
+label_copied: lemásolva

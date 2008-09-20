@@ -352,7 +352,7 @@ label_sort_higher: Su
 label_sort_lower: Giù
 label_sort_lowest: Sposta in fondo
 label_roadmap: Roadmap
-label_roadmap_due_in: Da ultimare in 
+label_roadmap_due_in: Da ultimare in %s
 label_roadmap_overdue: %s late
 label_roadmap_no_issues: Nessuna segnalazione per questa versione
 label_search: Ricerca
@@ -637,3 +637,6 @@ label_issue_watchers: Watchers
 setting_commit_logs_encoding: Commit messages encoding
 button_quote: Quote
 setting_sequential_project_identifiers: Generate sequential project identifiers
+notice_unable_delete_version: Unable to delete version
+label_renamed: renamed
+label_copied: copied

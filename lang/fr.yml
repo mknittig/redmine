@@ -404,6 +404,8 @@ label_revision_plural: Révisions
 label_associated_revisions: Révisions associées
 label_added: ajouté
 label_modified: modifié
+label_copied: copié
+label_renamed: renommé
 label_deleted: supprimé
 label_latest_revision: Dernière révision
 label_latest_revision_plural: Dernières révisions
@@ -415,7 +417,7 @@ label_sort_higher: Remonter
 label_sort_lower: Descendre
 label_sort_lowest: Descendre en dernier
 label_roadmap: Roadmap
-label_roadmap_due_in: Echéance dans
+label_roadmap_due_in: Echéance dans %s
 label_roadmap_overdue: En retard de %s
 label_roadmap_no_issues: Aucune demande pour cette version
 label_search: Recherche
@@ -638,3 +640,4 @@ default_activity_development: Développement
 enumeration_issue_priorities: Priorités des demandes
 enumeration_doc_categories: Catégories des documents
 enumeration_activities: Activités (suivi du temps)
+notice_unable_delete_version: Unable to delete version
