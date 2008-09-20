@@ -1,4 +1,4 @@
-<% form_tag(modify_settings_path(:tab => 'authentication')) do %>
+<% form_tag(settings_path(:tab => 'authentication'), :method => :put) do %>
 
 <div class="box tabular settings">
 <p><label><%= l(:setting_login_required) %></label>

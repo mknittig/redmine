@@ -1,5 +1,5 @@
 <% if @deliveries %>
-<% form_tag(modify_settings_path(:tab => 'notifications')) do %>
+<% form_tag(settings_path(:tab => 'notifications'), :method => :put) do %>
 
 <div class="box tabular settings">
 <p><label><%= l(:setting_mail_from) %></label>

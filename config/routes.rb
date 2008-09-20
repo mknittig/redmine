@@ -19,9 +19,9 @@ ActionController::Routing::Routes.draw do |map|
     omap.repositories_revision 'repositories/revision/:id/:rev', :action => 'revision'
   end
   
-  map.connect 'attachments/:id', :controller => 'attachments', :action => 'show', :id => /\d+/
+  #map.connect 'attachments/:id', :controller => 'attachments', :action => 'show', :id => /\d+/
   map.connect 'attachments/:id/:filename', :controller => 'attachments', :action => 'show', :id => /\d+/, :filename => /.*/
-  map.connect 'attachments/:id/download/:filename', :controller => 'attachments', :action => 'download', :id => /\d+/, :filename => /.*/
+  map.connect 'attachments/download/:id/:filename', :controller => 'attachments', :action => 'download', :id => /\d+/, :filename => /.*/
 
   map.resources :projects, :collection => { :activity => :get, :add => :get }, :member => { :activity => :get, :roadmap => :get, :changelog => :get, :list_files => :get, :settings => :any, :modules => :any, :archive => :post, :archive => :post, :unarchive => :post, :add_file => :any, :add_version => :any, :add_issue_category => :any }, :shallow => true do |project|
     project.resources :issues, :new => { :preview => :post }, :member => { :preview => :post, :move => :any, :reply => :post, :quote => :post, :destroy_attachment => :post, :update_from => :post }, :collection => { :calendar => :get, :gantt => :get, :context_menu => :any, :changes => :get, :bulk_edit => :any, :move => :any }
@@ -68,7 +68,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :roles, :collection => { :report => :any, :workflow => :any, :move => :post }
   
-  map.resources :settings, :collection => { :modify => :post }, :member => { :plugin => :any }, :only => [:edit, :index]
+  map.resources :settings, :member => { :plugin => :any }, :only => [:edit, :index, :update]
   
   map.resources :trackers, :collection => { :list => :get, :move => :post }
 
@@ -88,7 +88,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :repositories, :member => { :browse => :get, :changes => :get, :revision => :get, :revisions => :get, :entry => :get, :annotate => :get, :diff => :get, :stats => :get, :graph => :get }, :except => :index
   
-  #map.resources :attachments, :member => { :download => :get }, :only => :show
+  map.resources :attachments, :member => { :download => :get }, :only => :show
 
   map.resources :auth_sources, :member => { :list => :get, :test_connection => :post }
 

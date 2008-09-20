@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 95) do
+ActiveRecord::Schema.define(:version => 97) do
 
   create_table "attachments", :force => true do |t|
     t.integer  "container_id",   :limit => 11, :default => 0,  :null => false

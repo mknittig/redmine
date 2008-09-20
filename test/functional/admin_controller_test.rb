@@ -53,7 +53,7 @@ class AdminControllerTest < Test::Unit::TestCase
   
   def test_test_email
     get :test_email
-    assert_redirected_to 'settings?tab=notifications'
+    assert_redirected_to 'settings/edit'
     mail = ActionMailer::Base.deliveries.last
     assert_kind_of TMail::Mail, mail
     user = User.find(1)
