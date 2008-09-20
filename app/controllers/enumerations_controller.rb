@@ -20,7 +20,11 @@ class EnumerationsController < ApplicationController
   
   def index
     list
-    render :action => 'list'
+    @enumerations = Enumeration.find(:all)
+    respond_to do |format|
+      format.html { render :action => 'list' }
+      format.xml { render :xml => @enumerations }
+    end
   end
 
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)

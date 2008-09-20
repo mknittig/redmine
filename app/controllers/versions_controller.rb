@@ -17,7 +17,14 @@
 
 class VersionsController < ApplicationController
   menu_item :roadmap
-  before_filter :find_project, :authorize
+  before_filter :find_project, :except => :index
+  before_filter :authorize
+
+  def index
+    @project = Project.find(params[:id], :include => :versions)
+    @versions = @project.versions.find(:all)
+    render :xml => @versions
+  end
 
   def show
   end

@@ -69,10 +69,12 @@ ActionController::Routing::Routes.draw do |map|
       issues_views.connect 'issues.:format', :action => 'index'
       issues_views.connect 'projects/:project_id/issues.:format', :action => 'index'
       issues_views.connect 'projects/:project_id/issues/new', :action => 'new'
+      issues_views.connect 'projects/:project_id/issues/new.:format', :action => 'new'
       issues_views.connect 'projects/:project_id/issues/:copy_from/copy', :action => 'new'
       issues_views.connect 'issues/:id', :action => 'show'
       issues_views.connect 'issues/:id.:format', :action => 'show'
       issues_views.connect 'issues/:id/edit', :action => 'edit'
+      issues_views.connect 'issues/:id/edit.:format', :action => 'edit'
       issues_views.connect 'issues/:id/quoted', :action => 'reply'
       issues_views.connect 'issues/:id/move', :action => 'move'
     end
@@ -178,9 +180,18 @@ ActionController::Routing::Routes.draw do |map|
     omap.connect 'repositories/revision/:id/:rev', :action => 'revision'
   end
    
+  # XML stuff
+  map.connect '/versions.:format', :controller => 'versions', :action => 'index', :conditions => {:method => :get} 
+  map.connect '/projects/:id/categories.:format', :controller => 'issues_categories', :action => 'index', :conditions => {:method => :get} 
+  map.connect '/users.:format', :controller => 'users', :action => 'index', :conditions => {:method => :get} 
+  map.connect '/enumerations.:format', :controller => 'enumerations', :action => 'index', :conditions => {:method => :get} 
+  map.connect '/projects/:id/members.:format', :controller => 'members', :action => 'index', :conditions => {:method => :get} 
+  map.connect '/projects/:id/trackers.:format', :controller => 'trackers', :action => 'index', :conditions => {:method => :get} 
+  map.connect '/projects/:id/statuses.:format', :controller => 'issues_statuses', :action => 'index', :conditions => {:method => :get} 
+  
   # Allow downloading Web Service WSDL as a file with an extension
   # instead of a file named 'wsdl'
-  map.connect ':controller/service.wsdl', :action => 'wsdl'
+  map.connect ':controller/service.wsdl', :action => 'wadl'
  
   # Install the default route as the lowest priority.
   map.connect ':controller/:action/:id'

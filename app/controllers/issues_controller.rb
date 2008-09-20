@@ -55,6 +55,7 @@ class IssuesController < ApplicationController
         format.atom { }
         format.csv  { limit = Setting.issues_export_limit.to_i }
         format.pdf  { limit = Setting.issues_export_limit.to_i }
+        format.xml  { }
       end
       @issue_count = Issue.count(:include => [:status, :project], :conditions => @query.statement)
       @issue_pages = Paginator.new self, @issue_count, limit, params['page']
@@ -68,6 +69,7 @@ class IssuesController < ApplicationController
         format.atom { render_feed(@issues, :title => "#{@project || Setting.app_title}: #{l(:label_issue_plural)}") }
         format.csv  { send_data(issues_to_csv(@issues, @project).read, :type => 'text/csv; header=present', :filename => 'export.csv') }
         format.pdf  { send_data(render(:template => 'issues/index.rfpdf', :layout => false), :type => 'application/pdf', :filename => 'export.pdf') }
+        format.xml  { render :xml => @issues }
       end
     else
       # Send html if the query is not valid
@@ -105,6 +107,7 @@ class IssuesController < ApplicationController
       format.html { render :template => 'issues/show.rhtml' }
       format.atom { render :action => 'changes', :layout => false, :content_type => 'application/atom+xml' }
       format.pdf  { send_data(render(:template => 'issues/show.rfpdf', :layout => false), :type => 'application/pdf', :filename => "#{@project.identifier}-#{@issue.id}.pdf") }
+      format.xml  { render :xml => @issue.to_xml(:include => [:journals])  }
     end
   end
 

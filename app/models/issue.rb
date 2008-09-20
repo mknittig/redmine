@@ -260,4 +260,12 @@ class Issue < ActiveRecord::Base
   def to_s
     "#{tracker} ##{id}: #{subject}"
   end
+  
+  alias_method :ar_to_xml, :to_xml
+  def to_xml(options = {})
+    # protect attributes registered with attr_protected
+    default_except = self.class.protected_attributes()
+    options[:except] = (options[:except] ? options[:except] + default_except : default_except)   
+    ar_to_xml(options)
+  end
 end

@@ -17,9 +17,16 @@
 
 class IssueCategoriesController < ApplicationController
   menu_item :settings
-  before_filter :find_project, :authorize
+  before_filter :find_project, :except => :index
+  before_filter :authorize
   
   verify :method => :post, :only => :destroy
+
+  def index
+    @project = Project.find(params[:id], :include => :issue_categories)
+    @categories = @project.issue_categories
+    render :xml => @categories
+  end
 
   def edit
     if request.post? and @category.update_attributes(params[:category])

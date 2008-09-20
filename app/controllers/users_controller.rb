@@ -25,7 +25,10 @@ class UsersController < ApplicationController
 
   def index
     list
-    render :action => 'list' unless request.xhr?
+    respond_to do |format|
+      format.html { render :action => 'list' unless request.xhr? }
+      format.xml { render :xml => User.find(:all) }
+    end
   end
 
   def list
