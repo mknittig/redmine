@@ -359,7 +359,7 @@ label_sort_higher: 위로
 label_sort_lower: 아래로
 label_sort_lowest: 최하단으로
 label_roadmap: 로드맵
-label_roadmap_due_in: 기한 
+label_roadmap_due_in: 기한  %s
 label_roadmap_overdue: %s 지연
 label_roadmap_no_issues: 이버전에 해당하는 이슈 없음
 label_search: 검색
@@ -637,3 +637,6 @@ label_issue_watchers: Watchers
 setting_commit_logs_encoding: Commit messages encoding
 button_quote: Quote
 setting_sequential_project_identifiers: Generate sequential project identifiers
+notice_unable_delete_version: Unable to delete version
+label_renamed: renamed
+label_copied: copied

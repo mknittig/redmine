@@ -373,7 +373,7 @@ label_sort_higher: Siirrä ylös
 label_sort_lower: Siirrä alas
 label_sort_lowest: Siirrä alimmaiseksi
 label_roadmap: Roadmap
-label_roadmap_due_in: Määräaika
+label_roadmap_due_in: Määräaika %s
 label_roadmap_overdue: %s myöhässä
 label_roadmap_no_issues: Ei tapahtumia tälle versiolle
 label_search: Haku
@@ -627,13 +627,16 @@ label_duplicated_by: kopioinut
 setting_enabled_scm: Versionhallinta käytettävissä
 text_enumeration_category_reassign_to: 'Siirrä täksi arvoksi:'
 text_enumeration_destroy_question: '%d kohdetta on sijoitettu tälle arvolle.'
-label_incoming_emails: Incoming emails
-label_generate_key: Generate a key
-setting_mail_handler_api_enabled: Enable WS for incoming emails
-setting_mail_handler_api_key: API key
-text_email_delivery_not_configured: "Email delivery is not configured, and notifications are disabled.\nConfigure your SMTP server in config/email.yml and restart the application to enable them."
-field_parent_title: Parent page
-label_issue_watchers: Watchers
-setting_commit_logs_encoding: Commit messages encoding
+label_incoming_emails: Saapuvat sähköpostiviestit
+label_generate_key: Luo avain
+setting_mail_handler_api_enabled: Ota käyttöön WS saapuville sähköposteille
+setting_mail_handler_api_key: API avain
+text_email_delivery_not_configured: "Sähköpostin jakelu ei ole määritelty ja sähköpostimuistutukset eivät ole käytössä.\nKonfiguroi sähköpostipalvelinasetukset (SMTP) config/email.yml tiedostosta ja uudelleenkäynnistä sovellus jotta asetukset astuvat voimaan."
+field_parent_title: Aloitussivu
+label_issue_watchers: Tapahtuman seuraajat
 button_quote: Quote
 setting_sequential_project_identifiers: Generate sequential project identifiers
+setting_commit_logs_encoding: Commit messages encoding
+notice_unable_delete_version: Unable to delete version
+label_renamed: renamed
+label_copied: copied

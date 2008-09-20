@@ -77,6 +77,7 @@ notice_failed_to_save_issues: " %d 個項目儲存失敗 (總共選取 %d 個項
 notice_no_issue_selected: "未選擇任何項目！請勾選您想要編輯的項目。"
 notice_account_pending: "您的帳號已經建立，正在等待管理員的審核。"
 notice_default_data_loaded: 預設組態已載入成功。
+notice_unable_delete_version: 無法刪除版本。
 
 error_can_t_load_default_data: "無法載入預設組態： %s"
 error_scm_not_found: SCM 儲存庫中找不到這個專案或版本。
@@ -182,6 +183,7 @@ field_time_zone: 時區
 field_searchable: 可用做搜尋條件
 field_default_value: 預設值
 field_comments_sorting: 註解排序
+field_parent_title: 父頁面
 
 setting_app_title: 標題
 setting_app_subtitle: 副標題
@@ -200,14 +202,15 @@ setting_feeds_limit: RSS 新聞限制
 setting_autofetch_changesets: 自動取得送交版次
 setting_default_projects_public: 新建立之專案預設為「公開」
 setting_sys_api_enabled: 啟用管理版本庫之網頁服務 (Web Service)
-setting_commit_ref_keywords: 用於參照項目之關鍵字
-setting_commit_fix_keywords: 用於修正項目之關鍵字
+setting_commit_ref_keywords: 送交用於參照項目之關鍵字
+setting_commit_fix_keywords: 送交用於修正項目之關鍵字
 setting_autologin: 自動登入
 setting_date_format: 日期格式
 setting_time_format: 時間格式
 setting_cross_project_issue_relations: 允許關聯至其它專案的項目
 setting_issue_list_default_columns: 預設顯示於項目清單的欄位
 setting_repositories_encodings: 版本庫編碼
+setting_commit_logs_encoding: 送交訊息編碼
 setting_emails_footer: 電子郵件附帶說明
 setting_protocol: 協定
 setting_per_page_options: 每頁顯示個數選項
@@ -217,6 +220,7 @@ setting_display_subprojects_issues: 預設於父專案中顯示子專案的項�
 setting_enabled_scm: 啟用的 SCM
 setting_mail_handler_api_enabled: 啟用處理傳入電子郵件的服務
 setting_mail_handler_api_key: API 金鑰
+setting_sequential_project_identifiers: 循序產生專案識別碼
 
 project_module_issue_tracking: 項目追蹤
 project_module_time_tracking: 工時追蹤
@@ -401,6 +405,8 @@ label_revision_plural: 版次清單
 label_associated_revisions: 相關版次
 label_added: 已新增
 label_modified: 已修改
+label_copied: 已複製
+label_renamed: 已重新命名
 label_deleted: 已刪除
 label_latest_revision: 最新版次
 label_latest_revision_plural: 最近版次清單
@@ -412,7 +418,7 @@ label_sort_higher: 往上移動
 label_sort_lower: 往下移動
 label_sort_lowest: 移動至結尾
 label_roadmap: 版本藍圖
-label_roadmap_due_in: 倒數天數： 
+label_roadmap_due_in: 倒數天數 %s
 label_roadmap_overdue: %s 逾期
 label_roadmap_no_issues: 此版本尚未包含任何項目
 label_search: 搜尋
@@ -520,6 +526,7 @@ label_reverse_chronological_order: 以時間由近至遠排序
 label_planning: 計劃表
 label_incoming_emails: 傳入的電子郵件
 label_generate_key: 產生金鑰
+label_issue_watchers: 觀察者
 
 button_login: 登入
 button_submit: 送出
@@ -558,6 +565,7 @@ button_copy: 複製
 button_annotate: 加注
 button_update: 更新
 button_configure: 設定
+button_quote: 引用
 
 status_active: 活動中
 status_registered: 註冊完成
@@ -633,8 +641,3 @@ default_activity_development: 開發
 enumeration_issue_priorities: 項目優先權
 enumeration_doc_categories: 文件分類
 enumeration_activities: 活動 (時間追蹤)
-field_parent_title: Parent page
-label_issue_watchers: Watchers
-setting_commit_logs_encoding: Commit messages encoding
-button_quote: Quote
-setting_sequential_project_identifiers: Generate sequential project identifiers
