@@ -19,15 +19,15 @@
 	<td><%= member.name %></td>
     <td align="center">
     <% if authorize_for('members', 'edit') %>
-      <% remote_form_for(:member, member, :url => {:controller => 'members', :action => 'edit', :id => member}, :method => :post) do |f| %>
+      <% remote_form_for(:member, member, :url => member_path(member), :method => :put) do |f| %>
         <%= f.select :role_id, roles.collect{|role| [role.name, role.id]}, {}, :class => "small" %>
         <%= submit_tag l(:button_change), :class => "small" %>
       <% end %>
     <% end %>
     </td>
     <td align="center">
-      <%= link_to_remote l(:button_delete), { :url => {:controller => 'members', :action => 'destroy', :id => member},                                              
-                                              :method => :post
+      <%= link_to_remote l(:button_delete), { :url => member_path(member),                                              
+                                              :method => :delete
                                             }, :title => l(:button_delete),
                                                :class => 'icon icon-del' %>
     </td>
@@ -41,7 +41,7 @@
 <% end %>
 
 <% if authorize_for('members', 'new') && !users.empty? %>
-  <% remote_form_for(:member, @member, :url => {:controller => 'members', :action => 'new', :id => @project}, :method => :post) do |f| %>
+  <% remote_form_for(@member) do |f| %>
     <p><label for="member_user_id"><%=l(:label_member_new)%></label><br />
     <%= f.select :user_id, users.collect{|user| [user.name, user.id]} %>
     <%= l(:label_role) %>: <%= f.select :role_id, roles.collect{|role| [role.name, role.id]}, :selected => nil %>

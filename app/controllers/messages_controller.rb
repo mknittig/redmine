@@ -69,14 +69,14 @@ class MessagesController < ApplicationController
 
   # Edit a message
   def edit
+  end
+  
+  def update
     if params[:message] && User.current.allowed_to?(:edit_messages, @project)
       @message.locked = params[:message]['locked']
       @message.sticky = params[:message]['sticky']
     end
-  end
-  
-  def update
-    edit
+    
     if @message.update_attributes(params[:message])
       attach_files(@message, params[:attachments])
       flash[:notice] = l(:notice_successful_update)
