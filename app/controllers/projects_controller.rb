@@ -25,7 +25,7 @@ class ProjectsController < ApplicationController
   
   before_filter :find_project, :except => [:index, :list, :add, :create, :activity ]
   before_filter :find_optional_project, :only => :activity
-  before_filter :authorize, :except => [ :index, :list, :add, :create, :archive, :unarchive, :destroy_project, :destroy, :activity ]
+  before_filter :authorize, :except => [ :index, :list, :add, :create, :archive, :unarchive, :destroy, :activity ]
   before_filter :require_admin, :only => [ :add, :create, :update, :archive, :unarchive, :destroy_project, :destroy ]
   accept_key_auth :activity
   
@@ -153,19 +153,10 @@ class ProjectsController < ApplicationController
   end
   
   # Delete @project
-  def destroy_project
-    @project_to_destroy = @project
-
-    # hide project in layout
-    @project = nil
-    
-    render :action => 'destroy'
-  end
-  
   def destroy
     @project_to_destroy = @project
     
-    if params[:confirm]
+    if request.delete? && params[:confirm]
       @project_to_destroy.destroy
       redirect_to :controller => 'admin', :action => 'projects'
     end
