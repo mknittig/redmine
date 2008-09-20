@@ -17,11 +17,12 @@
 
 class IssueRelationsController < ApplicationController
   before_filter :find_project, :authorize
-  
-  def new
+   
+  def create
     @relation = IssueRelation.new(params[:relation])
     @relation.issue_from = @issue
-
+    @relation.save
+    
     respond_to do |format|
       format.html { redirect_to :controller => 'issues', :action => 'show', :id => @issue }
       format.js do
@@ -36,18 +37,13 @@ class IssueRelationsController < ApplicationController
     end
   end
   
-  def create
-    @relation = IssueRelation.new(params[:relation])
-    @relation.issue_from = @issue
-    @relation.save
-  end
-  
   def destroy
     relation = IssueRelation.find(params[:id])
-    if request.post? && @issue.relations.include?(relation)
+    if @issue.relations.include?(relation)
       relation.destroy
       @issue.reload
     end
+    
     respond_to do |format|
       format.html { redirect_to :controller => 'issues', :action => 'show', :id => @issue }
       format.js { render(:update) {|page| page.replace_html "relations", :partial => 'issues/relations'} }
