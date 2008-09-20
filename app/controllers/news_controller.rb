@@ -16,8 +16,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class NewsController < ApplicationController
-  before_filter :find_news, :except => [:new, :index, :preview]
-  before_filter :find_project, :only => [:new, :preview]
+  before_filter :find_news, :except => [:new, :create, :index, :preview]
+  before_filter :find_project, :only => [:new, :create, :preview]
   before_filter :authorize, :except => [:index, :preview]
   before_filter :find_optional_project, :only => :index
   accept_key_auth :index
@@ -50,6 +50,8 @@ class NewsController < ApplicationController
       flash[:notice] = l(:notice_successful_create)
       Mailer.deliver_news_added(@news) if Setting.notified_events.include?('news_added')
       redirect_to :controller => 'news', :action => 'index', :project_id => @project
+    else
+      render :action => 'new'
     end
   end
   

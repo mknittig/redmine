@@ -160,12 +160,14 @@ module ApplicationHelper
     html << link_to_remote(('&#171; ' + l(:label_previous)), 
                             {:update => 'content',
                              :url => url_param.merge(page_param => paginator.current.previous),
+                             :method => :get,
                              :complete => 'window.scrollTo(0,0)'},
                             {:href => url_for(:params => url_param.merge(page_param => paginator.current.previous))}) + ' ' if paginator.current.previous
                             
     html << (pagination_links_each(paginator, options) do |n|
       link_to_remote(n.to_s, 
                       {:url => {:params => url_param.merge(page_param => n)},
+                       :method => :get,
                        :update => 'content',
                        :complete => 'window.scrollTo(0,0)'},
                       {:href => url_for(:params => url_param.merge(page_param => n))})
@@ -174,6 +176,7 @@ module ApplicationHelper
     html << ' ' + link_to_remote((l(:label_next) + ' &#187;'), 
                                  {:update => 'content',
                                   :url => url_param.merge(page_param => paginator.current.next),
+                                  :method => :get,
                                   :complete => 'window.scrollTo(0,0)'},
                                  {:href => url_for(:params => url_param.merge(page_param => paginator.current.next))}) if paginator.current.next
     
@@ -189,7 +192,7 @@ module ApplicationHelper
     url_param.clear if url_param.has_key?(:set_filter)
     
     links = Setting.per_page_options_array.collect do |n|
-      n == selected ? n : link_to_remote(n, {:update => "content", :url => params.dup.merge(:per_page => n)}, 
+      n == selected ? n : link_to_remote(n, {:update => "content", :url => params.dup.merge(:per_page => n), :method => :get}, 
                                             {:href => url_for(url_param.merge(:per_page => n))})
     end
     links.size > 1 ? l(:label_display_per_page, links.join(', ')) : nil

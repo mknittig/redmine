@@ -59,6 +59,8 @@ class BoardsController < ApplicationController
    if @board.save
       flash[:notice] = l(:notice_successful_create)
       redirect_to :controller => 'projects', :action => 'settings', :id => @project, :tab => 'boards'
+    else
+      render :action => 'new'
     end
   end
 
@@ -74,6 +76,8 @@ class BoardsController < ApplicationController
       when 'lowest'; @board.move_to_bottom
       end if params[:position]
       redirect_to :controller => 'projects', :action => 'settings', :id => @project, :tab => 'boards'
+    else
+      render :action => 'edit'
     end
   end
 

@@ -52,6 +52,8 @@ class CustomFieldsController < ApplicationController
     if @custom_field.save
       flash[:notice] = l(:notice_successful_create)
       redirect_to :action => 'list', :tab => @custom_field.class.name
+    else
+      render :action => 'new'
     end
   end
 
@@ -68,6 +70,8 @@ class CustomFieldsController < ApplicationController
       end
       flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'list', :tab => @custom_field.class.name
+    else
+      render :action => 'edit'
     end
   end
 

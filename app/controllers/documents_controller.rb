@@ -54,6 +54,8 @@ class DocumentsController < ApplicationController
       flash[:notice] = l(:notice_successful_create)
       Mailer.deliver_document_added(@document) if Setting.notified_events.include?('document_added')
       redirect_to :action => 'index', :project_id => @project
+    else
+      render :action => 'new'
     end
   end
   
@@ -66,6 +68,8 @@ class DocumentsController < ApplicationController
     if @document.update_attributes(params[:document])
       flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'show', :id => @document
+    else
+      render :action => 'edit'
     end
   end
 

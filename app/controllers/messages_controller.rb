@@ -52,6 +52,8 @@ class MessagesController < ApplicationController
     if @message.save
       attach_files(@message, params[:attachments])
       redirect_to :action => 'show', :id => @message
+    else
+      render :action => 'new'
     end
   end
 
@@ -81,6 +83,8 @@ class MessagesController < ApplicationController
       attach_files(@message, params[:attachments])
       flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'show', :id => @topic
+    else
+      render :action => 'edit'
     end
   end
   

@@ -63,7 +63,7 @@ class RolesController < ApplicationController
       flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'index'
     else
-      render :action => :edit
+      render :action => 'edit'
     end
   end
 

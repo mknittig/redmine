@@ -45,6 +45,8 @@ class TrackersController < ApplicationController
       end
       flash[:notice] = l(:notice_successful_create)
       redirect_to :controller => 'trackers', :action => :index
+    else
+      render :action => 'new'
     end
   end
   

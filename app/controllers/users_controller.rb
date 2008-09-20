@@ -62,6 +62,8 @@ class UsersController < ApplicationController
       Mailer.deliver_account_information(@user, params[:password]) if params[:send_information]
       flash[:notice] = l(:notice_successful_create)
       redirect_to :action => 'list'
+    else
+      render :action => 'add'
     end
   end
 
@@ -83,6 +85,8 @@ class UsersController < ApplicationController
       flash[:notice] = l(:notice_successful_update)
       # Give a string to redirect_to otherwise it would use status param as the response code
       redirect_to(url_for(:action => 'list', :status => params[:status], :page => params[:page]))
+    else
+      render :action => 'edit'
     end 
   end
   

@@ -40,6 +40,8 @@ class QueriesController < ApplicationController
       flash[:notice] = l(:notice_successful_create)
       redirect_to :controller => 'issues', :action => 'index', :project_id => @project, :query_id => @query
       return
+    else
+      render :action => 'new'
     end
   end
   
@@ -59,6 +61,8 @@ class QueriesController < ApplicationController
     if @query.save
       flash[:notice] = l(:notice_successful_update)
       redirect_to :controller => 'issues', :action => 'index', :project_id => @project, :query_id => @query
+    else
+      render :action => 'edit'
     end
   end
 

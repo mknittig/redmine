@@ -46,6 +46,8 @@ class RepositoriesController < ApplicationController
     if @repository
       @repository.attributes = params[:repository]
       @repository.save
+    else
+      render :action => 'edit'
     end
   end
   

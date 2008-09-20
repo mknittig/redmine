@@ -43,6 +43,8 @@ class SettingsController < ApplicationController
       flash[:notice] = l(:notice_successful_update)
       redirect_to :action => 'edit', :tab => params[:tab]
       return
+    else
+      render :action => 'edit'
     end
   end
   

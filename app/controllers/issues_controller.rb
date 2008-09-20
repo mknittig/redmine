@@ -151,6 +151,8 @@ class IssuesController < ApplicationController
       Mailer.deliver_issue_add(@issue) if Setting.notified_events.include?('issue_added')
       redirect_to :controller => 'issues', :action => 'show', :id => @issue
       return
+    else
+      render :action => 'new'
     end   
   end
   
@@ -165,7 +167,7 @@ class IssuesController < ApplicationController
     @time_entry = TimeEntry.new
     
     @notes = params[:notes]
-    journal = @issue.init_journal(User.current, @notes)
+    @journal = @issue.init_journal(User.current, @notes)
     # User can change issue attributes only if he has :edit permission or if a workflow transition is allowed
     if (@edit_allowed || !@allowed_statuses.empty?) && params[:issue]
       attrs = params[:issue].dup
@@ -180,18 +182,20 @@ class IssuesController < ApplicationController
     @time_entry = TimeEntry.new(:project => @project, :issue => @issue, :user => User.current, :spent_on => Date.today)
     @time_entry.attributes = params[:time_entry]
     attachments = attach_files(@issue, params[:attachments])
-    attachments.each {|a| journal.details << JournalDetail.new(:property => 'attachment', :prop_key => a.id, :value => a.filename)}
+    attachments.each {|a| @journal.details << JournalDetail.new(:property => 'attachment', :prop_key => a.id, :value => a.filename)}
     if (@time_entry.hours.nil? || @time_entry.valid?) && @issue.save
       # Log spend time
       if current_role.allowed_to?(:log_time)
         @time_entry.save
       end
-      if !journal.new_record?
+      if !@journal.new_record?
         # Only send notification if something was actually changed
         flash[:notice] = l(:notice_successful_update)
-        Mailer.deliver_issue_edit(journal) if Setting.notified_events.include?('issue_updated')
+        Mailer.deliver_issue_edit(@journal) if Setting.notified_events.include?('issue_updated')
       end
       redirect_to(params[:back_to] || {:action => 'show', :id => @issue})
+    else
+      render :action => 'edit'
     end
   rescue ActiveRecord::StaleObjectError
     # Optimistic locking exception

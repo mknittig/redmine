@@ -200,6 +200,8 @@ class TimelogController < ApplicationController
       flash[:notice] = l(:notice_successful_update)
       redirect_to(params[:back_url].blank? ? {:action => 'details', :project_id => @time_entry.project} : params[:back_url])
       return
+    else
+      render :action => 'edit'
     end    
   end
   

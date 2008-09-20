@@ -26,7 +26,7 @@ class JournalsController < ApplicationController
     @journal.destroy if @journal.details.empty? && @journal.notes.blank?
     respond_to do |format|
       format.html { redirect_to :controller => 'issues', :action => 'show', :id => @journal.journalized_id }
-      format.js { render :action => 'update' }
+      format.js { render(:update) }
     end
   end
   

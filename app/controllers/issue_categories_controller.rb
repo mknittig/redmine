@@ -28,6 +28,8 @@ class IssueCategoriesController < ApplicationController
     if @category.update_attributes(params[:category])
       flash[:notice] = l(:notice_successful_update)
       redirect_to :controller => 'projects', :action => 'settings', :tab => 'categories', :id => @project
+    else
+      render :action => 'edit'
     end
   end
 
