@@ -1,5 +1,5 @@
 <% labelled_tabular_form_for :issue, @issue,
-                             :url => issue_path(@issue),
+                             :url => project_issue_path(@project, @issue),
                              :html => {:id => 'issue-form',
                                        :class => nil,
                                        :multipart => true,

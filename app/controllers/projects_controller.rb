@@ -23,10 +23,10 @@ class ProjectsController < ApplicationController
   menu_item :settings, :only => :settings
   menu_item :issues, :only => [:changelog]
   
-  before_filter :find_project, :except => [ :index, :list, :add, :create, :activity ]
+  before_filter :find_project, :except => [:index, :list, :add, :create, :activity ]
   before_filter :find_optional_project, :only => :activity
-  before_filter :authorize, :except => [ :index, :list, :add, :create, :archive, :unarchive, :destroy, :activity ]
-  before_filter :require_admin, :only => [ :add, :create, :update, :archive, :unarchive, :destroy ]
+  before_filter :authorize, :except => [ :index, :list, :add, :create, :archive, :unarchive, :destroy_project, :destroy, :activity ]
+  before_filter :require_admin, :only => [ :add, :create, :update, :archive, :unarchive, :destroy_project, :destroy ]
   accept_key_auth :activity
   
   helper :sort
@@ -76,11 +76,14 @@ class ProjectsController < ApplicationController
   end
   
   def create
+    add
     @project.enabled_module_names = params[:enabled_modules]
     if @project.save
       flash[:notice] = l(:notice_successful_create)
       redirect_to :controller => 'admin', :action => 'projects'
-    end   
+    else
+      render :action => 'add'
+    end
   end
 	
   # Show @project
@@ -150,12 +153,23 @@ class ProjectsController < ApplicationController
   end
   
   # Delete @project
+  def destroy_project
+    @project_to_destroy = @project
+
+    # hide project in layout
+    @project = nil
+    
+    render :action => 'destroy'
+  end
+  
   def destroy
     @project_to_destroy = @project
-    if request.post? and params[:confirm]
+    
+    if params[:confirm]
       @project_to_destroy.destroy
       redirect_to :controller => 'admin', :action => 'projects'
     end
+    
     # hide project in layout
     @project = nil
   end

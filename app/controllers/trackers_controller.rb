@@ -44,7 +44,7 @@ class TrackersController < ApplicationController
         @tracker.workflows.copy(copy_from)
       end
       flash[:notice] = l(:notice_successful_create)
-      redirect_to(trackers_url)
+      redirect_to :controller => 'trackers', :action => :index
     end
   end
   
@@ -56,7 +56,7 @@ class TrackersController < ApplicationController
     edit
     if @tracker.update_attributes(params[:tracker])
       flash[:notice] = l(:notice_successful_update)
-      redirect_to(trackers_url)
+      redirect_to :controller => 'trackers', :action => :index
     else
       render :action => 'edit'
     end
@@ -74,7 +74,7 @@ class TrackersController < ApplicationController
     when 'lowest'
       @tracker.move_to_bottom
     end if params[:position]
-    redirect_to(trackers_url)
+    redirect_to :controller => 'trackers', :action => :index
   end
   
   def destroy
@@ -84,6 +84,6 @@ class TrackersController < ApplicationController
     else
       @tracker.destroy
     end
-    redirect_to(trackers_url)
+    redirect_to :controller => 'trackers', :action => :index
   end  
 end

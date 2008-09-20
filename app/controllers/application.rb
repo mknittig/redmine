@@ -103,6 +103,7 @@ class ApplicationController < ActionController::Base
   # Authorize the user for the requested action
   def authorize(ctrl = params[:controller], action = params[:action])
     allowed = User.current.allowed_to?({:controller => ctrl, :action => action}, @project)
+    puts User.current, params[:controller], params[:action], allowed
     allowed ? true : deny_access
   end
   

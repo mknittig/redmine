@@ -1,5 +1,5 @@
 <div class="contextual">
-<%= link_to_if_authorized l(:button_edit), {:controller => 'versions', :action => 'edit', :id => @version}, :class => 'icon icon-edit' %>
+<%= link_to_if_authorized l(:button_edit), {:controller => 'versions', :action => 'edit', :project_id => @project, :id => @version}, :class => 'icon icon-edit' %>
 </div>
 
 <h2><%= h(@version.name) %></h2>
