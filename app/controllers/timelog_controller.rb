@@ -20,7 +20,7 @@ class TimelogController < ApplicationController
   before_filter :find_project, :authorize, :only => [:edit, :update, :destroy]
   before_filter :find_optional_project, :only => [:report, :details]
 
-  verify :method => :post, :only => :destroy, :redirect_to => { :action => :details }
+  #verify :method => :post, :only => :destroy, :redirect_to => { :action => :details }
   
   helper :sort
   include SortHelper

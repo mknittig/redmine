@@ -28,7 +28,7 @@ ActionController::Routing::Routes.draw do |map|
     project.resources :news, :new => { :preview => :post }, :member => { :preview => :post, :add_comment => :post, :destroy_comment => :post }
     project.resources :documents
     project.resources :boards
-    project.resources :timelog, :collection => { :details => :get, :report => :get }, :only => [:edit, :update, :destroy]
+    project.resources :timelog, :collection => { :details => :get, :report => :any }, :only => [:edit, :update, :destroy]
     project.resources :reports, :collection => { :issue_report => :get }
     project.resources :members
     project.resources :queries

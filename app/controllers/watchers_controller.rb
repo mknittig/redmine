@@ -18,11 +18,11 @@
 class WatchersController < ApplicationController
   before_filter :find_project
   before_filter :require_login, :check_project_privacy, :only => [:watch, :unwatch]
-  before_filter :authorize, :only => :new
+  before_filter :authorize, :only => [:new, :create]
   
-  verify :method => :post,
-         :only => [ :watch, :unwatch ],
-         :render => { :nothing => true, :status => :method_not_allowed }
+  #verify :method => :post,
+  #       :only => [ :watch, :unwatch ],
+  #       :render => { :nothing => true, :status => :method_not_allowed }
   
   def watch
     set_watcher(User.current, true)
@@ -35,7 +35,8 @@ class WatchersController < ApplicationController
   def new
     @watcher = Watcher.new(params[:watcher])
     @watcher.watchable = @watched
-
+    @watcher.save if request.post?
+    
     respond_to do |format|
       format.html { redirect_to :back }
       format.js do
@@ -49,9 +50,7 @@ class WatchersController < ApplicationController
   end
   
   def create
-    @watcher = Watcher.new(params[:watcher])
-    @watcher.watchable = @watched
-    @watcher.save
+    new
   end
   
 private
