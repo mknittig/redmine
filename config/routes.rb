@@ -21,6 +21,7 @@ ActionController::Routing::Routes.draw do |map|
   
   #map.connect 'attachments/:id', :controller => 'attachments', :action => 'show', :id => /\d+/
   map.connect 'attachments/:id/:filename', :controller => 'attachments', :action => 'show', :id => /\d+/, :filename => /.*/
+  map.connect 'attachments/download/:id', :controller => 'attachments', :action => 'download', :id => /\d+/
   map.connect 'attachments/download/:id/:filename', :controller => 'attachments', :action => 'download', :id => /\d+/, :filename => /.*/
 
   map.resources :projects, :collection => { :activity => :get, :add => :get }, :member => { :activity => :get, :roadmap => :get, :changelog => :get, :destroy => :get, :list_files => :get, :settings => :any, :modules => :any, :archive => :post, :archive => :post, :unarchive => :post, :add_file => :any, :add_version => :any, :add_issue_category => :any }, :shallow => true do |project|
