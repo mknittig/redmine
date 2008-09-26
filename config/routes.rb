@@ -40,7 +40,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :versions, :member => { :destroy_attachment => :post }, :collection => { :status_by => :get }, :except => [:create, :index]
   
-  map.resources :timelog, :collection => { :details => :get, :report => :get }, :only => [:edit, :update, :destroy]
+  map.resources :timelog, :collection => { :details => :get, :report => :get }
   
   map.resources :documents, :member => { :add_attachment => :post, :destroy_attachment => :post}
   
