@@ -33,6 +33,7 @@ ActionController::Routing::Routes.draw do |map|
     project.resources :reports, :collection => { :issue_report => :get }
     project.resources :members
     project.resources :queries
+    project.resources :wikis
   end
   
   map.resources :documents do |document|
