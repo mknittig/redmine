@@ -17,8 +17,8 @@
 
 class TimelogController < ApplicationController
   menu_item :issues
-  before_filter :find_project, :authorize, :only => [:new, :create, :edit, :update, :destroy]
-  before_filter :find_optional_project, :only => [:report, :details]
+  before_filter :find_project, :authorize, :only => [:edit, :update, :destroy]
+  before_filter :find_optional_project, :only => [:new, :create, :report, :details]
 
   #verify :method => :post, :only => :destroy, :redirect_to => { :action => :details }
   
@@ -189,34 +189,31 @@ class TimelogController < ApplicationController
   end
   
   def new
+    edit
+  end
+  
+  def create
+    update
+  end
+  
+  def edit
     render_403 and return if @time_entry && !@time_entry.editable_by?(User.current)
     @time_entry ||= TimeEntry.new(:project => @project, :issue => @issue, :user => User.current, :spent_on => Date.today)
     @time_entry.attributes = params[:time_entry]
   end
   
-  def create
-    new
-    if @time_entry.save
-      flash[:notice] = l(:notice_successful_update)
-      redirect_back_or_default :action => 'details', :project_id => @time_entry.project
-      return
-    else
-      render :action => 'new'
-    end
-  end
-  
-  def edit
-    new
-  end
-  
   def update
-    new
+    edit
     if @time_entry.save
       flash[:notice] = l(:notice_successful_update)
       redirect_to(params[:back_url].blank? ? {:action => 'details', :project_id => @time_entry.project} : params[:back_url])
       return
     else
-      render :action => 'edit'
+      if request.post?
+        render :action => 'new'
+      else
+        render :action => 'edit'
+      end
     end
   end
   

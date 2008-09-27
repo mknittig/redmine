@@ -78,7 +78,7 @@
 	<li><%= context_menu_link l(:button_copy), new_project_issue_path(@project, :project_id => @project, :copy_from => @issue),
 	        :class => 'icon-copy', :disabled => !@can[:copy] %></li>
 	<% if @can[:log_time] -%>
-	<li><%= context_menu_link l(:button_log_time), edit_project_timelog_path(@project, :issue_id => @issue),
+	<li><%= context_menu_link l(:button_log_time), {:controller => 'timelog', :action => 'new', :issue_id => @issue},
 	        :class => 'icon-time' %></li>
 	<% end %>
 <% end %>
