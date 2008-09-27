@@ -46,7 +46,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :documents, :member => { :add_attachment => :post, :destroy_attachment => :post}
   
-  map.resources :issues, :new => { :preview => :post }, :member => { :preview => :post, :move => :any, :reply => :post, :quote => :post, :destroy_attachment => :post, :update_from => :post }, :collection => { :calendar => :get, :gantt => :get, :context_menu => :any, :changes => :get, :bulk_edit => :any }
+  map.resources :issues, :new => { :preview => :post }, :member => { :preview => :post, :move => :any, :reply => :post, :quote => :post, :destroy_attachment => :post, :update_from => :post }, :collection => { :calendar => :get, :gantt => :get, :context_menu => :any, :changes => :get, :bulk_edit => :any, :move => :any }
   
   map.resources :journals, :only => :update
   
