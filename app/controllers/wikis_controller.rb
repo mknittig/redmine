@@ -23,19 +23,18 @@ class WikisController < ApplicationController
   def edit
     @wiki = @project.wiki || Wiki.new(:project => @project)
     @wiki.attributes = params[:wiki]
+    @wiki.save if request.put?
 
     render(:update) {|page| page.replace_html "tab-content-wiki", :partial => 'projects/settings/wiki'}
   end
   
   def update
-    @wiki = @project.wiki || Wiki.new(:project => @project)
-    @wiki.attributes = params[:wiki]
-    @wiki.save
+    edit
   end
 
   # Delete a project's wiki
   def destroy
-    if request.post? && params[:confirm] && @project.wiki
+    if params[:confirm] && @project.wiki
       @project.wiki.destroy
       redirect_to :controller => 'projects', :action => 'settings', :id => @project, :tab => 'wiki'
     end    
