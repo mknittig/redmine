@@ -40,7 +40,7 @@ class RolesControllerTest < Test::Unit::TestCase
     assert_not_nil assigns(:roles)
     assert_equal Role.find(:all, :order => 'builtin, position'), assigns(:roles)
 
-    assert_tag :tag => 'a', :attributes => { :href => '/roles/edit/1' },
+    assert_tag :tag => 'a', :attributes => { :href => '/roles/1/edit' },
                             :content => 'Manager'
   end
   
