@@ -51,7 +51,7 @@ class RolesControllerTest < Test::Unit::TestCase
   end
   
   def test_post_new_with_validaton_failure
-    post :new, :role => {:name => '',
+    post :create, :role => {:name => '',
                          :permissions => ['add_issues', 'edit_issues', 'log_time', ''],
                          :assignable => '0'}
     
@@ -61,7 +61,7 @@ class RolesControllerTest < Test::Unit::TestCase
   end
   
   def test_post_new_without_workflow_copy
-    post :new, :role => {:name => 'RoleWithoutWorkflowCopy',
+    post :create, :role => {:name => 'RoleWithoutWorkflowCopy',
                          :permissions => ['add_issues', 'edit_issues', 'log_time', ''],
                          :assignable => '0'}
     
@@ -73,7 +73,7 @@ class RolesControllerTest < Test::Unit::TestCase
   end
 
   def test_post_new_with_workflow_copy
-    post :new, :role => {:name => 'RoleWithWorkflowCopy',
+    post :create, :role => {:name => 'RoleWithWorkflowCopy',
                          :permissions => ['add_issues', 'edit_issues', 'log_time', ''],
                          :assignable => '0'},
                :copy_workflow_from => '1'
@@ -113,7 +113,7 @@ class RolesControllerTest < Test::Unit::TestCase
   
   def test_destroy_role_in_use
     delete :destroy, :id => 1
-    assert_redirected_to 'roles'
+    assert_redirected_to 'roles/list'
     assert flash[:error] == 'This role is in use and can not be deleted.'
     assert_not_nil Role.find_by_id(1)
   end

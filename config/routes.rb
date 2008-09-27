@@ -70,7 +70,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :users, :collection => { :add => :get, :list => :get }, :member => { :destroy_membership => :post, :edit_membership => :post }
   
-  map.resources :roles, :collection => { :report => :any, :workflow => :any, :move => :post }
+  map.resources :roles, :collection => { :report => :any, :workflow => :any, :move => :post, :list => :get }
   
   map.resources :settings, :member => { :plugin => :any }, :only => [:edit, :index, :update]
   

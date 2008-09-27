@@ -39,14 +39,14 @@ class RolesController < ApplicationController
   end
   
   def create
-    @role = Role.new(params[:role])
+    new
     if @role.save
       # workflow copy
       if !params[:copy_workflow_from].blank? && (copy_from = Role.find_by_id(params[:copy_workflow_from]))
         @role.workflows.copy(copy_from)
       end
       flash[:notice] = l(:notice_successful_create)
-      redirect_to :action => 'index'
+      redirect_to :action => 'list'
     else
       render :action => 'new'
     end
@@ -61,7 +61,7 @@ class RolesController < ApplicationController
     edit
     if @role.update_attributes(params[:role])
       flash[:notice] = l(:notice_successful_update)
-      redirect_to :action => 'index'
+      redirect_to :action => 'list'
     else
       render :action => 'edit'
     end
@@ -73,7 +73,7 @@ class RolesController < ApplicationController
     redirect_to :action => 'list'
   rescue
     flash[:error] = 'This role is in use and can not be deleted.'
-    redirect_to :action => 'index'
+    redirect_to :action => 'list'
   end
   
   def move
@@ -88,7 +88,7 @@ class RolesController < ApplicationController
     when 'lowest'
       @role.move_to_bottom
     end if params[:position]
-    redirect_to :action => 'index'
+    redirect_to :action => 'list'
   end
   
   def workflow    
@@ -121,7 +121,7 @@ class RolesController < ApplicationController
         role.save
       end
       flash[:notice] = l(:notice_successful_update)
-      redirect_to :action => 'index'
+      redirect_to :action => 'list'
     end
   end
 end
