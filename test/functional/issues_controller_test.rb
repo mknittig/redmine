@@ -583,13 +583,22 @@ class IssuesControllerTest < Test::Unit::TestCase
                             :attributes => { :href => '/projects/ecookbook/issues/1/edit',
                                              :class => 'icon-edit' }
     assert_tag :tag => 'a', :content => 'Closed',
-                            :attributes => { :href => '/projects/ecookbook/issues/edit/1?issue%5Bstatus_id%5D=5',
+                            :attributes => { :href => '/projects/ecookbook/issues/1?issue%5Bstatus_id%5D=5',
                                              :class => '' }
     assert_tag :tag => 'a', :content => 'Immediate',
                             :attributes => { :href => '/projects/ecookbook/issues/bulk_edit?ids%5B%5D=1&amp;priority_id=8',
                                              :class => '' }
+    assert_tag :tag => 'a', :content => '1.0',
+                            :attributes => { :href => '/projects/ecookbook/issues/bulk_edit?back_to=&fixed_version_id=2&ids%5B%5D=1',
+                                             :class => '' }
     assert_tag :tag => 'a', :content => 'Dave Lopper',
                             :attributes => { :href => '/projects/ecookbook/issues/bulk_edit?assigned_to_id=3&amp;ids%5B%5D=1',
+                                             :class => '' }
+    assert_tag :tag => 'a', :content => 'Printing',
+                            :attributes => { :href => '/projects/ecookbook/issues/bulk_edit?back_to=&category_id=1&ids%5B%5D=1',
+                                             :class => '' }
+    assert_tag :tag => 'a', :content => '100%',
+                            :attributes => { :href => '/projects/ecookbook/issues/bulk_edit?back_to=&done_ratio=100&ids%5B%5D=1',
                                              :class => '' }
     assert_tag :tag => 'a', :content => 'Copy',
                             :attributes => { :href => '/projects/ecookbook/issues/new?copy_from=1',
