@@ -580,7 +580,7 @@ class IssuesControllerTest < Test::Unit::TestCase
     assert_response :success
     assert_template 'context_menu'
     assert_tag :tag => 'a', :content => 'Edit',
-                            :attributes => { :href => '/projects/ecookbook/issues/edit/1',
+                            :attributes => { :href => '/projects/ecookbook/issues/1/edit',
                                              :class => 'icon-edit' }
     assert_tag :tag => 'a', :content => 'Closed',
                             :attributes => { :href => '/projects/ecookbook/issues/edit/1?issue%5Bstatus_id%5D=5',

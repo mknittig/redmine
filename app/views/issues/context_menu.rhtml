@@ -1,12 +1,12 @@
 <ul>
 <% if !@issue.nil? -%>
-	<li><%= context_menu_link l(:button_edit), {:controller => 'issues', :action => 'edit', :id => @issue},
+	<li><%= context_menu_link l(:button_edit), edit_project_issue_path(@project, @issue},
 	        :class => 'icon-edit', :disabled => !@can[:edit] %></li>
 	<li class="folder">			
 		<a href="#" class="submenu" onclick="return false;"><%= l(:field_status) %></a>
 		<ul>
 		<% @statuses.each do |s| -%>
-		    <li><%= context_menu_link s.name, project_issue_path(@project, @issue, :issue => {:status_id => s}, :back_to => @back), :method => :post,
+		    <li><%= context_menu_link s.name, project_issue_path(@project, @issue, :issue => {:status_id => s}, :back_to => @back), :method => :put,
 		                              :selected => (s == @issue.status), :disabled => !(@can[:update] && @allowed_statuses.include?(s)) %></li>
 		<% end -%>
 		</ul>
