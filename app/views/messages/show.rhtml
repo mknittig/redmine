@@ -3,9 +3,9 @@
 
 <div class="contextual">
     <%= watcher_tag(@topic, User.current) %>
-    <%= link_to_remote_if_authorized l(:button_quote), { :url => quote_board_message_path(@board, @topic) }, :class => 'icon icon-comment' %>
-    <%= link_to_if_authorized l(:button_edit), edit_board_message_path(@board, @topic), :class => 'icon icon-edit' %>
-    <%= link_to_if_authorized l(:button_delete), board_message_path(@board, @topic), :method => :delete, :confirm => l(:text_are_you_sure), :class => 'icon icon-del' %>
+    <%= link_to_remote_if_authorized l(:button_quote), { :url => {:action => 'quote', :id => @topic} }, :class => 'icon icon-comment' %>
+    <%= link_to_if_authorized l(:button_edit), {:action => 'edit', :id => @topic}, :class => 'icon icon-edit' %>
+    <%= link_to_if_authorized l(:button_delete), {:action => 'destroy', :id => @topic}, :method => :delete, :confirm => l(:text_are_you_sure), :class => 'icon icon-del' %>
 </div>
 
 <h2><%=h @topic.subject %></h2>
