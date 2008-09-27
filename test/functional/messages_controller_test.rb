@@ -66,7 +66,7 @@ class MessagesControllerTest < Test::Unit::TestCase
     ActionMailer::Base.deliveries.clear
     Setting.notified_events << 'message_posted'
     
-    post :new, :board_id => 1,
+    post :create, :board_id => 1,
                :message => { :subject => 'Test created message',
                              :content => 'Message body'}
     assert_redirected_to 'messages/show'
