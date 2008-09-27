@@ -60,7 +60,7 @@ class QueriesControllerTest < Test::Unit::TestCase
   
   def test_new_project_public_query
     @request.session[:user_id] = 2
-    post :new,
+    post :create,
          :project_id => 'ecookbook', 
          :confirm => '1',
          :default_columns => '1',
@@ -78,7 +78,7 @@ class QueriesControllerTest < Test::Unit::TestCase
   
   def test_new_project_private_query
     @request.session[:user_id] = 3
-    post :new,
+    post :create,
          :project_id => 'ecookbook', 
          :confirm => '1',
          :default_columns => '1',
@@ -96,7 +96,7 @@ class QueriesControllerTest < Test::Unit::TestCase
   
   def test_new_global_private_query_with_custom_columns
     @request.session[:user_id] = 3
-    post :new,
+    post :create,
          :confirm => '1',
          :fields => ["status_id", "assigned_to_id"],
          :operators => {"assigned_to_id" => "=", "status_id" => "o"},

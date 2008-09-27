@@ -67,7 +67,7 @@ class QueriesController < ApplicationController
   end
 
   def destroy
-    @query.destroy if request.post?
+    @query.destroy
     redirect_to :controller => 'issues', :action => 'index', :project_id => @project, :set_filter => 1
   end
   
