@@ -72,7 +72,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :roles, :collection => { :report => :any, :workflow => :any, :move => :post, :list => :get }
   
-  map.resources :settings, :member => { :plugin => :any }, :only => [:edit, :index, :update]
+  map.resources :settings, :collection => { :plugin => :any }, :only => [:edit, :index, :update]
   
   map.resources :trackers, :collection => { :list => :get, :move => :post }
 

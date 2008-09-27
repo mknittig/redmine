@@ -20,9 +20,9 @@ class WatchersController < ApplicationController
   before_filter :require_login, :check_project_privacy, :only => [:watch, :unwatch]
   before_filter :authorize, :only => [:new, :create]
   
-  #verify :method => :post,
-  #       :only => [ :watch, :unwatch ],
-  #       :render => { :nothing => true, :status => :method_not_allowed }
+  verify :method => :post,
+         :only => [ :watch, :unwatch ],
+         :render => { :nothing => true, :status => :method_not_allowed }
   
   def watch
     set_watcher(User.current, true)
