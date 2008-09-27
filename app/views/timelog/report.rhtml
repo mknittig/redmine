@@ -6,7 +6,7 @@
 
 <h2><%= l(:label_spent_time) %></h2>
 
-<% form_remote_tag(:url => {}, :update => 'content') do %>
+<% form_remote_tag(:url => {}, :update => 'content', :method => 'get') do %>
   <% @criterias.each do |criteria| %>
     <%= hidden_field_tag 'criterias[]', criteria, :id => nil %>
   <% end %>
@@ -25,7 +25,7 @@
                                                           :id => nil,
                                                           :disabled => (@criterias.length >= 3)) %>
      <%= link_to_remote l(:button_clear), {:url => {:project_id => @project, :period_type => params[:period_type], :period => params[:period], :from => @from, :to => @to, :columns => @columns},
-                                           :update => 'content'
+                                           :update => 'content', :method => 'get'
                                           }, :class => 'icon icon-reload' %></p>
 <% end %>
 
