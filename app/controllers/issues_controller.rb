@@ -18,8 +18,8 @@
 class IssuesController < ApplicationController
   menu_item :new_issue, :only => :new
   
-  before_filter :find_issue, :only => [:show, :edit, :update, :reply, :destroy_attachment]
-  before_filter :find_issues, :only => [:bulk_edit, :move, :destroy]
+  before_filter :find_issue, :only => [:show, :edit, :update, :reply, :destroy, :destroy_attachment]
+  before_filter :find_issues, :only => [:bulk_edit, :move, :bulk_destroy]
   before_filter :find_project, :only => [:new, :create, :update_form, :preview, :gantt, :calendar]
   before_filter :authorize, :except => [:index, :changes, :preview, :update_form, :context_menu]
   before_filter :find_optional_project, :only => [:index, :changes]
@@ -306,17 +306,21 @@ class IssuesController < ApplicationController
         reassign_to = @project.issues.find_by_id(params[:reassign_to_id])
         if reassign_to.nil?
           flash.now[:error] = l(:error_issue_not_found_in_project)
-          return
+          render :action => 'destroy'
         else
           TimeEntry.update_all("issue_id = #{reassign_to.id}", ['issue_id IN (?)', @issues])
         end
       else
         # display the destroy form
-        return
+        render :action => 'destroy'
       end
     end
     @issues.each(&:destroy)
     redirect_to :action => 'index', :project_id => @project
+  end
+  
+  def bulk_destroy
+    destroy
   end
 
   def destroy_attachment
