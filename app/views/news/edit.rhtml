@@ -1,6 +1,6 @@
 <h2><%=l(:label_news)%></h2>
 
-<% labelled_tabular_form_for :news, @news, :url => { :action => "edit" },
+<% labelled_tabular_form_for :news, @news, :url => { :action => "update" },
                                            :html => { :id => 'news-form', :method => :put } do |f| %>
 <%= render :partial => 'form', :locals => { :f => f } %>
 <%= submit_tag l(:button_save) %>

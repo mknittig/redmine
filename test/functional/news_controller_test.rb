@@ -67,7 +67,7 @@ class NewsControllerTest < Test::Unit::TestCase
   
   def test_post_new
     @request.session[:user_id] = 2
-    post :new, :project_id => 1, :news => { :title => 'NewsControllerTest',
+    post :create, :project_id => 1, :news => { :title => 'NewsControllerTest',
                                             :description => 'This is the description',
                                             :summary => '' }
     assert_redirected_to 'projects/ecookbook/news'
@@ -96,7 +96,7 @@ class NewsControllerTest < Test::Unit::TestCase
 
   def test_post_new_with_validation_failure
     @request.session[:user_id] = 2
-    post :new, :project_id => 1, :news => { :title => '',
+    post :create, :project_id => 1, :news => { :title => '',
                                             :description => 'This is the description',
                                             :summary => '' }
     assert_response :success
