@@ -42,7 +42,7 @@ class DocumentsControllerTest < Test::Unit::TestCase
     @request.session[:user_id] = 2
     set_tmp_attachments_directory
     
-    post :new, :project_id => 'ecookbook',
+    post :create, :project_id => 'ecookbook',
                :document => { :title => 'DocumentsControllerTest#test_post_new',
                               :description => 'This is a new document',
                               :category_id => 2},
