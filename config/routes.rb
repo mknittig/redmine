@@ -9,6 +9,8 @@ ActionController::Routing::Routes.draw do |map|
   map.home '', :controller => 'welcome'
   map.signin 'login', :controller => 'account', :action => 'login'
   map.signout 'logout', :controller => 'account', :action => 'logout'
+  
+  map.mail_handler 'mail_handler', :controller => 'mail_handler', :action => 'index'
 
   map.with_options :controller => 'repositories' do |omap|
     omap.repositories_show 'repositories/browse/:id/*path', :action => 'browse'
@@ -24,7 +26,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'attachments/download/:id', :controller => 'attachments', :action => 'download', :id => /\d+/
   map.connect 'attachments/download/:id/:filename', :controller => 'attachments', :action => 'download', :id => /\d+/, :filename => /.*/
 
-  map.resources :projects, :collection => { :activity => :get, :add => :get }, :member => { :activity => :get, :roadmap => :get, :changelog => :get, :destroy => :get, :list_files => :get, :settings => :any, :modules => :any, :archive => :post, :archive => :post, :unarchive => :post, :add_file => :any, :add_version => :any, :add_issue_category => :any }, :shallow => true do |project|
+  map.resources :projects, :collection => { :activity => :get, :add => :get }, :member => { :activity => :get, :roadmap => :get, :changelog => :get, :destroy => :get, :list_files => :get, :settings => :any, :modules => :any, :archive => :post, :archive => :post, :unarchive => :post, :add_file => :any, :add_version => :any, :add_issue_category => :any } do |project|
     project.resources :issues, :new => { :preview => :post }, :member => { :preview => :post, :move => :any, :reply => :post, :quote => :post, :destroy_attachment => :post, :update_from => :post }, :collection => { :calendar => :get, :gantt => :get, :context_menu => :any, :changes => :get, :bulk_edit => :any, :move => :any, :bulk_destroy => :post }
     project.resources :news, :new => { :preview => :post }, :member => { :preview => :post, :add_comment => :post, :destroy_comment => :post }
     project.resources :documents
@@ -72,7 +74,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :roles, :collection => { :report => :any, :workflow => :any, :move => :post, :list => :get }
   
-  map.resources :settings, :collection => { :plugin => :any }, :only => [:edit, :index, :update]
+  map.resource :settings, :collection => { :plugin => :any }
   
   map.resources :trackers, :collection => { :list => :get, :move => :post }
 
@@ -102,8 +104,8 @@ ActionController::Routing::Routes.draw do |map|
     issue.resources :attachment
   end
 
-  map.resources :boards do |project|
-    project.resources :messages, :as => 'topics', :new => { :preview => :post }, :member => { :preview => :post, :reply => :post, :quote => :post }, :except => :index
+  map.resources :boards do |board|
+    board.resources :messages, :as => 'topics', :new => { :preview => :post }, :member => { :preview => :post, :reply => :post, :quote => :post }, :except => :index
   end
   
   map.connect 'wiki/:id/:page/:action', :controller => 'wiki', :page => nil

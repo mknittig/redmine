@@ -18,7 +18,7 @@
 class SettingsController < ApplicationController
   before_filter :require_admin
   
-  def index
+  def show
     edit
     render :action => 'edit'
   end
@@ -41,10 +41,9 @@ class SettingsController < ApplicationController
         Setting[name] = value
       end
       flash[:notice] = l(:notice_successful_update)
-      redirect_to :action => 'edit', :tab => params[:tab]
-      return
+      redirect_to :action => 'show', :tab => params[:tab]
     else
-      render :action => 'edit'
+      render :action => 'show', :tab => params[:tab]
     end
   end
   

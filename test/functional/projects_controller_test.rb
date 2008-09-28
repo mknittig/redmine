@@ -90,9 +90,9 @@ class ProjectsControllerTest < Test::Unit::TestCase
   
   def test_edit
     @request.session[:user_id] = 2 # manager
-    put :update, :id => 1, :project => {:name => 'Test changed name',
+    post :settings, :id => 1, :project => {:name => 'Test changed name',
                                        :issue_custom_field_ids => ['']}
-    assert_redirected_to 'projects/settings/ecookbook'
+    assert_redirected_to 'projects/ecookbook/settings'
     project = Project.find(1)
     assert_equal 'Test changed name', project.name
   end

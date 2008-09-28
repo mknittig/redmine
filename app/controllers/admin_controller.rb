@@ -70,7 +70,7 @@ class AdminController < ApplicationController
       flash[:error] = l(:notice_email_error, e.message)
     end
     ActionMailer::Base.raise_delivery_errors = raise_delivery_errors
-    redirect_to :controller => 'settings', :action => 'index', :tab => 'notifications'
+    redirect_to :controller => 'settings', :action => 'show', :tab => 'notifications'
   end
   
   def info

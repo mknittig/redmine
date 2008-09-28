@@ -7,7 +7,7 @@
     <%= link_to l(:label_enumerations), {:controller => 'enumerations' }, :class => "menuItem" %>
     <%= link_to l(:field_mail_notification), {:controller => 'admin', :action => 'mail_options' }, :class => "menuItem" %>
     <%= link_to l(:label_authentication), {:controller => 'auth_sources' }, :class => "menuItem" %>
-    <%= link_to l(:label_settings), {:controller => 'settings' }, :class => "menuItem" %>
+    <%= link_to l(:label_settings), {:controller => 'settings', :action => 'show' }, :class => "menuItem" %>
     <%= link_to l(:label_information_plural), {:controller => 'admin', :action => 'info' }, :class => "menuItem" %>
 </div>
 <div id="menuTrackers" class="menu">
