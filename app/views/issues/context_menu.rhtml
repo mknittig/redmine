@@ -86,5 +86,5 @@
   <li><%= context_menu_link l(:button_move), move_project_issues_path(@project, :ids => @issues.collect(&:id)),
 	                        :class => 'icon-move', :disabled => !@can[:move]  %></li>
   <li><%= context_menu_link l(:button_delete), bulk_destroy_project_issues_path(@project, :ids => @issues.collect(&:id)),
-                            :method => :delete, :confirm => l(:text_issues_destroy_confirmation), :class => 'icon-del', :disabled => !@can[:delete] %></li>
+                            :method => :post, :confirm => l(:text_issues_destroy_confirmation), :class => 'icon-del', :disabled => !@can[:delete] %></li>
 </ul>

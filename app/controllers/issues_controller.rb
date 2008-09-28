@@ -18,8 +18,8 @@
 class IssuesController < ApplicationController
   menu_item :new_issue, :only => :new
   
-  before_filter :find_issue, :only => [:show, :edit, :update, :reply, :destroy, :destroy_attachment]
-  before_filter :find_issues, :only => [:bulk_edit, :move, :bulk_destroy]
+  before_filter :find_issue, :only => [:show, :edit, :update, :reply, :destroy_attachment]
+  before_filter :find_issues, :only => [:bulk_edit, :move, :destroy, :bulk_destroy]
   before_filter :find_project, :only => [:new, :create, :update_form, :preview, :gantt, :calendar]
   before_filter :authorize, :except => [:index, :changes, :preview, :update_form, :context_menu]
   before_filter :find_optional_project, :only => [:index, :changes]
@@ -124,18 +124,18 @@ class IssuesController < ApplicationController
     @issue.attributes = params[:issue]
     @issue.author = User.current
     
-    default_status = IssueStatus.default
-    unless default_status
+    @default_status = IssueStatus.default
+    unless @default_status
       flash.now[:error] = 'No default issue status is defined. Please check your configuration (Go to "Administration -> Issue statuses").'
       render :nothing => true, :layout => true
       return
     end    
-    @issue.status = default_status
-    @allowed_statuses = ([default_status] + default_status.find_new_statuses_allowed_to(User.current.role_for_project(@project), @issue.tracker)).uniq
+    @issue.status = @default_status
+    @allowed_statuses = ([@default_status] + @default_status.find_new_statuses_allowed_to(User.current.role_for_project(@project), @issue.tracker)).uniq
     
+    @issue.start_date ||= Date.today
+    @priorities = Enumeration::get_values('IPRI')
     if request.get? || request.xhr?
-      @issue.start_date ||= Date.today
-      @priorities = Enumeration::get_values('IPRI')
       render :layout => !request.xhr?
     end	
   end
@@ -144,7 +144,7 @@ class IssuesController < ApplicationController
     new
     requested_status = IssueStatus.find_by_id(params[:issue][:status_id])
     # Check that the user is allowed to apply the requested status
-    @issue.status = (@allowed_statuses.include? requested_status) ? requested_status : default_status
+    @issue.status = (@allowed_statuses.include? requested_status) ? requested_status : @default_status
     if @issue.save
       attach_files(@issue, params[:attachments])
       flash[:notice] = l(:notice_successful_create)
@@ -307,12 +307,14 @@ class IssuesController < ApplicationController
         if reassign_to.nil?
           flash.now[:error] = l(:error_issue_not_found_in_project)
           render :action => 'destroy'
+          return
         else
           TimeEntry.update_all("issue_id = #{reassign_to.id}", ['issue_id IN (?)', @issues])
         end
       else
         # display the destroy form
         render :action => 'destroy'
+        return
       end
     end
     @issues.each(&:destroy)

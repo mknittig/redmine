@@ -25,7 +25,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'attachments/download/:id/:filename', :controller => 'attachments', :action => 'download', :id => /\d+/, :filename => /.*/
 
   map.resources :projects, :collection => { :activity => :get, :add => :get }, :member => { :activity => :get, :roadmap => :get, :changelog => :get, :destroy => :get, :list_files => :get, :settings => :any, :modules => :any, :archive => :post, :archive => :post, :unarchive => :post, :add_file => :any, :add_version => :any, :add_issue_category => :any }, :shallow => true do |project|
-    project.resources :issues, :new => { :preview => :post }, :member => { :preview => :post, :move => :any, :reply => :post, :quote => :post, :destroy_attachment => :post, :update_from => :post }, :collection => { :calendar => :get, :gantt => :get, :context_menu => :any, :changes => :get, :bulk_edit => :any, :move => :any, :bulk_destroy => :delete }
+    project.resources :issues, :new => { :preview => :post }, :member => { :preview => :post, :move => :any, :reply => :post, :quote => :post, :destroy_attachment => :post, :update_from => :post }, :collection => { :calendar => :get, :gantt => :get, :context_menu => :any, :changes => :get, :bulk_edit => :any, :move => :any, :bulk_destroy => :post }
     project.resources :news, :new => { :preview => :post }, :member => { :preview => :post, :add_comment => :post, :destroy_comment => :post }
     project.resources :documents
     project.resources :boards
@@ -46,7 +46,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :documents, :member => { :add_attachment => :post, :destroy_attachment => :post}
   
-  map.resources :issues, :new => { :preview => :post }, :member => { :preview => :post, :move => :any, :reply => :post, :quote => :post, :destroy_attachment => :post, :update_from => :post }, :collection => { :calendar => :get, :gantt => :get, :context_menu => :any, :changes => :get, :bulk_edit => :any, :move => :any, :bulk_destroy => :delete }
+  map.resources :issues, :new => { :preview => :post }, :member => { :preview => :post, :move => :any, :reply => :post, :quote => :post, :destroy_attachment => :post, :update_from => :post }, :collection => { :calendar => :get, :gantt => :get, :context_menu => :any, :changes => :get, :bulk_edit => :any, :move => :any, :bulk_destroy => :post }
   
   map.resources :journals, :only => :update
   

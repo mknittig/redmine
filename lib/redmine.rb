@@ -40,7 +40,7 @@ Redmine::AccessControl.map do |map|
     map.permission :edit_issue_notes, {:journals => [:edit, :update]}, :require => :loggedin
     map.permission :edit_own_issue_notes, {:journals => [:edit, :update]}, :require => :loggedin
     map.permission :move_issues, {:issues => :move}, :require => :loggedin
-    map.permission :delete_issues, {:issues => :destroy}, :require => :member
+    map.permission :delete_issues, {:issues => [:destroy, :bulk_destroy]}, :require => :member
     # Queries
     map.permission :manage_public_queries, {:queries => [:new, :create, :edit, :create, :destroy]}, :require => :member
     map.permission :save_queries, {:queries => [:new, :create, :edit, :upate, :destroy]}, :require => :loggedin

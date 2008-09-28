@@ -241,7 +241,7 @@ class IssuesControllerTest < Test::Unit::TestCase
   
   def test_update_new_form
     @request.session[:user_id] = 2
-    xhr :post, :new, :project_id => 1,
+    xhr :get, :new, :project_id => 1,
                      :issue => {:tracker_id => 2, 
                                 :subject => 'This is the test_new issue',
                                 :description => 'This is the description',
@@ -252,16 +252,16 @@ class IssuesControllerTest < Test::Unit::TestCase
   
   def test_post_new
     @request.session[:user_id] = 2
-    post :new, :project_id => 1, 
+    post :create, :project_id => 1, 
                :issue => {:tracker_id => 3,
                           :subject => 'This is the test_new issue',
                           :description => 'This is the description',
                           :priority_id => 5,
                           :estimated_hours => '',
                           :custom_field_values => {'2' => 'Value for field 2'}}
-    assert_redirected_to 'issues/show'
     
     issue = Issue.find_by_subject('This is the test_new issue')
+    assert_redirected_to "issues/#{issue.id.to_s}"
     assert_not_nil issue
     assert_equal 2, issue.author_id
     assert_equal 3, issue.tracker_id
@@ -273,12 +273,13 @@ class IssuesControllerTest < Test::Unit::TestCase
   
   def test_post_new_without_custom_fields_param
     @request.session[:user_id] = 2
-    post :new, :project_id => 1, 
+    post :create, :project_id => 1, 
                :issue => {:tracker_id => 1,
                           :subject => 'This is the test_new issue',
                           :description => 'This is the description',
                           :priority_id => 5}
-    assert_redirected_to 'issues/show'
+    issue = Issue.find_by_subject('This is the test_new issue')
+    assert_redirected_to "issues/#{issue.id.to_s}"
   end
   
   def test_post_new_with_required_custom_field_and_without_custom_fields_param
@@ -286,7 +287,7 @@ class IssuesControllerTest < Test::Unit::TestCase
     field.update_attribute(:is_required, true)
 
     @request.session[:user_id] = 2
-    post :new, :project_id => 1, 
+    post :create, :project_id => 1, 
                :issue => {:tracker_id => 1,
                           :subject => 'This is the test_new issue',
                           :description => 'This is the description',
@@ -300,7 +301,7 @@ class IssuesControllerTest < Test::Unit::TestCase
   
   def test_post_should_preserve_fields_values_on_validation_failure
     @request.session[:user_id] = 2
-    post :new, :project_id => 1, 
+    post :create, :project_id => 1, 
                :issue => {:tracker_id => 1,
                           :subject => 'This is the test_new issue',
                           # empty description
@@ -415,7 +416,7 @@ class IssuesControllerTest < Test::Unit::TestCase
     
     assert_difference('Journal.count') do
       assert_difference('JournalDetail.count', 3) do
-        post :edit, :id => 1, :issue => {:subject => 'Custom field change',
+        put :update, :id => 1, :issue => {:subject => 'Custom field change',
                                          :priority_id => '6',
                                          :category_id => '1', # no change
                                          :custom_field_values => { '2' => 'New custom value' }
@@ -674,7 +675,7 @@ class IssuesControllerTest < Test::Unit::TestCase
 
   def test_destroy_issues_with_time_entries
     @request.session[:user_id] = 2
-    delete :destroy, :ids => [1, 3]
+    post :bulk_destroy, :ids => [1, 3]
     assert_response :success
     assert_template 'destroy'
     assert_not_nil assigns(:hours)
@@ -683,7 +684,7 @@ class IssuesControllerTest < Test::Unit::TestCase
 
   def test_destroy_issues_and_destroy_time_entries
     @request.session[:user_id] = 2
-    delete :destroy, :ids => [1, 3], :todo => 'destroy'
+    post :bulk_destroy, :ids => [1, 3], :todo => 'destroy'
     assert_redirected_to 'projects/ecookbook/issues'
     assert !(Issue.find_by_id(1) || Issue.find_by_id(3))
     assert_nil TimeEntry.find_by_id([1, 2])
@@ -691,7 +692,7 @@ class IssuesControllerTest < Test::Unit::TestCase
 
   def test_destroy_issues_and_assign_time_entries_to_project
     @request.session[:user_id] = 2
-    delete :destroy, :ids => [1, 3], :todo => 'nullify'
+    post :bulk_destroy, :ids => [1, 3], :todo => 'nullify'
     assert_redirected_to 'projects/ecookbook/issues'
     assert !(Issue.find_by_id(1) || Issue.find_by_id(3))
     assert_nil TimeEntry.find(1).issue_id
@@ -700,7 +701,7 @@ class IssuesControllerTest < Test::Unit::TestCase
   
   def test_destroy_issues_and_reassign_time_entries_to_another_issue
     @request.session[:user_id] = 2
-    delete :destroy, :ids => [1, 3], :todo => 'reassign', :reassign_to_id => 2
+    post :bulk_destroy, :ids => [1, 3], :todo => 'reassign', :reassign_to_id => 2
     assert_redirected_to 'projects/ecookbook/issues'
     assert !(Issue.find_by_id(1) || Issue.find_by_id(3))
     assert_equal 2, TimeEntry.find(1).issue_id
