@@ -41,7 +41,7 @@ class CustomFieldsController < ApplicationController
       when "TimeEntryCustomField" 
         @custom_field = TimeEntryCustomField.new(params[:custom_field])
       else
-        redirect_to :action => 'list'
+        redirect_to :action => 'index'
         return
     end  
     @trackers = Tracker.find(:all, :order => 'position')
@@ -51,7 +51,7 @@ class CustomFieldsController < ApplicationController
     new
     if @custom_field.save
       flash[:notice] = l(:notice_successful_create)
-      redirect_to :action => 'list', :tab => @custom_field.class.name
+      redirect_to :action => 'index', :tab => @custom_field.class.name
     else
       render :action => 'new'
     end
@@ -87,14 +87,14 @@ class CustomFieldsController < ApplicationController
     when 'lowest'
       @custom_field.move_to_bottom
     end if params[:position]
-    redirect_to :action => 'list', :tab => @custom_field.class.name
+    redirect_to :action => 'index', :tab => @custom_field.class.name
   end
   
   def destroy
     @custom_field = CustomField.find(params[:id]).destroy
-    redirect_to :action => 'list', :tab => @custom_field.class.name
+    redirect_to :action => 'index', :tab => @custom_field.class.name
   rescue
     flash[:error] = "Unable to delete custom field"
-    redirect_to :action => 'list'
+    redirect_to :action => 'index'
   end
 end
