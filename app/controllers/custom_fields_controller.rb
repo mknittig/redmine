@@ -69,7 +69,7 @@ class CustomFieldsController < ApplicationController
         @custom_field.trackers = params[:tracker_ids] ? Tracker.find(params[:tracker_ids]) : []
       end
       flash[:notice] = l(:notice_successful_update)
-      redirect_to :action => 'list', :tab => @custom_field.class.name
+      redirect_to :action => 'index', :tab => @custom_field.class.name
     else
       render :action => 'edit'
     end
