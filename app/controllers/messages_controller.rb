@@ -51,7 +51,7 @@ class MessagesController < ApplicationController
     new
     if @message.save
       attach_files(@message, params[:attachments])
-      redirect_to :action => 'show', :id => @message
+      redirect_to :action => 'show', :id => @message, :board_id => @board
     else
       render :action => 'new'
     end
@@ -66,7 +66,7 @@ class MessagesController < ApplicationController
     if !@reply.new_record?
       attach_files(@reply, params[:attachments])
     end
-    redirect_to :action => 'show', :id => @topic
+    redirect_to :action => 'show', :id => @topic, :board_id => @board
   end
 
   # Edit a message
@@ -82,7 +82,7 @@ class MessagesController < ApplicationController
     if @message.update_attributes(params[:message])
       attach_files(@message, params[:attachments])
       flash[:notice] = l(:notice_successful_update)
-      redirect_to :action => 'show', :id => @topic
+      redirect_to :action => 'show', :id => @topic, :board_id => @board
     else
       render :action => 'edit'
     end

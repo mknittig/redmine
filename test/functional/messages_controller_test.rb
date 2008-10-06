@@ -69,8 +69,8 @@ class MessagesControllerTest < Test::Unit::TestCase
     post :create, :board_id => 1,
                :message => { :subject => 'Test created message',
                              :content => 'Message body'}
-    assert_redirected_to 'boards/1/topics/1'
     message = Message.find_by_subject('Test created message')
+    assert_redirected_to "boards/1/topics/#{message.id}"
     assert_not_nil message
     assert_equal 'Message body', message.content
     assert_equal 2, message.author_id
@@ -114,7 +114,7 @@ class MessagesControllerTest < Test::Unit::TestCase
   def test_destroy_topic
     @request.session[:user_id] = 2
     delete :destroy, :board_id => 1, :id => 1
-    assert_redirected_to 'boards/show'
+    assert_redirected_to 'boards/1'
     assert_nil Message.find_by_id(1)
   end
   
