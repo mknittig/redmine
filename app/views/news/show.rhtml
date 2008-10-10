@@ -10,8 +10,8 @@
 <h2><%=h @news.title %></h2>
 
 <div id="edit-news" style="display:none;">
-<% labelled_tabular_form_for :news, @news, :url => { :action => "edit", :id => @news },
-                                           :html => { :id => 'news-form' } do |f| %>
+<% labelled_tabular_form_for :news, @news, :url => { :action => "update", :id => @news },
+                                           :html => { :id => 'news-form', :method => :put } do |f| %>
 <%= render :partial => 'form', :locals => { :f => f } %>
 <%= submit_tag l(:button_save) %>
 <%= link_to_remote l(:label_preview), 
@@ -38,7 +38,7 @@
     <% next if comment.new_record? %>
     <div class="contextual">
     <%= link_to_if_authorized image_tag('delete.png'), {:controller => 'news', :action => 'destroy_comment', :id => @news, :comment_id => comment},
-                                                       :confirm => l(:text_are_you_sure), :method => :post, :title => l(:button_delete) %>
+                                                       :confirm => l(:text_are_you_sure), :method => :delete, :title => l(:button_delete) %>
     </div>
     <h4><%= authoring comment.created_on, comment.author %></h4>
     <%= textilizable(comment.comments) %>
