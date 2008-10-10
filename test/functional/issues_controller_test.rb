@@ -496,6 +496,10 @@ class IssuesControllerTest < Test::Unit::TestCase
   def test_post_edit_with_attachment_only
     set_tmp_attachments_directory
     
+    # Delete all fixtured journals, a race condition can occur causing the wrong
+    # journal to get fetched in the next find.
+    Journal.delete_all
+
     # anonymous user
     put :update,
          :id => 1,
