@@ -105,7 +105,7 @@ ActionController::Routing::Routes.draw do |map|
   end
 
   map.resources :boards do |board|
-    board.resources :messages, :as => 'topics', :new => { :preview => :post }, :member => { :preview => :put, :reply => :post, :quote => :post }, :except => :index
+    board.resources :messages, :as => 'topics', :new => { :preview => :post }, :member => { :preview => :post, :reply => :post, :quote => :post }, :except => :index
   end
   
   map.connect 'wiki/:id/:page/:action', :controller => 'wiki', :page => nil
