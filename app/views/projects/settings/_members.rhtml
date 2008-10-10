@@ -19,14 +19,14 @@
 	<td><%= member.name %></td>
     <td align="center">
     <% if authorize_for('members', 'edit') %>
-      <% remote_form_for(:member, member, :url => member_path(member), :method => :put) do |f| %>
+      <% remote_form_for(:member, member, :url => project_member_path(@project, member), :method => :put) do |f| %>
         <%= f.select :role_id, roles.collect{|role| [role.name, role.id]}, {}, :class => "small" %>
         <%= submit_tag l(:button_change), :class => "small" %>
       <% end %>
     <% end %>
     </td>
     <td align="center">
-      <%= link_to_remote l(:button_delete), { :url => member_path(member),                                              
+      <%= link_to_remote l(:button_delete), { :url => project_member_path(@project, member),                                              
                                               :method => :delete
                                             }, :title => l(:button_delete),
                                                :class => 'icon icon-del' %>
