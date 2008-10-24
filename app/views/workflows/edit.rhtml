@@ -1,5 +1,5 @@
 <div class="contextual">
-<%= link_to l(:field_summary), :action => 'index' %>
+<%= link_to l(:field_summary), :action => 'show' %>
 </div>
 
 <h2><%=l(:label_workflow)%></h2>
@@ -23,7 +23,7 @@
   
 
 <% unless @tracker.nil? or @role.nil? or @statuses.empty? %>
-<% form_tag({}, :id => 'workflow_form' ) do %>
+<% form_tag({:action => 'update'}, :id => 'workflow_form', :method => :put ) do %>
 <%= hidden_field_tag 'tracker_id', @tracker.id %>
 <%= hidden_field_tag 'role_id', @role.id %>
 <table class="list">

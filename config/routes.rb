@@ -101,7 +101,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :enumerations, :member => { :move => :post }
   
-  map.resources :workflows, :only => [:edit, :update]
+  map.resource :workflows
 
   map.resources :issues do |issue|
     issue.resources :issue_relations, :as => 'relations'

@@ -18,7 +18,7 @@
 class WorkflowsController < ApplicationController
   before_filter :require_admin
 
-  def index
+  def show
     @workflow_counts = Workflow.count_by_tracker_and_role
   end
   

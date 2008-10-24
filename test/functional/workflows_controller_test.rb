@@ -32,10 +32,10 @@ class WorkflowsControllerTest < Test::Unit::TestCase
     @request.session[:user_id] = 1 # admin
   end
   
-  def test_index
-    get :index
+  def test_show
+    get :show
     assert_response :success
-    assert_template 'index'
+    assert_template 'show'
     
     count = Workflow.count(:all, :conditions => 'role_id = 1 AND tracker_id = 2')
     assert_tag :tag => 'a', :content => count.to_s,
