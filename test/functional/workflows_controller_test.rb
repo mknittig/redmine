@@ -67,7 +67,7 @@ class WorkflowsControllerTest < Test::Unit::TestCase
   end
   
   def test_post_edit
-    post :edit, :role_id => 2, :tracker_id => 1, :issue_status => {'4' => ['5'], '3' => ['1', '2']}
+    put :update, :role_id => 2, :tracker_id => 1, :issue_status => {'4' => ['5'], '3' => ['1', '2']}
     assert_redirected_to 'workflows/edit'
     
     assert_equal 3, Workflow.count(:conditions => {:tracker_id => 1, :role_id => 2})
@@ -78,7 +78,7 @@ class WorkflowsControllerTest < Test::Unit::TestCase
   def test_clear_workflow
     assert Workflow.count(:conditions => {:tracker_id => 1, :role_id => 2}) > 0
 
-    post :edit, :role_id => 2, :tracker_id => 1
+    put :update, :role_id => 2, :tracker_id => 1
     assert_equal 0, Workflow.count(:conditions => {:tracker_id => 1, :role_id => 2})
   end
 end

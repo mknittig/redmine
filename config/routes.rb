@@ -100,6 +100,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :auth_sources, :member => { :list => :get, :test_connection => :post }
 
   map.resources :enumerations, :member => { :move => :post }
+  
+  map.resources :workflows, :only => [:edit, :update]
 
   map.resources :issues do |issue|
     issue.resources :issue_relations, :as => 'relations'

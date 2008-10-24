@@ -21,7 +21,7 @@
   <td><%= h tracker %></td>
   <% roles.each do |role, count| -%>
     <td align="center">
-      <%= link_to((count > 1 ? count : image_tag('false.png')), {:action => 'edit', :role_id => role, :tracker_id => tracker}, :title => l(:button_edit)) %>
+      <%= link_to((count > 1 ? count : image_tag('false.png')), {:action => 'update', :role_id => role, :tracker_id => tracker, :method => :put}, :title => l(:button_edit)) %>
     </td>
   <% end -%>
 </tr>
