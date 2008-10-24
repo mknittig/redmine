@@ -24,8 +24,8 @@ activerecord_error_exclusion: è riservato
 activerecord_error_invalid: non è valido
 activerecord_error_confirmation: non coincide con la conferma
 activerecord_error_accepted: deve essere accettato
-activerecord_error_empty: non puo' essere vuoto
-activerecord_error_blank: non puo' essere blank
+activerecord_error_empty: non può essere vuoto
+activerecord_error_blank: non può essere lasciato in bianco
 activerecord_error_too_long: è troppo lungo/a
 activerecord_error_too_short: è troppo corto/a
 activerecord_error_wrong_length: è della lunghezza sbagliata
@@ -108,7 +108,7 @@ field_value: Valore
 field_category: Categoria
 field_title: Titolo
 field_project: Progetto
-field_issue: Issue
+field_issue: Segnalazione
 field_status: Stato
 field_notes: Note
 field_is_closed: Chiude la segnalazione
@@ -353,7 +353,7 @@ label_sort_lower: Giù
 label_sort_lowest: Sposta in fondo
 label_roadmap: Roadmap
 label_roadmap_due_in: Da ultimare in %s
-label_roadmap_overdue: %s late
+label_roadmap_overdue: %s di ritardo
 label_roadmap_no_issues: Nessuna segnalazione per questa versione
 label_search: Ricerca
 label_result_plural: Risultati
@@ -578,7 +578,7 @@ label_document_added: Documenti aggiunti
 label_message_posted: Messaggi aggiunti
 label_file_added: File aggiunti
 label_news_added: Notizie aggiunte
-project_module_boards: Boards
+project_module_boards: Forum
 project_module_issue_tracking: Tracking delle segnalazioni
 project_module_wiki: Wiki
 project_module_files: File
@@ -640,3 +640,50 @@ setting_sequential_project_identifiers: Genera progetti con identificativi in se
 notice_unable_delete_version: Impossibile cancellare la versione
 label_renamed: rinominato
 label_copied: copiato
+setting_plain_text_mail: solo testo (non HTML)
+permission_view_files: View files
+permission_edit_issues: Edit issues
+permission_edit_own_time_entries: Edit own time logs
+permission_manage_public_queries: Manage public queries
+permission_add_issues: Add issues
+permission_log_time: Log spent time
+permission_view_changesets: View changesets
+permission_view_time_entries: View spent time
+permission_manage_versions: Manage versions
+permission_manage_wiki: Manage wiki
+permission_manage_categories: Manage issue categories
+permission_protect_wiki_pages: Protect wiki pages
+permission_comment_news: Comment news
+permission_delete_messages: Delete messages
+permission_select_project_modules: Select project modules
+permission_manage_documents: Manage documents
+permission_edit_wiki_pages: Edit wiki pages
+permission_add_issue_watchers: Add watchers
+permission_view_gantt: View gantt chart
+permission_move_issues: Move issues
+permission_manage_issue_relations: Manage issue relations
+permission_delete_wiki_pages: Delete wiki pages
+permission_manage_boards: Manage boards
+permission_delete_wiki_pages_attachments: Delete attachments
+permission_view_wiki_edits: View wiki history
+permission_add_messages: Post messages
+permission_view_messages: View messages
+permission_manage_files: Manage files
+permission_edit_issue_notes: Edit notes
+permission_manage_news: Manage news
+permission_view_calendar: View calendrier
+permission_manage_members: Manage members
+permission_edit_messages: Edit messages
+permission_delete_issues: Delete issues
+permission_view_issue_watchers: View watchers list
+permission_manage_repository: Manage repository
+permission_commit_access: Commit access
+permission_browse_repository: Browse repository
+permission_view_documents: View documents
+permission_edit_project: Edit project
+permission_add_issue_notes: Add notes
+permission_save_queries: Save queries
+permission_view_wiki_pages: View wiki
+permission_rename_wiki_pages: Rename wiki pages
+permission_edit_time_entries: Edit time logs
+permission_edit_own_issue_notes: Edit own notes

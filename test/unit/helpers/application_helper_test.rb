@@ -181,7 +181,9 @@ class ApplicationHelperTest < HelperTestCase
       "<pre><code>\nline 1\nline2</code></pre>" => "<pre><code>\nline 1\nline2</code></pre>",
       "<pre><div>content</div></pre>" => "<pre>&lt;div&gt;content&lt;/div&gt;</pre>",
       "HTML comment: <!-- no comments -->" => "<p>HTML comment: &lt;!-- no comments --&gt;</p>",
-      "<!-- opening comment" => "<p>&lt;!-- opening comment</p>"
+      "<!-- opening comment" => "<p>&lt;!-- opening comment</p>",
+      # remove attributes
+      "<pre class='foo'>some text</pre>" => "<pre>some text</pre>",
     }
     to_test.each { |text, result| assert_equal result, textilizable(text) }
   end
@@ -215,6 +217,21 @@ class ApplicationHelperTest < HelperTestCase
   def test_wiki_horizontal_rule
     assert_equal '<hr />', textilizable('---')
     assert_equal '<p>Dashes: ---</p>', textilizable('Dashes: ---')
+  end
+  
+  def test_footnotes
+    raw = <<-RAW
+This is some text[1].
+
+fn1. This is the foot note
+RAW
+
+    expected = <<-EXPECTED
+<p>This is some text<sup><a href=\"#fn1\">1</a></sup>.</p>
+<p id="fn1" class="footnote"><sup>1</sup> This is the foot note</p>
+EXPECTED
+
+    assert_equal expected.gsub(%r{[\r\n\t]}, ''), textilizable(raw).gsub(%r{[\r\n\t]}, '')
   end
   
   def test_table_of_content
