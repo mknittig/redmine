@@ -1,5 +1,5 @@
 <% labelled_tabular_form_for :issue, @issue,
-                             :url => project_issue_path(@project, @issue),
+                             :url => {:action => 'update', :id => @issue},
                              :html => {:id => 'issue-form',
                                        :class => nil,
                                        :multipart => true,
@@ -44,7 +44,7 @@
     <%= f.hidden_field :lock_version %>
     <%= submit_tag l(:button_submit) %>
     <%= link_to_remote l(:label_preview), 
-                       { :url => preview_project_issue_path(@project, @issue),
+                       { :url => { :controller => 'issues', :action => 'preview', :project_id => @project, :id => @issue },
                          :method => 'post',
                          :update => 'preview',
                          :with => 'Form.serialize("issue-form")',

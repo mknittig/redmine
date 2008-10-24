@@ -585,37 +585,37 @@ class IssuesControllerTest < Test::Unit::TestCase
     assert_response :success
     assert_template 'context_menu'
     assert_tag :tag => 'a', :content => 'Edit',
-                            :attributes => { :href => '/projects/ecookbook/issues/1/edit',
+                            :attributes => { :href => '/issues/1/edit',
                                              :class => 'icon-edit' }
     assert_tag :tag => 'a', :content => 'Closed',
-                            :attributes => { :href => '/projects/ecookbook/issues/1?back_to=&issue%5Bstatus_id%5D=5',
+                            :attributes => { :href => '/issues/1?issue%5Bstatus_id%5D=5',
                                              :class => '' }
     assert_tag :tag => 'a', :content => 'Immediate',
-                            :attributes => { :href => '/projects/ecookbook/issues/bulk_edit?back_to=&ids%5B%5D=1&priority_id=8',
+                            :attributes => { :href => '/issues/bulk_edit?ids%5B%5D=1&amp;priority_id=8',
                                              :class => '' }
     assert_tag :tag => 'a', :content => '1.0',
-                            :attributes => { :href => '/projects/ecookbook/issues/bulk_edit?back_to=&fixed_version_id=2&ids%5B%5D=1',
+                            :attributes => { :href => '/issues/bulk_edit?fixed_version_id=2&amp;ids%5B%5D=1',
                                              :class => '' }
     assert_tag :tag => 'a', :content => 'Dave Lopper',
-                            :attributes => { :href => '/projects/ecookbook/issues/bulk_edit?assigned_to_id=3&back_to=&ids%5B%5D=1',
+                            :attributes => { :href => '/issues/bulk_edit?assigned_to_id=3&amp;ids%5B%5D=1',
                                              :class => '' }
     assert_tag :tag => 'a', :content => 'Recipes',
-                            :attributes => { :href => '/projects/ecookbook/issues/bulk_edit?back_to=&category_id=2&ids%5B%5D=1',
+                            :attributes => { :href => '/issues/bulk_edit?category_id=2&amp;ids%5B%5D=1',
                                              :class => '' }
     assert_tag :tag => 'a', :content => '100%',
-                            :attributes => { :href => '/projects/ecookbook/issues/bulk_edit?back_to=&done_ratio=100&ids%5B%5D=1',
+                            :attributes => { :href => '/issues/bulk_edit?done_ratio=100&amp;ids%5B%5D=1',
                                              :class => '' }
     assert_tag :tag => 'a', :content => 'Copy',
-                            :attributes => { :href => '/projects/ecookbook/issues/new?copy_from=1&project_id=ecookbook',
+                            :attributes => { :href => '/projects/ecookbook/issues/new?copy_from=1',
                                              :class => 'icon-copy' }
     assert_tag :tag => 'a', :content => 'Log time',
                             :attributes => { :href => '/projects/ecookbook/timelog/new?issue_id=1',
                                              :class => 'icon-time' }
     assert_tag :tag => 'a', :content => 'Move',
-                            :attributes => { :href => '/projects/ecookbook/issues/move?ids%5B%5D=1',
+                            :attributes => { :href => '/issues/move?ids%5B%5D=1',
                                              :class => 'icon-move' }
     assert_tag :tag => 'a', :content => 'Delete',
-                            :attributes => { :href => '/projects/ecookbook/issues/bulk_destroy?ids%5B%5D=1',
+                            :attributes => { :href => '/issues/bulk_destroy?ids%5B%5D=1',
                                              :class => 'icon-del' }
   end
 
@@ -634,28 +634,28 @@ class IssuesControllerTest < Test::Unit::TestCase
     assert_response :success
     assert_template 'context_menu'
     assert_tag :tag => 'a', :content => 'Edit',
-                            :attributes => { :href => '/projects/ecookbook/issues/bulk_edit?ids%5B%5D=1&ids%5B%5D=2',
+                            :attributes => { :href => '/issues/bulk_edit?ids%5B%5D=1&amp;ids%5B%5D=2',
                                              :class => 'icon-edit' }
     assert_tag :tag => 'a', :content => 'Immediate',
-                            :attributes => { :href => '/projects/ecookbook/issues/bulk_edit?back_to=&ids%5B%5D=1&ids%5B%5D=2&priority_id=8',
+                            :attributes => { :href => '/issues/bulk_edit?ids%5B%5D=1&amp;ids%5B%5D=2&amp;priority_id=8',
                                              :class => '' }
     assert_tag :tag => 'a', :content => '1.0',
-                            :attributes => { :href => '/projects/ecookbook/issues/bulk_edit?back_to=&fixed_version_id=2&ids%5B%5D=1&ids%5B%5D=2',
+                            :attributes => { :href => '/issues/bulk_edit?fixed_version_id=2&amp;ids%5B%5D=1&amp;ids%5B%5D=2',
                                              :class => '' }
     assert_tag :tag => 'a', :content => 'Dave Lopper',
-                            :attributes => { :href => '/projects/ecookbook/issues/bulk_edit?assigned_to_id=3&back_to=&ids%5B%5D=1&ids%5B%5D=2',
+                            :attributes => { :href => '/issues/bulk_edit?assigned_to_id=3&amp;ids%5B%5D=1&amp;ids%5B%5D=2',
                                              :class => '' }
     assert_tag :tag => 'a', :content => 'Printing',
-                            :attributes => { :href => '/projects/ecookbook/issues/bulk_edit?back_to=&category_id=1&ids%5B%5D=1&ids%5B%5D=2',
+                            :attributes => { :href => '/issues/bulk_edit?category_id=1&amp;ids%5B%5D=1&amp;ids%5B%5D=2',
                                              :class => '' }
     assert_tag :tag => 'a', :content => '100%',
-                            :attributes => { :href => '/projects/ecookbook/issues/bulk_edit?back_to=&done_ratio=100&ids%5B%5D=1&ids%5B%5D=2',
+                            :attributes => { :href => '/issues/bulk_edit?done_ratio=100&amp;ids%5B%5D=1&amp;ids%5B%5D=2',
                                              :class => '' }
     assert_tag :tag => 'a', :content => 'Move',
-                            :attributes => { :href => '/projects/ecookbook/issues/move?ids%5B%5D=1&ids%5B%5D=2',
+                            :attributes => { :href => '/issues/move?ids%5B%5D=1&amp;ids%5B%5D=2',
                                              :class => 'icon-move' }
     assert_tag :tag => 'a', :content => 'Delete',
-                            :attributes => { :href => '/projects/ecookbook/issues/bulk_destroy?ids%5B%5D=1&ids%5B%5D=2',
+                            :attributes => { :href => '/issues/bulk_destroy?ids%5B%5D=1&amp;ids%5B%5D=2',
                                              :class => 'icon-del' }
   end
 
