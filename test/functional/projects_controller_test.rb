@@ -90,7 +90,7 @@ class ProjectsControllerTest < Test::Unit::TestCase
   
   def test_edit
     @request.session[:user_id] = 2 # manager
-    post :settings, :id => 1, :project => {:name => 'Test changed name',
+    put :update, :id => 1, :project => {:name => 'Test changed name',
                                        :issue_custom_field_ids => ['']}
     assert_redirected_to 'projects/ecookbook/settings'
     project = Project.find(1)
