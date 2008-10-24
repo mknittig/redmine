@@ -1,10 +1,10 @@
-<h2><%= link_to h(@board.name), project_board_path(@project, @board) %> &#187; <%=h @message.subject %></h2>
+<h2><%= link_to h(@board.name), :controller => 'boards', :action => 'show', :project_id => @project, :id => @board %> &#187; <%=h @message.subject %></h2>
 
-<% form_for :message, @message, :url => board_message_path(@board, @topic), :html => {:multipart => true, :method => :put, :id => 'message-form'} do |f| %>
+<% form_for :message, @message, :url => {:action => 'update'}, :html => {:multipart => true, :method => :put, :id => 'message-form'} do |f| %>
   <%= render :partial => 'form', :locals => {:f => f, :replying => !@message.parent.nil?} %>
   <%= submit_tag l(:button_save) %>
   <%= link_to_remote l(:label_preview), 
-                     { :url => preview_board_message_path(@board, @topic),
+                     { :url => { :controller => 'messages', :action => 'preview', :board_id => @board },
                        :method => 'post',
                        :update => 'preview',
                        :with => "Form.serialize('message-form')",
