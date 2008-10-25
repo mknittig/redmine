@@ -57,6 +57,7 @@ class ProjectsController < ApplicationController
         render_feed(projects.sort_by(&:created_on).reverse.slice(0, Setting.feeds_limit.to_i), 
                                   :title => "#{Setting.app_title}: #{l(:label_project_latest)}")
       }
+      format.xml { render :xml => projects.to_xml(:except => [:created_om, :updated_on]) }
     end
   end
   
