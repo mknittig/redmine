@@ -2,7 +2,7 @@
     <h2><%=l(:label_issue_plural)%></h2>
     <% html_title(l(:label_issue_plural)) %>
     
-    <% form_tag({ :controller => 'queries', :action => 'new' }, :id => 'query_form') do %>
+    <% form_tag({ :controller => 'queries', :action => 'create' }, :id => 'query_form') do %>
     <%= hidden_field_tag('project_id', @project.id) if @project %>
     <fieldset id="filters"><legend><%= l(:label_filter_plural) %></legend>
     <%= render :partial => 'queries/filters', :locals => {:query => @query} %>
