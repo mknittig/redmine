@@ -23,6 +23,7 @@ Redmine::AccessControl.map do |map|
   map.permission :select_project_modules, {:projects => :modules}, :require => :member
   map.permission :manage_members, {:projects => :settings, :members => [:new, :create, :edit, :update, :destroy]}, :require => :member
   map.permission :manage_versions, {:projects => [:settings, :add_version], :versions => [:edit, :update, :destroy]}, :require => :member
+  map.permission :use_api, {:projects => [:members, :versions, :issue_categories, :trackers], :issues_statuses => [:index], :enumerations => [:priorities]}, :public => true
   
   map.project_module :issue_tracking do |map|
     # Issue categories

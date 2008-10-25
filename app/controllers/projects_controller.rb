@@ -254,6 +254,30 @@ class ProjectsController < ApplicationController
     end
   end
   
+  def members
+    respond_to do |format|
+      format.xml { render :xml => @project.members.to_xml(:except => [:created_on, :updated_on, :mail_notification]) }
+    end
+  end
+  
+  def versions
+    respond_to do |format|
+      format.xml { render :xml => @project.versions.to_xml(:except => [:created_on, :updated_on]) }
+    end
+  end
+  
+  def issue_categories
+    respond_to do |format|
+      format.xml { render :xml => @project.issue_categories.to_xml(:except => [:created_on, :updated_on]) }
+    end
+  end
+  
+  def trackers
+    respond_to do |format|
+      format.xml { render :xml => @project.trackers.to_xml(:except => [:created_on, :updated_on, :is_in_chlog, :is_in_roadmap]) }
+    end
+  end
+  
 private
   # Find project of id params[:id]
   # if not found, redirect to project list

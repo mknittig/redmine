@@ -16,11 +16,21 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class EnumerationsController < ApplicationController
-  before_filter :require_admin
+  #before_filter :authorize, :only => [:priorities]
+  before_filter :require_admin, :except => [:priorities]
   
   def index
     list
     render :action => 'list'
+  end
+  
+  def priorities
+    respond_to do |format|
+      format.xml do
+        enumerations = Enumeration::get_values('IPRI')
+        render :xml => enumerations.to_xml(:except => [:opt])
+      end
+    end
   end
 
   # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)

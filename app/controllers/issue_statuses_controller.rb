@@ -16,14 +16,28 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class IssueStatusesController < ApplicationController
-  before_filter :require_admin
+  #before_filter :authorize, :only => [:index]
+  before_filter :require_admin, :except => [:index]
 
   #verify :method => :post, :only => [ :destroy, :create, :update, :move ],
   #       :redirect_to => { :action => :list }
          
   def index
-    list
-    render :action => 'list' unless request.xhr?
+    respond_to do |format|
+      format.html do
+        if User.current.admin?
+          list
+          render :action => 'list' unless request.xhr?
+        else
+          render_403
+        end
+      end
+      format.xml do
+        issue_statuses = IssueStatus.find(:all)
+        render :xml => issue_statuses.to_xml
+      end
+    end
+    
   end
 
   def list
