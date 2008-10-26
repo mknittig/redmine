@@ -17,8 +17,15 @@
 
 class QueriesController < ApplicationController
   menu_item :issues
-  before_filter :find_query, :except => [:new, :create]
-  before_filter :find_optional_project, :only => [:new, :create]
+  before_filter :find_query, :except => [:new, :create, :index]
+  before_filter :find_optional_project, :only => [:new, :create, :index]
+  
+  def index
+    @queries = Query.find(:all, :conditions => { :project_id => @project })
+    respond_to do |format|
+      format.xml { render :xml => @queries.to_xml(:except => [:column_names, :filters]) }
+    end
+  end
   
   def new
     @query = Query.new(params[:query])
