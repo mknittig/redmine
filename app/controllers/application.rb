@@ -53,6 +53,11 @@ class ApplicationController < ActionController::Base
     elsif params[:key] && accept_key_auth_actions.include?(params[:action])
       # RSS key authentication
       User.find_by_rss_key(params[:key])
+    elsif request.format = Mime::XML
+      authenticate_with_http_basic do |username, password|
+        user = User.try_to_login(username, password)
+      end
+      return user
     end
   end
   
@@ -82,7 +87,11 @@ class ApplicationController < ActionController::Base
   
   def require_login
     if !User.current.logged?
-      redirect_to :controller => "account", :action => "login", :back_url => url_for(params)
+      if request.format = Mime::XML
+        request_http_basic_authentication
+      else
+        redirect_to :controller => "account", :action => "login", :back_url => url_for(params)
+      end
       return false
     end
     true
