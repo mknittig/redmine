@@ -53,11 +53,13 @@ class ApplicationController < ActionController::Base
     elsif params[:key] && accept_key_auth_actions.include?(params[:action])
       # RSS key authentication
       User.find_by_rss_key(params[:key])
-    elsif request.format = Mime::XML
-      authenticate_with_http_basic do |username, password|
-        user = User.try_to_login(username, password)
-      end
-      return user
+    #FIXME Why doesn't this work?
+    #elsif request.format = Mime::XML
+    #elsif params[:format] = "xml"
+    #  authenticate_with_http_basic do |username, password| 
+    #    User.current = User.try_to_login(username, password)
+    #  end
+    #  User.current
     end
   end
   
