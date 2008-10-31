@@ -31,6 +31,14 @@ class AccountController < ApplicationController
     @memberships = @user.memberships.select do |membership|
       membership.project.is_public? || (User.current.member_of?(membership.project))
     end
+    
+    except = [:created_on, :updated_on, :login, :hashed_password, :admin,
+        :auth_source_id, :language, :last_login_on, :mail_notification, :status]
+    except = except + [:mail] if @user.pref.hide_mail
+    respond_to do |format|
+      format.html
+      format.xml { render :xml => @user.to_xml(:except => except) }
+    end
   rescue ActiveRecord::RecordNotFound
     render_404
   end
