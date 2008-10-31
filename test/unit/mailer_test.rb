@@ -31,8 +31,8 @@ class MailerTest < Test::Unit::TestCase
     mail = ActionMailer::Base.deliveries.last
     assert_kind_of TMail::Mail, mail
     # link to the main ticket
-    assert mail.body.include?('<a href="https://mydomain.foo/issues/1">Bug #1: Can\'t print recipes</a>')
-    
+    assert mail.body.include?('<a href="https://mydomain.foo/issues/show/1">Bug #1: Can\'t print recipes</a>')
+ 
     # link to a referenced ticket
     assert mail.body.include?('<a href="https://mydomain.foo/issues/2" class="issue" title="Add ingredients categories (Assigned)">#2</a>')
     # link to a changeset

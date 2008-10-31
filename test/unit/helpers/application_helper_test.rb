@@ -24,7 +24,8 @@ class ApplicationHelperTest < HelperTestCase
                       :repositories, :changesets, 
                       :trackers, :issue_statuses, :issues, :versions, :documents,
                       :wikis, :wiki_pages, :wiki_contents,
-                      :boards, :messages
+                      :boards, :messages,
+                      :attachments
 
   def setup
     super
@@ -68,6 +69,15 @@ class ApplicationHelperTest < HelperTestCase
       'with style !{width:100px;height100px}http://foo.bar/image.jpg!' => 'with style <img src="http://foo.bar/image.jpg" style="width:100px;height100px;" alt="" />',
     }
     to_test.each { |text, result| assert_equal "<p>#{result}</p>", textilizable(text) }
+  end
+  
+  def test_attached_images
+    to_test = {
+      'Inline image: !logo.gif!' => 'Inline image: <img src="/attachments/download/3" title="This is a logo" alt="This is a logo" />',
+      'Inline image: !logo.GIF!' => 'Inline image: <img src="/attachments/download/3" title="This is a logo" alt="This is a logo" />'
+    }
+    attachments = Attachment.find(:all)
+    to_test.each { |text, result| assert_equal "<p>#{result}</p>", textilizable(text, :attachments => attachments) }
   end
   
   def test_textile_external_links
@@ -219,6 +229,11 @@ class ApplicationHelperTest < HelperTestCase
     assert_equal '<p>Dashes: ---</p>', textilizable('Dashes: ---')
   end
   
+  def test_acronym
+    assert_equal '<p>This is an acronym: <acronym title="American Civil Liberties Union">ACLU</acronym>.</p>',
+                 textilizable('This is an acronym: ACLU(American Civil Liberties Union).')
+  end
+  
   def test_footnotes
     raw = <<-RAW
 This is some text[1].
@@ -348,6 +363,13 @@ EXPECTED
 
     text = "{{include(unknowidentifier:somepage)}}"
     assert textilizable(text).match(/Unknow project/)
+  end
+  
+  def test_default_formatter
+    Setting.text_formatting = 'unknown'
+    text = 'a *link*: http://www.example.net/'
+    assert_equal '<p>a *link*: <a href="http://www.example.net/">http://www.example.net/</a></p>', textilizable(text)
+    Setting.text_formatting = 'textile'
   end
   
   def test_date_format_default

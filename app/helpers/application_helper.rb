@@ -17,9 +17,13 @@
 
 require 'coderay'
 require 'coderay/helpers/file_type'
+require 'forwardable'
 
 module ApplicationHelper
   include Redmine::WikiFormatting::Macros::Definitions
+
+  extend Forwardable
+  def_delegators :wiki_helper, :wikitoolbar_for, :heads_for_wiki_formatter
 
   def current_role
     @current_role ||= User.current.role_for_project(@project)
@@ -246,7 +250,7 @@ module ApplicationHelper
     
     if attachments
       attachments = attachments.sort_by(&:created_on).reverse
-      text = text.gsub(/!((\<|\=|\>)?(\([^\)]+\))?(\[[^\]]+\])?(\{[^\}]+\})?)(\S+\.(gif|jpg|jpeg|png))!/) do |m|
+      text = text.gsub(/!((\<|\=|\>)?(\([^\)]+\))?(\[[^\]]+\])?(\{[^\}]+\})?)(\S+\.(bmp|gif|jpg|jpeg|png))!/i) do |m|
         style = $1
         filename = $6
         rf = Regexp.new(Regexp.escape(filename),  Regexp::IGNORECASE)
@@ -262,9 +266,7 @@ module ApplicationHelper
       end
     end
     
-    text = (Setting.text_formatting == 'textile') ?
-      Redmine::WikiFormatting.to_html(text) { |macro, args| exec_macro(macro, obj, args) } :
-      simple_format(auto_link(h(text)))
+    text = Redmine::WikiFormatting.to_html(Setting.text_formatting, text) { |macro, args| exec_macro(macro, obj, args) }
 
     # different methods for formatting wiki links
     case options[:wiki_links]
@@ -552,18 +554,6 @@ module ApplicationHelper
     end
   end
   
-  def wikitoolbar_for(field_id)
-    return '' unless Setting.text_formatting == 'textile'
-    
-    help_link = l(:setting_text_formatting) + ': ' +
-      link_to(l(:label_help), compute_public_path('wiki_syntax', 'help', 'html'),
-                              :onclick => "window.open(\"#{ compute_public_path('wiki_syntax', 'help', 'html') }\", \"\", \"resizable=yes, location=no, width=300, height=640, menubar=no, status=no, scrollbars=yes\"); return false;")
-
-    javascript_include_tag('jstoolbar/jstoolbar') +
-      javascript_include_tag("jstoolbar/lang/jstoolbar-#{current_language}") +
-      javascript_tag("var toolbar = new jsToolBar($('#{field_id}')); toolbar.setHelpLink('#{help_link}'); toolbar.draw();")
-  end
-  
   def content_for(name, content = nil, &block)
     @has_content ||= {}
     @has_content[name] = true
@@ -572,5 +562,19 @@ module ApplicationHelper
   
   def has_content?(name)
     (@has_content && @has_content[name]) || false
+  end
+
+  def gravatar_for_mail(mail, options = { })
+    if Setting.gravatar_enabled?
+      return gravatar(mail, options) rescue nil
+    end
+  end
+
+  private
+  
+  def wiki_helper
+    helper = Redmine::WikiFormatting.helper_for(Setting.text_formatting)
+    extend helper
+    return self
   end
 end
