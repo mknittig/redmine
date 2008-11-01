@@ -148,14 +148,19 @@ class IssuesController < ApplicationController
     requested_status = IssueStatus.find_by_id(params[:issue][:status_id])
     # Check that the user is allowed to apply the requested status
     @issue.status = (@allowed_statuses.include? requested_status) ? requested_status : @default_status
-    if @issue.save
-      attach_files(@issue, params[:attachments])
-      flash[:notice] = l(:notice_successful_create)
-      Mailer.deliver_issue_add(@issue) if Setting.notified_events.include?('issue_added')
-      redirect_to :controller => 'issues', :action => 'show', :id => @issue
-      return
-    else
-      render :action => 'new'
+    
+    respond_to do |format|
+      if @issue.save
+        attach_files(@issue, params[:attachments])
+        flash[:notice] = l(:notice_successful_create)  
+        Mailer.deliver_issue_add(@issue) if Setting.notified_events.include?('issue_added')
+        
+        format.html { redirect_to :controller => 'issues', :action => 'show', :id => @issue }
+        format.xml  { head :created, :location => {:controller => 'issues', :action => 'show', :id => @issue} }
+      else
+        format.html { render :action => 'new' }
+        format.xml  { render :xml => @issue.errors.to_xml }
+      end
     end
   end
   
@@ -186,19 +191,25 @@ class IssuesController < ApplicationController
     @time_entry.attributes = params[:time_entry]
     attachments = attach_files(@issue, params[:attachments])
     attachments.each {|a| @journal.details << JournalDetail.new(:property => 'attachment', :prop_key => a.id, :value => a.filename)}
-    if (@time_entry.hours.nil? || @time_entry.valid?) && @issue.save
-      # Log spend time
-      if current_role.allowed_to?(:log_time)
-        @time_entry.save
+    
+    respond_to do |format|
+      if (@time_entry.hours.nil? || @time_entry.valid?) && @issue.save
+        # Log spend time
+        if current_role.allowed_to?(:log_time)
+          @time_entry.save
+        end
+        if !@journal.new_record?
+          # Only send notification if something was actually changed
+          flash[:notice] = l(:notice_successful_update)
+          Mailer.deliver_issue_edit(@journal) if Setting.notified_events.include?('issue_updated')
+        end
+        
+        format.html { redirect_to(params[:back_to] || {:action => 'show', :id => @issue}) }
+        format.xml  { head :ok }
+      else
+        format.html { render :action => 'edit' }
+        format.xml  { render :xml => @issue.errors.to_xml }
       end
-      if !@journal.new_record?
-        # Only send notification if something was actually changed
-        flash[:notice] = l(:notice_successful_update)
-        Mailer.deliver_issue_edit(@journal) if Setting.notified_events.include?('issue_updated')
-      end
-      redirect_to(params[:back_to] || {:action => 'show', :id => @issue})
-    else
-      render :action => 'edit'
     end
   rescue ActiveRecord::StaleObjectError
     # Optimistic locking exception
