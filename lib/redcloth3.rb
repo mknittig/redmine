@@ -1010,7 +1010,7 @@ class RedCloth3 < String
 
     def glyphs_textile( text, level = 0 )
         if text !~ HASTAG_MATCH
-            #pgl text
+            pgl text
             footnote_ref text
         else
             codepre = 0
