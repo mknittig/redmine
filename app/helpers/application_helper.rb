@@ -21,6 +21,7 @@ require 'forwardable'
 
 module ApplicationHelper
   include Redmine::WikiFormatting::Macros::Definitions
+  include GravatarHelper::PublicMethods
 
   extend Forwardable
   def_delegators :wiki_helper, :wikitoolbar_for, :heads_for_wiki_formatter
@@ -128,7 +129,10 @@ module ApplicationHelper
   end
 
   def authoring(created, author)
-    time_tag = content_tag('acronym', distance_of_time_in_words(Time.now, created), :title => format_time(created))
+    time_tag = @project.nil? ? content_tag('acronym', distance_of_time_in_words(Time.now, created), :title => format_time(created)) :
+                               link_to(distance_of_time_in_words(Time.now, created), 
+                                       {:controller => 'projects', :action => 'activity', :id => @project, :from => created.to_date},
+                                       :title => format_time(created))
     author_tag = (author.is_a?(User) && !author.anonymous?) ? link_to(h(author), :controller => 'account', :action => 'show', :id => author) : h(author || 'Anonymous')
     l(:label_added_time_by, author_tag, time_tag)
   end
@@ -564,9 +568,17 @@ module ApplicationHelper
     (@has_content && @has_content[name]) || false
   end
 
-  def gravatar_for_mail(mail, options = { })
+  # Returns the avatar image tag for the given +user+ if avatars are enabled
+  # +user+ can be a User or a string that will be scanned for an email address (eg. 'joe <joe@foo.bar>')
+  def avatar(user, options = { })
     if Setting.gravatar_enabled?
-      return gravatar(mail.to_s.downcase, options) rescue nil
+      email = nil
+      if user.respond_to?(:mail)
+        email = user.mail
+      elsif user.to_s =~ %r{<(.+?)>}
+        email = $1
+      end
+      return gravatar(email.to_s.downcase, options) unless email.blank? rescue nil
     end
   end
 

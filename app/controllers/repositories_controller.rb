@@ -51,6 +51,20 @@ class RepositoriesController < ApplicationController
     end
   end
   
+  def committers
+    @committers = @repository.committers
+    @users = @project.users
+    additional_user_ids = @committers.collect(&:last).collect(&:to_i) - @users.collect(&:id)
+    @users += User.find_all_by_id(additional_user_ids) unless additional_user_ids.empty?
+    @users.compact!
+    @users.sort!
+    if request.post?
+      @repository.committer_ids = params[:committers]
+      flash[:notice] = l(:notice_successful_update)
+      redirect_to :action => 'committers', :id => @project
+    end
+  end
+  
   def destroy
     @repository.destroy
     redirect_to :controller => 'projects', :action => 'settings', :id => @project, :tab => 'repository'
@@ -91,7 +105,8 @@ class RepositoriesController < ApplicationController
 								      params['page']								
     @changesets = @repository.changesets.find(:all,
 						:limit  =>  @changeset_pages.items_per_page,
-						:offset =>  @changeset_pages.current.offset)
+						:offset =>  @changeset_pages.current.offset,
+            :include => :user)
 
     respond_to do |format|
       format.html { render :layout => false if request.xhr? }
