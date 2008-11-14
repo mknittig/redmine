@@ -5,12 +5,12 @@
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
 # of the License, or (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -27,8 +27,11 @@ class SettingsController < ApplicationController
     @notifiables = %w(issue_added issue_updated news_added document_added file_added message_posted)
 
     @options = {}
-    @options[:user_format] = User::USER_FORMATS.keys.collect {|f| [User.current.name(f), f.to_s] }
+    @options[@op:user_format] = User::USER_FORMATS.keys.collect {|f| [User.current.name(f), f.to_s] }
     @deliveries = ActionMailer::Base.perform_deliveries
+
+    @guessed_host_and_path = request.host_with_port
+    @guessed_host_and_path << ('/'+ request.relative_url_root.gsub(%r{^\/}, '')) unless request.relative_url_root.blank?
   end
   
   def update
@@ -46,7 +49,7 @@ class SettingsController < ApplicationController
       render :action => 'show', :tab => params[:tab]
     end
   end
-  
+
   def plugin
     plugin_id = params[:id].to_sym
     @plugin = Redmine::Plugin.registered_plugins[plugin_id]

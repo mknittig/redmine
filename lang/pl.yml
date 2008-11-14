@@ -1,8 +1,8 @@
-﻿# Keep this line in order to avoid problems with Windows Notepad UTF-8 EF-BB-BF idea...
+﻿# Keep this line in order to avoid problems with Windows Notepad UTF-8 EF-BB-BFidea...
 # PL translation by Mariusz@Olejnik.net, 
 # Best regards from Lublin@Poland :-)
 
-_gloc_rule_default: '|n| n==1 ? "" : "_plural" '
+_gloc_rule_default: '|n| n10=n%10; n100=n%100; n==1 ? "" : n10>=2 && n10<=4 && (n100<10 || n100>=20) ? "_plural234" : "_plural5"'
 
 actionview_datehelper_select_day_prefix:
 actionview_datehelper_select_month_names: Styczeń,Luty,Marzec,Kwiecień,Maj,Czerwiec,Lipiec,Sierpień,Wrzesień,Październik,Listopad,Grudzień
@@ -10,17 +10,25 @@ actionview_datehelper_select_month_names_abbr: Sty,Lut,Mar,Kwi,Maj,Cze,Lip,Sie,W
 actionview_datehelper_select_month_prefix:
 actionview_datehelper_select_year_prefix:
 actionview_datehelper_time_in_words_day: 1 dzień
+actionview_datehelper_time_in_words_day_plural234: %d dni
+actionview_datehelper_time_in_words_day_plural5: %d dni
 actionview_datehelper_time_in_words_day_plural: %d dni
 actionview_datehelper_time_in_words_hour_about: około godziny
+actionview_datehelper_time_in_words_hour_about_plural234: około %d godzin
+actionview_datehelper_time_in_words_hour_about_plural5: około %d godzin
 actionview_datehelper_time_in_words_hour_about_plural: około %d godzin
 actionview_datehelper_time_in_words_hour_about_single: około godziny
 actionview_datehelper_time_in_words_minute: 1 minuta
 actionview_datehelper_time_in_words_minute_half: pół minuty
 actionview_datehelper_time_in_words_minute_less_than: mniej niż minuta
+actionview_datehelper_time_in_words_minute_plural234: %d minuty
+actionview_datehelper_time_in_words_minute_plural5: %d minut
 actionview_datehelper_time_in_words_minute_plural: %d minut
 actionview_datehelper_time_in_words_minute_single: 1 minuta
 actionview_datehelper_time_in_words_second_less_than: mniej niż sekunda
 actionview_datehelper_time_in_words_second_less_than_plural: mniej niż %d sekund
+actionview_datehelper_time_in_words_second_less_than_plural234: mniej niż %d sekundy
+actionview_datehelper_time_in_words_second_less_than_plural5: mniej niż %d sekund
 actionview_instancetag_blank_option: Proszę wybierz
 
 activerecord_error_inclusion: nie jest zawarte na liście
@@ -40,7 +48,9 @@ activerecord_error_greater_than_start_date: musi być większe niż początkowa 
 activerecord_error_not_same_project: nie należy do tego samego projektu
 activerecord_error_circular_dependency: Ta relacja może wytworzyć kołową zależność
 
-general_fmt_age: %d lat
+general_fmt_age: %d rok
+general_fmt_age_plural234: %d lata
+general_fmt_age_plural5: %d lat
 general_fmt_age_plural: %d lat
 general_fmt_date: %%m/%%d/%%Y
 general_fmt_datetime: %%m/%%d/%%Y %%I:%%M %%p
@@ -76,7 +86,7 @@ notice_locking_conflict: Dane poprawione przez innego użytkownika.
 notice_not_authorized: Nie jesteś autoryzowany by zobaczyć stronę.
 
 error_scm_not_found: "Obiekt lub wersja nie zostały znalezione w repozytorium."
-error_scm_command_failed: "An error occurred when trying to access the repository: %s"
+error_scm_command_failed: "Wystąpił błąd przy próbie dostępu do repozytorium: %s"
 
 mail_subject_lost_password: Twoje hasło do %s
 mail_body_lost_password: 'W celu zmiany swojego hasła użyj poniższego odnośnika:'
@@ -84,6 +94,8 @@ mail_subject_register: Aktywacja konta w %s
 mail_body_register: 'W celu aktywacji Twojego konta, użyj poniższego odnośnika:'
 
 gui_validation_error: 1 błąd
+gui_validation_error_plural234: %d błędy
+gui_validation_error_plural5: %d błędów
 gui_validation_error_plural: %d błędów
 
 field_name: Nazwa
@@ -173,7 +185,7 @@ setting_self_registration: Własna rejestracja umożliwiona
 setting_attachment_max_size: Maks. rozm. załącznika
 setting_issues_export_limit: Limit eksportu zagadnień
 setting_mail_from: Adres email wysyłki
-setting_host_name: Nazwa hosta
+setting_host_name: Nazwa hosta i ścieżka
 setting_text_formatting: Formatowanie tekstu
 setting_wiki_compression: Kompresja historii Wiki
 setting_feeds_limit: Limit danych RSS
@@ -189,6 +201,8 @@ label_user_plural: Użytkownicy
 label_user_new: Nowy użytkownik
 label_project: Projekt
 label_project_new: Nowy projekt
+label_project_plural234: Projekty
+label_project_plural5: Projekty
 label_project_plural: Projekty
 label_project_all: Wszystkie projekty
 label_project_latest: Ostatnie projekty
@@ -237,7 +251,9 @@ label_help: Pomoc
 label_reported_issues: Wprowadzone zagadnienia
 label_assigned_to_me_issues: Zagadnienia przypisane do mnie
 label_last_login: Ostatnie połączenie
-label_last_updates: Ostatnia zmieniana
+label_last_updates: Ostatnia zmiana
+label_last_updates_plural234: %d ostatnie zmiany
+label_last_updates_plural5: %d ostatnich zmian
 label_last_updates_plural: %d ostatnie zmiany
 label_registered_on: Zarejestrowany
 label_activity: Aktywność
@@ -259,13 +275,15 @@ label_text: Długi tekst
 label_attribute: Atrybut
 label_attribute_plural: Atrybuty
 label_download: %d Pobranie
+label_download_plural234: %d Pobrania
+label_download_plural5: %d Pobrań
 label_download_plural: %d Pobrania
 label_no_data: Brak danych do pokazania
 label_change_status: Status zmian
 label_history: Historia
 label_attachment: Plik
 label_attachment_new: Nowy plik
-label_attachment_delete: Skasuj plik
+label_attachment_delete: Usuń plik
 label_attachment_plural: Pliki
 label_report: Raport
 label_report_plural: Raporty
@@ -285,8 +303,12 @@ label_export_to: Eksportuj do
 label_read: Czytanie...
 label_public_projects: Projekty publiczne
 label_open_issues: otwarte
+label_open_issues_plural234: otwarte
+label_open_issues_plural5: otwarte
 label_open_issues_plural: otwarte
 label_closed_issues: zamknięte
+label_closed_issues_plural234: zamknięte
+label_closed_issues_plural5: zamknięte
 label_closed_issues_plural: zamknięte
 label_total: Ogółem
 label_permissions: Uprawnienia
@@ -308,6 +330,8 @@ label_last_changes: ostatnie %d zmian
 label_change_view_all: Pokaż wszystkie zmiany
 label_personalize_page: Personalizuj tą stronę
 label_comment: Komentarz
+label_comment_plural234: Komentarze
+label_comment_plural5: Komentarze
 label_comment_plural: Komentarze
 label_comment_add: Dodaj komentarz
 label_comment_added: Komentarz dodany
@@ -332,7 +356,9 @@ label_day_plural: dni
 label_repository: Repozytorium
 label_browse: Przegląd
 label_modification: %d modyfikacja
-label_modification_plural: %d modyfikacja
+label_modification_plural234: %d modyfikacje
+label_modification_plural5: %d modyfikacji
+label_modification_plural: %d modyfikacje
 label_revision: Rewizja
 label_revision_plural: Rewizje
 label_added: dodane
@@ -367,6 +393,8 @@ label_changes_details: Szczegóły wszystkich zmian
 label_issue_tracking: Śledzenie zagadnień
 label_spent_time: Spędzony czas
 label_f_hour: %.2f godzina
+label_f_hour_plural234: %.2f godziny
+label_f_hour_plural5: %.2f godzin
 label_f_hour_plural: %.2f godzin
 label_time_tracking: Śledzenie czasu
 label_change_plural: Zmiany
@@ -646,51 +674,56 @@ label_renamed: przemianowano
 label_copied: skopiowano
 field_vf_watcher: Obserwator
 field_vf_personnel: Personel
-setting_plain_text_mail: plain text only (no HTML)
-permission_view_files: View files
-permission_edit_issues: Edit issues
-permission_edit_own_time_entries: Edit own time logs
-permission_manage_public_queries: Manage public queries
-permission_add_issues: Add issues
-permission_log_time: Log spent time
-permission_view_changesets: View changesets
-permission_view_time_entries: View spent time
-permission_manage_versions: Manage versions
-permission_manage_wiki: Manage wiki
-permission_manage_categories: Manage issue categories
-permission_protect_wiki_pages: Protect wiki pages
-permission_comment_news: Comment news
-permission_delete_messages: Delete messages
-permission_select_project_modules: Select project modules
-permission_manage_documents: Manage documents
-permission_edit_wiki_pages: Edit wiki pages
-permission_add_issue_watchers: Add watchers
-permission_view_gantt: View gantt chart
-permission_move_issues: Move issues
-permission_manage_issue_relations: Manage issue relations
-permission_delete_wiki_pages: Delete wiki pages
-permission_manage_boards: Manage boards
-permission_delete_wiki_pages_attachments: Delete attachments
-permission_view_wiki_edits: View wiki history
-permission_add_messages: Post messages
-permission_view_messages: View messages
-permission_manage_files: Manage files
-permission_edit_issue_notes: Edit notes
-permission_manage_news: Manage news
-permission_view_calendar: View calendrier
-permission_manage_members: Manage members
-permission_edit_messages: Edit messages
-permission_delete_issues: Delete issues
-permission_view_issue_watchers: View watchers list
-permission_manage_repository: Manage repository
-permission_commit_access: Commit access
-permission_browse_repository: Browse repository
-permission_view_documents: View documents
-permission_edit_project: Edit project
-permission_add_issue_notes: Add notes
-permission_save_queries: Save queries
-permission_view_wiki_pages: View wiki
-permission_rename_wiki_pages: Rename wiki pages
-permission_edit_time_entries: Edit time logs
-permission_edit_own_issue_notes: Edit own notes
-setting_gravatar_enabled: Use Gravatar user icons
+setting_plain_text_mail: tylko tekst (bez HTML)
+permission_view_files: Podgląd plików
+permission_edit_issues: Edycja zagadnień
+permission_edit_own_time_entries: Edycja własnego logu czasu
+permission_manage_public_queries: Zarządzanie publicznymi kwerendami
+permission_add_issues: Dodawanie zagadnień
+permission_log_time: Zapisywanie spędzonego czasu
+permission_view_changesets: Podgląd zmian
+permission_view_time_entries: Podgląd spędzonego czasu
+permission_manage_versions: Zarządzanie wersjami
+permission_manage_wiki: Zarządzanie wiki
+permission_manage_categories: Zarządzanie kategoriami zaganień
+permission_protect_wiki_pages: Blokowanie stron wiki
+permission_comment_news: Komentowanie wiadomości
+permission_delete_messages: Usuwanie wiadomości
+permission_select_project_modules: Wybieranie modułów projektu
+permission_manage_documents: Zarządzanie dokumentami
+permission_edit_wiki_pages: Edycja stron wiki
+permission_add_issue_watchers: Dodawanie obserwatorów
+permission_view_gantt: Podgląd diagramu Gantta
+permission_move_issues: Przenoszenie zagadnień
+permission_manage_issue_relations: Zarządzanie powiązaniami zagadnień
+permission_delete_wiki_pages: Usuwanie stron wiki
+permission_manage_boards: Zarządzanie forami
+permission_delete_wiki_pages_attachments: Usuwanie załączników
+permission_view_wiki_edits: Podgląd historii wiki
+permission_add_messages: Dodawanie wiadomości
+permission_view_messages: Podgląd wiadomości
+permission_manage_files: Zarządzanie plikami
+permission_edit_issue_notes: Edycja notatek
+permission_manage_news: Zarządzanie wiadomościami
+permission_view_calendar: Podgląd kalendarza
+permission_manage_members: Zarządzanie uczestnikami
+permission_edit_messages: Edycja wiadomości
+permission_delete_issues: Usuwanie zagadnień
+permission_view_issue_watchers: Podgląd listy obserwatorów
+permission_manage_repository: Zarządzanie repozytorium
+permission_commit_access: Wykonywanie zatwierdzeń
+permission_browse_repository: Przeglądanie repozytorium
+permission_view_documents: Podgląd dokumentów
+permission_edit_project: Edycja projektów
+permission_add_issue_notes: Dodawanie notatek
+permission_save_queries: Zapisywanie kwerend
+permission_view_wiki_pages: Podgląd wiki
+permission_rename_wiki_pages: Zmiana nazw stron wiki
+permission_edit_time_entries: Edycja logów czasu
+permission_edit_own_issue_notes: Edycja własnych notatek
+setting_gravatar_enabled: Używaj ikon użytkowników Gravatar
+
+label_example: Przykład
+text_repository_usernames_mapping: "Wybierz lub uaktualnij przyporządkowanie użytkowników Redmine do użytkowników repozytorium.\nUżytkownicy z taką samą nazwą lub adresem email są przyporządkowani automatycznie."
+permission_edit_own_messages: Edycja własnych wiadomości
+permission_delete_won_messages: Usuwanie własnych wiadomości

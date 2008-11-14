@@ -20,7 +20,7 @@ require File.dirname(__FILE__) + '/../../test_helper'
 class ApplicationHelperTest < HelperTestCase
   include ApplicationHelper
   include ActionView::Helpers::TextHelper
-  fixtures :projects, :roles, :enabled_modules,
+  fixtures :projects, :roles, :enabled_modules, :users,
                       :repositories, :changesets, 
                       :trackers, :issue_statuses, :issues, :versions, :documents,
                       :wikis, :wiki_pages, :wiki_contents,
@@ -36,6 +36,7 @@ class ApplicationHelperTest < HelperTestCase
       'http://foo.bar' => '<a class="external" href="http://foo.bar">http://foo.bar</a>',
       'http://foo.bar/~user' => '<a class="external" href="http://foo.bar/~user">http://foo.bar/~user</a>',
       'http://foo.bar.' => '<a class="external" href="http://foo.bar">http://foo.bar</a>.',
+      'https://foo.bar.' => '<a class="external" href="https://foo.bar">https://foo.bar</a>.',
       'This is a link: http://foo.bar.' => 'This is a link: <a class="external" href="http://foo.bar">http://foo.bar</a>.',
       'A link (eg. http://foo.bar).' => 'A link (eg. <a class="external" href="http://foo.bar">http://foo.bar</a>).',
       'http://foo.bar/foo.bar#foo.bar.' => '<a class="external" href="http://foo.bar/foo.bar#foo.bar">http://foo.bar/foo.bar#foo.bar</a>.',
@@ -52,6 +53,8 @@ class ApplicationHelperTest < HelperTestCase
       'http://foo@www.bar.com' => '<a class="external" href="http://foo@www.bar.com">http://foo@www.bar.com</a>',
       'http://foo:bar@www.bar.com' => '<a class="external" href="http://foo:bar@www.bar.com">http://foo:bar@www.bar.com</a>',
       'ftp://foo.bar' => '<a class="external" href="ftp://foo.bar">ftp://foo.bar</a>',
+      'ftps://foo.bar' => '<a class="external" href="ftps://foo.bar">ftps://foo.bar</a>',
+      'sftp://foo.bar' => '<a class="external" href="sftp://foo.bar">sftp://foo.bar</a>',
     }
     to_test.each { |text, result| assert_equal "<p>#{result}</p>", textilizable(text) }
   end
@@ -174,6 +177,7 @@ class ApplicationHelperTest < HelperTestCase
       '[[onlinestore:Unknown page]]' => '<a href="/wiki/onlinestore/Unknown_page" class="wiki-page new">Unknown page</a>',
       # striked through link
       '-[[Another page|Page]]-' => '<del><a href="/wiki/ecookbook/Another_page" class="wiki-page">Page</a></del>',
+      '-[[Another page|Page]] link-' => '<del><a href="/wiki/ecookbook/Another_page" class="wiki-page">Page</a> link</del>',
       # escaping
       '![[Another page|Page]]' => '[[Another page|Page]]',
     }
@@ -192,8 +196,9 @@ class ApplicationHelperTest < HelperTestCase
       "<pre><div>content</div></pre>" => "<pre>&lt;div&gt;content&lt;/div&gt;</pre>",
       "HTML comment: <!-- no comments -->" => "<p>HTML comment: &lt;!-- no comments --&gt;</p>",
       "<!-- opening comment" => "<p>&lt;!-- opening comment</p>",
-      # remove attributes
-      "<pre class='foo'>some text</pre>" => "<pre>some text</pre>",
+      # remove attributes except class
+      "<pre class='foo'>some text</pre>" => "<pre class='foo'>some text</pre>",
+      "<pre onmouseover='alert(1)'>some text</pre>" => "<pre>some text</pre>",
     }
     to_test.each { |text, result| assert_equal result, textilizable(text) }
   end
@@ -205,6 +210,21 @@ class ApplicationHelperTest < HelperTestCase
       "<notextile>this is <tag>a tag</tag></notextile>" => "this is &lt;tag&gt;a tag&lt;/tag&gt;"
     }
     to_test.each { |text, result| assert_equal result, textilizable(text) }
+  end
+  
+  def syntax_highlight
+    raw = <<-RAW
+<pre><code class="ruby">
+# Some ruby code here
+</pre></code>
+RAW
+
+    expected = <<-EXPECTED
+<pre><code class="ruby CodeRay"><span class="no">1</span> <span class="c"># Some ruby code here</span>
+</pre></code>
+EXPECTED
+
+    assert_equal expected.gsub(%r{[\r\n\t]}, ''), textilizable(raw).gsub(%r{[\r\n\t]}, '')
   end
   
   def test_wiki_links_in_tables
@@ -420,5 +440,18 @@ EXPECTED
     to_test.each do |date, expected|
       assert_equal expected, due_date_distance_in_words(date)
     end
+  end
+  
+  def test_avatar
+    # turn on avatars
+    Setting.gravatar_enabled = '1'
+    assert avatar(User.find_by_mail('jsmith@somenet.foo')).include?(Digest::MD5.hexdigest('jsmith@somenet.foo'))
+    assert avatar('jsmith <jsmith@somenet.foo>').include?(Digest::MD5.hexdigest('jsmith@somenet.foo'))
+    assert_nil avatar('jsmith')
+    assert_nil avatar(nil)
+    
+    # turn off avatars
+    Setting.gravatar_enabled = '0'
+    assert_nil avatar(User.find_by_mail('jsmith@somenet.foo'))
   end
 end

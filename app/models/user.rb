@@ -37,6 +37,7 @@ class User < ActiveRecord::Base
   has_many :members, :dependent => :delete_all
   has_many :projects, :through => :memberships
   has_many :issue_categories, :foreign_key => 'assigned_to_id', :dependent => :nullify
+  has_many :changesets, :dependent => :nullify
   has_one :preference, :dependent => :destroy, :class_name => 'UserPreference'
   has_one :rss_token, :dependent => :destroy, :class_name => 'Token', :conditions => "action='feeds'"
   belongs_to :auth_source
@@ -69,6 +70,11 @@ class User < ActiveRecord::Base
   def before_save
     # update hashed_password if password was set
     self.hashed_password = User.hash_password(self.password) if self.password
+  end
+  
+  def reload(*args)
+    @name = nil
+    super
   end
 
   def self.active
@@ -119,8 +125,11 @@ class User < ActiveRecord::Base
 	
   # Return user's full name for display
   def name(formatter = nil)
-    f = USER_FORMATS[formatter || Setting.user_format] || USER_FORMATS[:firstname_lastname]
-    eval '"' + f + '"'
+    if formatter
+      eval('"' + (USER_FORMATS[formatter] || USER_FORMATS[:firstname_lastname]) + '"')
+    else
+      @name ||= eval('"' + (USER_FORMATS[Setting.user_format] || USER_FORMATS[:firstname_lastname]) + '"')
+    end
   end
   
   def active?
@@ -179,14 +188,9 @@ class User < ActiveRecord::Base
     token && (token.created_on > Setting.autologin.to_i.day.ago) && token.user.active? ? token.user : nil
   end
 
+  # Sort users by their display names
   def <=>(user)
-    if user.nil?
-      -1
-    elsif lastname.to_s.downcase == user.lastname.to_s.downcase
-      firstname.to_s.downcase <=> user.firstname.to_s.downcase
-    else
-      lastname.to_s.downcase <=> user.lastname.to_s.downcase
-    end
+    self.to_s.downcase <=> user.to_s.downcase
   end
   
   def to_s

@@ -13,7 +13,7 @@ actionview_datehelper_time_in_words_hour_about_plural2: около %d часов
 actionview_datehelper_time_in_words_hour_about_plural5: около %d часов
 actionview_datehelper_time_in_words_hour_about_plural: около %d часов
 actionview_datehelper_time_in_words_hour_about_single: около часа
-actionview_datehelper_time_in_words_hour_about: около часа
+actionview_datehelper_time_in_words_hour_about: около %d часа
 actionview_datehelper_time_in_words_minute: 1 минута
 actionview_datehelper_time_in_words_minute_half: полминуты
 actionview_datehelper_time_in_words_minute_less_than: менее минуты
@@ -322,6 +322,7 @@ label_enumeration_new: Новое значение
 label_enumerations: Справочники
 label_environment: Окружение
 label_equals: соответствует
+label_example: Пример
 label_export_to: Экспортировать в
 label_feed_plural: Вводы
 label_feeds_access_key_created_on: Ключ доступа RSS создан %s назад
@@ -624,6 +625,8 @@ permission_view_wiki_pages: Просмотр wiki
 permission_rename_wiki_pages: Переименование страниц wiki
 permission_edit_time_entries: Редактирование учета времени
 permission_edit_own_issue_notes: Редактирование собственных примечаний
+permission_edit_own_messages: Редактирование собственных сообщений
+permission_delete_won_messages: Удаление собственных сообщений
 
 project_module_boards: Форумы
 project_module_documents: Документы
@@ -707,6 +710,7 @@ text_project_destroy_confirmation: Вы настаиваете на удален
 text_project_identifier_info: 'Допустимы строчные буквы (a-z), цифры и дефис.<br />Сохраненный идентификатор не может быть изменен.'
 text_reassign_time_entries: 'Перенести зарегистрированное время на следующую задачу:'
 text_regexp_info: напр. ^[A-Z0-9]+$
+text_repository_usernames_mapping: "Выберите или обновите пользователя Redmine, связанного с найденными именами в журнале хранилица.\nПользователи с одинаковыми именами или email в Redmine и хранилище связываются автоматически."
 text_rmagick_available: Доступно использование RMagick (опционально)
 text_select_mail_notifications: Выберите действия, на которые будет отсылаться уведомление на электронную почту.
 text_select_project_modules: 'Выберите модули, которые будут использованы в проекте:'
@@ -721,50 +725,3 @@ text_user_mail_option: "Для невыбранных проектов, Вы б�
 text_user_wrote: '%s написал(а):'
 text_wiki_destroy_confirmation: Вы уверены, что хотите удалить данную Wiki и все ее содержимое?
 text_workflow_edit: Выберите роль и трекер для редактирования последовательности состояний
-
-permission_view_files: View files
-permission_edit_issues: Edit issues
-permission_edit_own_time_entries: Edit own time logs
-permission_manage_public_queries: Manage public queries
-permission_add_issues: Add issues
-permission_log_time: Log spent time
-permission_view_changesets: View changesets
-permission_view_time_entries: View spent time
-permission_manage_versions: Manage versions
-permission_manage_wiki: Manage wiki
-permission_manage_categories: Manage issue categories
-permission_protect_wiki_pages: Protect wiki pages
-permission_comment_news: Comment news
-permission_delete_messages: Delete messages
-permission_select_project_modules: Select project modules
-permission_manage_documents: Manage documents
-permission_edit_wiki_pages: Edit wiki pages
-permission_add_issue_watchers: Add watchers
-permission_view_gantt: View gantt chart
-permission_move_issues: Move issues
-permission_manage_issue_relations: Manage issue relations
-permission_delete_wiki_pages: Delete wiki pages
-permission_manage_boards: Manage boards
-permission_delete_wiki_pages_attachments: Delete attachments
-permission_view_wiki_edits: View wiki history
-permission_add_messages: Post messages
-permission_view_messages: View messages
-permission_manage_files: Manage files
-permission_edit_issue_notes: Edit notes
-permission_manage_news: Manage news
-permission_view_calendar: View calendrier
-permission_manage_members: Manage members
-permission_edit_messages: Edit messages
-permission_delete_issues: Delete issues
-permission_view_issue_watchers: View watchers list
-permission_manage_repository: Manage repository
-permission_commit_access: Commit access
-permission_browse_repository: Browse repository
-permission_view_documents: View documents
-permission_edit_project: Edit project
-permission_add_issue_notes: Add notes
-permission_save_queries: Save queries
-permission_view_wiki_pages: View wiki
-permission_rename_wiki_pages: Rename wiki pages
-permission_edit_time_entries: Edit time logs
-permission_edit_own_issue_notes: Edit own notes

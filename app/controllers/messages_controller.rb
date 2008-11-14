@@ -19,7 +19,7 @@ class MessagesController < ApplicationController
   menu_item :boards
   before_filter :find_board, :only => [:new, :create, :preview]
   before_filter :find_message, :except => [:new, :create, :preview]
-  before_filter :authorize, :except => :preview
+  before_filter :authorize, :except => [:preview, :edit, :update, :destroy]
 
   #verify :method => :post, :only => [ :reply, :destroy ], :redirect_to => { :action => :show }
   verify :xhr => true, :only => :quote
@@ -30,7 +30,7 @@ class MessagesController < ApplicationController
 
   # Show a topic and its replies
   def show
-    @replies = @topic.children
+    @replies = @topic.children.find(:all, :include => [:author, :attachments, {:board => :project}])
     @replies.reverse! if User.current.wants_comments_in_reverse_order?
     @reply = Message.new(:subject => "RE: #{@message.subject}")
     render :action => "show", :layout => false if request.xhr?
@@ -71,10 +71,8 @@ class MessagesController < ApplicationController
 
   # Edit a message
   def edit
-  end
-  
-  def update
-    if params[:message] && User.current.allowed_to?(:edit_messages, @project)
+    render_403 and return false unless @message.editable_by?(User.current)
+    if params[:message]
       @message.locked = params[:message]['locked']
       @message.sticky = params[:message]['sticky']
     end
@@ -90,6 +88,7 @@ class MessagesController < ApplicationController
   
   # Delete a messages
   def destroy
+    render_403 and return false unless @message.destroyable_by?(User.current)
     @message.destroy
     redirect_to @message.parent.nil? ?
       { :controller => 'boards', :action => 'show', :project_id => @project, :id => @board } :

@@ -89,7 +89,7 @@ Redmine::AccessControl.map do |map|
   end
     
   map.project_module :repository do |map|
-    map.permission :manage_repository, {:repositories => [:edit, :update, :destroy]}, :require => :member
+    map.permission :manage_repository, {:repositories => [:edit, :update, :committers, :destroy]}, :require => :member
     map.permission :browse_repository, :repositories => [:show, :browse, :entry, :annotate, :changes, :diff, :stats, :graph]
     map.permission :view_changesets, :repositories => [:show, :revisions, :revision]
     map.permission :commit_access, {}
@@ -100,7 +100,9 @@ Redmine::AccessControl.map do |map|
     map.permission :view_messages, {:boards => [:index, :show], :messages => [:show]}, :public => true
     map.permission :add_messages, {:messages => [:new, :create, :reply, :quote]}
     map.permission :edit_messages, {:messages => [:edit, :update]}, :require => :member
+    map.permission :edit_own_messages, {:messages => [:edit, :update]}, :require => :loggedin
     map.permission :delete_messages, {:messages => :destroy}, :require => :member
+    map.permission :delete_own_messages, {:messages => :destroy}, :require => :loggedin
   end
 end
 
@@ -120,6 +122,10 @@ Redmine::MenuManager.map :account_menu do |menu|
 end
 
 Redmine::MenuManager.map :application_menu do |menu|
+  # Empty
+end
+
+Redmine::MenuManager.map :admin_menu do |menu|
   # Empty
 end
 
