@@ -31,7 +31,7 @@ class MailHandler < ActionMailer::Base
     @@handler_options[:allow_override] ||= []
     # Project needs to be overridable if not specified
     @@handler_options[:allow_override] << 'project' unless @@handler_options[:issue].has_key?(:project)
-    # Status needs to be overridable if not specified
+    # Status overridable by default
     @@handler_options[:allow_override] << 'status' unless @@handler_options[:issue].has_key?(:status)    
     super email
   end
@@ -39,7 +39,7 @@ class MailHandler < ActionMailer::Base
   # Processes incoming emails
   def receive(email)
     @email = email
-    @user = User.find_active(:first, :conditions => ["LOWER(mail) = ?", email.from.first.to_s.strip.downcase])
+    @user = User.active.find(:first, :conditions => ["LOWER(mail) = ?", email.from.first.to_s.strip.downcase])
     unless @user
       # Unknown user => the email is ignored
       # TODO: ability to create the user's account
@@ -78,17 +78,25 @@ class MailHandler < ActionMailer::Base
     tracker = (get_keyword(:tracker) && project.trackers.find_by_name(get_keyword(:tracker))) || project.trackers.find(:first)
     category = (get_keyword(:category) && project.issue_categories.find_by_name(get_keyword(:category)))
     priority = (get_keyword(:priority) && Enumeration.find_by_opt_and_name('IPRI', get_keyword(:priority)))
-    status =  (get_keyword(:status) && IssueStatus.find_by_name(get_keyword(:status))) || IssueStatus.default
+    status =  (get_keyword(:status) && IssueStatus.find_by_name(get_keyword(:status)))
 
     # check permission
     raise UnauthorizedAction unless user.allowed_to?(:add_issues, project)
-    issue = Issue.new(:author => user, :project => project, :tracker => tracker, :category => category, :priority => priority, :status => status)
+    issue = Issue.new(:author => user, :project => project, :tracker => tracker, :category => category, :priority => priority)
+    # check workflow
+    if status && issue.new_statuses_allowed_to(user).include?(status)
+      issue.status = status
+    end
     issue.subject = email.subject.chomp.toutf8
     issue.description = email.plain_text_body.chomp
     issue.save!
     add_attachments(issue)
     logger.info "MailHandler: issue ##{issue.id} created by #{user}" if logger && logger.info
+    # send notification before adding watchers since they were cc'ed
     Mailer.deliver_issue_add(issue) if Setting.notified_events.include?('issue_added')
+    # add To and Cc as watchers
+    add_watchers(issue)
+    
     issue
   end
   
@@ -114,7 +122,10 @@ class MailHandler < ActionMailer::Base
     # add the note
     journal = issue.init_journal(user, email.plain_text_body.chomp)
     add_attachments(issue)
-    issue.status = status unless status.nil?
+    # check workflow
+    if status && issue.new_statuses_allowed_to(user).include?(status)
+      issue.status = status
+    end
     issue.save!
     logger.info "MailHandler: issue ##{issue.id} updated by #{user}" if logger && logger.info
     Mailer.deliver_issue_edit(journal) if Setting.notified_events.include?('issue_updated')
@@ -128,6 +139,18 @@ class MailHandler < ActionMailer::Base
                           :file => attachment,
                           :author => user,
                           :content_type => attachment.content_type)
+      end
+    end
+  end
+  
+  # Adds To and Cc as watchers of the given object if the sender has the
+  # appropriate permission
+  def add_watchers(obj)
+    if user.allowed_to?("add_#{obj.class.name.underscore}_watchers".to_sym, obj.project)
+      addresses = [email.to, email.cc].flatten.compact.uniq.collect {|a| a.strip.downcase}
+      unless addresses.empty?
+        watchers = User.active.find(:all, :conditions => ['LOWER(mail) IN (?)', addresses])
+        watchers.each {|w| obj.add_watcher(w)}
       end
     end
   end

@@ -30,6 +30,7 @@ class ProjectsControllerTest < Test::Unit::TestCase
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
     @request.session[:user_id] = nil
+    Setting.default_language = 'en'
   end
 
   def test_index
@@ -202,6 +203,24 @@ class ProjectsControllerTest < Test::Unit::TestCase
                }
   end
   
+  def test_user_activity
+    get :activity, :user_id => 2
+    assert_response :success
+    assert_template 'activity'
+    assert_not_nil assigns(:events_by_day)
+    
+    assert_tag :tag => "h3", 
+               :content => /#{3.day.ago.to_date.day}/,
+               :sibling => { :tag => "dl",
+                 :child => { :tag => "dt",
+                   :attributes => { :class => /issue/ },
+                   :child => { :tag => "a",
+                     :content => /#{Issue.find(1).subject}/,
+                   }
+                 }
+               }
+  end
+  
   def test_activity_atom_feed
     get :activity, :format => 'atom'
     assert_response :success
@@ -233,14 +252,17 @@ class ProjectsControllerTest < Test::Unit::TestCase
       
       get :show, :id => 1
       assert_tag :div, :attributes => { :id => 'main-menu' },
-                       :descendant => { :tag => 'li', :child => { :tag => 'a', :content => 'Foo' } }
+                       :descendant => { :tag => 'li', :child => { :tag => 'a', :content => 'Foo',
+                                                                               :attributes => { :class => 'foo' } } }
   
       assert_tag :div, :attributes => { :id => 'main-menu' },
-                       :descendant => { :tag => 'li', :child => { :tag => 'a', :content => 'Bar' },
+                       :descendant => { :tag => 'li', :child => { :tag => 'a', :content => 'Bar',
+                                                                               :attributes => { :class => 'bar' } },
                                                       :before => { :tag => 'li', :child => { :tag => 'a', :content => 'ECOOKBOOK' } } }
 
       assert_tag :div, :attributes => { :id => 'main-menu' },
-                       :descendant => { :tag => 'li', :child => { :tag => 'a', :content => 'ECOOKBOOK' },
+                       :descendant => { :tag => 'li', :child => { :tag => 'a', :content => 'ECOOKBOOK',
+                                                                               :attributes => { :class => 'hello' } },
                                                       :before => { :tag => 'li', :child => { :tag => 'a', :content => 'Activity' } } }
       
       # Remove the menu items

@@ -48,7 +48,7 @@ module ApplicationHelper
 
   # Display a link to user's account page
   def link_to_user(user)
-    user ? link_to(user, :controller => 'account', :action => 'show', :id => user) : 'Anonymous'
+    (user && !user.anonymous?) ? link_to(user, :controller => 'account', :action => 'show', :id => user) : 'Anonymous'
   end
 
   def link_to_issue(issue, options={})
@@ -105,6 +105,18 @@ module ApplicationHelper
     @time_format ||= (Setting.time_format.blank? ? l(:general_fmt_time) : Setting.time_format)
     include_date ? local.strftime("#{@date_format} #{@time_format}") : local.strftime(@time_format)
   end
+  
+  def format_activity_title(text)
+    h(truncate_single_line(text, 100))
+  end
+  
+  def format_activity_day(date)
+    date == Date.today ? l(:label_today).titleize : format_date(date)
+  end
+  
+  def format_activity_description(text)
+    h(truncate(text.to_s, 250).gsub(%r{<(pre|code)>.*$}m, '...'))
+  end
 
   def distance_of_date_in_words(from_date, to_date = 0)
     from_date = from_date.to_date if from_date.respond_to?(:to_date)
@@ -117,6 +129,22 @@ module ApplicationHelper
     if date
       l((date < Date.today ? :label_roadmap_overdue : :label_roadmap_due_in), distance_of_date_in_words(Date.today, date))
     end
+  end
+
+  def render_page_hierarchy(pages, node=nil)
+    content = ''
+    if pages[node]
+      content << "<ul class=\"pages-hierarchy\">\n"
+      pages[node].each do |page|
+        content << "<li>"
+        content << link_to(h(page.pretty_title), {:controller => 'wiki', :action => 'index', :id => page.project, :page => page.title},
+                           :title => (page.respond_to?(:updated_on) ? l(:label_updated_time, distance_of_time_in_words(Time.now, page.updated_on)) : nil))
+        content << "\n" + render_page_hierarchy(pages, page.id) if pages[page.id]
+        content << "</li>\n"
+      end
+      content << "</ul>\n"
+    end
+    content
   end
 
   # Truncates and returns the string as a single line
@@ -517,9 +545,9 @@ module ApplicationHelper
     legend = options[:legend] || ''
     content_tag('table',
       content_tag('tr',
-        (pcts[0] > 0 ? content_tag('td', '', :width => "#{pcts[0].floor}%;", :class => 'closed') : '') +
-        (pcts[1] > 0 ? content_tag('td', '', :width => "#{pcts[1].floor}%;", :class => 'done') : '') +
-        (pcts[2] > 0 ? content_tag('td', '', :width => "#{pcts[2].floor}%;", :class => 'todo') : '')
+        (pcts[0] > 0 ? content_tag('td', '', :style => "width: #{pcts[0].floor}%;", :class => 'closed') : '') +
+        (pcts[1] > 0 ? content_tag('td', '', :style => "width: #{pcts[1].floor}%;", :class => 'done') : '') +
+        (pcts[2] > 0 ? content_tag('td', '', :style => "width: #{pcts[2].floor}%;", :class => 'todo') : '')
       ), :class => 'progress', :style => "width: #{width};") +
       content_tag('p', legend, :class => 'pourcent')
   end

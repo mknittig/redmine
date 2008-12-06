@@ -170,7 +170,6 @@ field_start_page: Page de démarrage
 field_subproject: Sous-projet
 field_hours: Heures
 field_activity: Activité
-label_overall_activity: Activité globale
 field_spent_on: Date
 field_identifier: Identifiant
 field_is_filter: Utilisé comme filtre
@@ -272,7 +271,7 @@ permission_add_messages: Poster un message
 permission_edit_messages: Modifier les messages
 permission_edit_own_messages: Modifier ses propres messages
 permission_delete_messages: Supprimer les messages
-permission_delete_won_messages: Supprimer ses propres messages
+permission_delete_own_messages: Supprimer ses propres messages
 
 project_module_issue_tracking: Suivi des demandes
 project_module_time_tracking: Suivi du temps passé
@@ -344,6 +343,8 @@ label_last_updates: Dernière mise à jour
 label_last_updates_plural: %d dernières mises à jour
 label_registered_on: Inscrit le
 label_activity: Activité
+label_overall_activity: Activité globale
+label_user_activity: "Activité de %s"
 label_new: Nouveau
 label_logged_as: Connecté en tant que
 label_environment: Environnement
