@@ -184,7 +184,7 @@ class IssuesController < ApplicationController
     attachments = attach_files(@issue, params[:attachments])
     attachments.each {|a| @journal.details << JournalDetail.new(:property => 'attachment', :prop_key => a.id, :value => a.filename)}
     
-    call_hook(:controller_issues_edit_before_save, { :params => params, :issue => @issue, :time_entry => @time_entry, :journal => journal})
+    call_hook(:controller_issues_edit_before_save, { :params => params, :issue => @issue, :time_entry => @time_entry, :journal => @journal})
 
     if (@time_entry.hours.nil? || @time_entry.valid?) && @issue.save
       # Log spend time
