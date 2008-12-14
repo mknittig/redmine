@@ -16,8 +16,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class MembersController < ApplicationController
-  before_filter :find_member, :except => [:new, :create]
-  before_filter :find_project, :only => [:new, :create]
+  before_filter :find_member, :except => [:new, :update, :create]
+  before_filter :find_project, :only => [:new, :update, :create]
   before_filter :authorize
 
   def new
