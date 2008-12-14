@@ -91,7 +91,7 @@ class RepositoriesControllerTest < Test::Unit::TestCase
     
     assert_no_difference "Changeset.count(:conditions => 'user_id = 3')" do
       post :committers, :id => 1, :committers => { 'foo' => '2', 'dlopper' => '3'}
-      assert_redirected_to '/repositories/committers/ecookbook'
+      assert_redirected_to '/repositories/ecookbook/committers'
       assert_equal User.find(2), c.reload.user
     end
   end
