@@ -20,7 +20,7 @@ class IssuesController < ApplicationController
   
   before_filter :find_issue, :only => [:show, :edit, :update, :reply, :destroy_attachment]
   before_filter :find_issues, :only => [:bulk_edit, :move, :destroy, :bulk_destroy]
-  before_filter :find_project, :only => [:new, :create, :update_form, :preview, :gantt, :calendar]
+  before_filter :find_project, :only => [:new, :create, :update_form, :preview]
   before_filter :authorize, :except => [:index, :changes, :gantt, :calendar, :preview, :update_form, :context_menu]
   before_filter :find_optional_project, :only => [:index, :changes, :gantt, :calendar]
   accept_key_auth :index, :changes
