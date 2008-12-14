@@ -18,11 +18,11 @@
 class IssuesController < ApplicationController
   menu_item :new_issue, :only => :new
   
-  before_filter :find_issue, :only => [:show, :edit, :update, :reply, :destroy_attachment]
+  before_filter :find_issue, :only => [:show, :edit, :update, :reply]
   before_filter :find_issues, :only => [:bulk_edit, :move, :destroy, :bulk_destroy]
-  before_filter :find_project, :only => [:new, :create, :update_form, :preview, :gantt, :calendar]
-  before_filter :authorize, :except => [:index, :changes, :preview, :update_form, :context_menu]
-  before_filter :find_optional_project, :only => [:index, :changes]
+  before_filter :find_project, :only => [:new, :create, :update_form, :preview]
+  before_filter :authorize, :except => [:index, :changes, :gantt, :calendar, :preview, :update_form, :context_menu]
+  before_filter :find_optional_project, :only => [:index, :changes, :gantt, :calendar]
   accept_key_auth :index, :changes
 
   helper :journals
@@ -192,6 +192,8 @@ class IssuesController < ApplicationController
     attachments = attach_files(@issue, params[:attachments])
     attachments.each {|a| @journal.details << JournalDetail.new(:property => 'attachment', :prop_key => a.id, :value => a.filename)}
     
+    call_hook(:controller_issues_edit_before_save, { :params => params, :issue => @issue, :time_entry => @time_entry, :journal => @journal})
+
     respond_to do |format|
       if (@time_entry.hours.nil? || @time_entry.valid?) && @issue.save
         # Log spend time
@@ -338,17 +340,6 @@ class IssuesController < ApplicationController
   def bulk_destroy
     destroy
   end
-
-  def destroy_attachment
-    a = @issue.attachments.find(params[:attachment_id])
-    a.destroy
-    journal = @issue.init_journal(User.current)
-    journal.details << JournalDetail.new(:property => 'attachment',
-                                         :prop_key => a.id,
-                                         :old_value => a.filename)
-    journal.save
-    redirect_to :action => 'show', :id => @issue
-  end
   
   def gantt
     @gantt = Redmine::Helpers::Gantt.new(params)
@@ -377,7 +368,7 @@ class IssuesController < ApplicationController
     respond_to do |format|
       format.html { render :template => "issues/gantt.rhtml", :layout => !request.xhr? }
       format.png  { send_data(@gantt.to_image, :disposition => 'inline', :type => 'image/png', :filename => "#{@project.identifier}-gantt.png") } if @gantt.respond_to?('to_image')
-      format.pdf  { send_data(render(:template => "issues/gantt.rfpdf", :layout => false), :type => 'application/pdf', :filename => "#{@project.identifier}-gantt.pdf") }
+      format.pdf  { send_data(render(:template => "issues/gantt.rfpdf", :layout => false), :type => 'application/pdf', :filename => "#{@project.nil? ? '' : "#{@project.identifier}-" }gantt.pdf") }
     end
   end
   
@@ -478,9 +469,9 @@ private
   end
   
   def find_optional_project
-    return true unless params[:project_id]
-    @project = Project.find(params[:project_id])
-    authorize
+    @project = Project.find(params[:project_id]) unless params[:project_id].blank?
+    allowed = User.current.allowed_to?({:controller => params[:controller], :action => params[:action]}, @project, :global => true)
+    allowed ? true : deny_access
   rescue ActiveRecord::RecordNotFound
     render_404
   end

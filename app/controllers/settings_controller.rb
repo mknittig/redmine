@@ -48,17 +48,24 @@ class SettingsController < ApplicationController
     else
       render :action => 'show', :tab => params[:tab]
     end
+    @options = {}
+    @options[:user_format] = User::USER_FORMATS.keys.collect {|f| [User.current.name(f), f.to_s] }
+    @deliveries = ActionMailer::Base.perform_deliveries
+
+    @guessed_host_and_path = request.host_with_port
+    @guessed_host_and_path << ('/'+ request.relative_url_root.gsub(%r{^\/}, '')) unless request.relative_url_root.blank?
   end
 
   def plugin
-    plugin_id = params[:id].to_sym
-    @plugin = Redmine::Plugin.registered_plugins[plugin_id]
+    @plugin = Redmine::Plugin.find(params[:id])
     if request.post?
-      Setting["plugin_#{plugin_id}"] = params[:settings]
+      Setting["plugin_#{@plugin.id}"] = params[:settings]
       flash[:notice] = l(:notice_successful_update)
-      redirect_to :action => 'plugin', :id => params[:id]
+      redirect_to :action => 'plugin', :id => @plugin.id
     end
     @partial = @plugin.settings[:partial]
-    @settings = Setting["plugin_#{plugin_id}"]
+    @settings = Setting["plugin_#{@plugin.id}"]
+  rescue Redmine::PluginNotFound
+    render_404
   end
 end

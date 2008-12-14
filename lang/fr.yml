@@ -170,7 +170,6 @@ field_start_page: Page de démarrage
 field_subproject: Sous-projet
 field_hours: Heures
 field_activity: Activité
-label_overall_activity: Activité globale
 field_spent_on: Date
 field_identifier: Identifiant
 field_is_filter: Utilisé comme filtre
@@ -224,6 +223,7 @@ setting_mail_handler_api_enabled: "Activer le WS pour la réception d'emails"
 setting_mail_handler_api_key: Clé de protection de l'API
 setting_sequential_project_identifiers: Générer des identifiants de projet séquentiels
 setting_gravatar_enabled: Afficher les Gravatar des utilisateurs
+setting_diff_max_lines_displayed: Nombre maximum de lignes de diff affichées
 
 permission_edit_project: Modifier le projet
 permission_select_project_modules: Choisir les modules
@@ -272,7 +272,7 @@ permission_add_messages: Poster un message
 permission_edit_messages: Modifier les messages
 permission_edit_own_messages: Modifier ses propres messages
 permission_delete_messages: Supprimer les messages
-permission_delete_won_messages: Supprimer ses propres messages
+permission_delete_own_messages: Supprimer ses propres messages
 
 project_module_issue_tracking: Suivi des demandes
 project_module_time_tracking: Suivi du temps passé
@@ -344,6 +344,8 @@ label_last_updates: Dernière mise à jour
 label_last_updates_plural: %d dernières mises à jour
 label_registered_on: Inscrit le
 label_activity: Activité
+label_overall_activity: Activité globale
+label_user_activity: "Activité de %s"
 label_new: Nouveau
 label_logged_as: Connecté en tant que
 label_environment: Environnement
@@ -543,6 +545,7 @@ label_send_test_email: Envoyer un email de test
 label_feeds_access_key_created_on: Clé d'accès RSS créée il y a %s
 label_module_plural: Modules
 label_added_time_by: Ajouté par %s il y a %s
+label_updated_time_by: Mis à jour par %s il y a %s
 label_updated_time: Mis à jour il y a %s
 label_jump_to_a_project: Aller à un projet...
 label_file_plural: Fichiers
@@ -668,6 +671,7 @@ text_enumeration_destroy_question: 'Cette valeur est affectée à %d objets.'
 text_enumeration_category_reassign_to: 'Réaffecter les objets à cette valeur:'
 text_email_delivery_not_configured: "L'envoi de mail n'est pas configuré, les notifications sont désactivées.\nConfigurez votre serveur SMTP dans config/email.yml et redémarrez l'application pour les activer."
 text_repository_usernames_mapping: "Vous pouvez sélectionner ou modifier l'utilisateur Redmine associé à chaque nom d'utilisateur figurant dans l'historique du dépôt.\nLes utilisateurs avec le même identifiant ou la même adresse mail seront automatiquement associés."
+text_diff_truncated: '... Ce différentiel a été tronqué car il excède la taille maximale pouvant être affichée.'
 
 default_role_manager: Manager
 default_role_developper: Développeur

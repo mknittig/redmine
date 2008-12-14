@@ -73,7 +73,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :account, :collection => { :login => :any, :logout => :get, :register => :any, :lost_password => :any, :activate => :get }, :only => :show
 
-  map.resources :admin, :collection => { :projects => :get, :info => :get, :test_email => :get, :default_configuration => :post }, :only => :index
+  map.resources :admin, :collection => { :projects => :get, :info => :get, :test_email => :get, :default_configuration => :post, :plugins => :get }, :only => :index
 
   map.resources :users, :collection => { :add => :get, :list => :get }, :member => { :destroy_membership => :post, :edit_membership => :post }
   
@@ -95,7 +95,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :wikis, :only => [:edit, :update, :destroy] 
 
-  map.resources :repositories, :member => { :browse => :get, :changes => :get, :revision => :get, :revisions => :get, :entry => :get, :annotate => :get, :diff => :get, :stats => :get, :graph => :get }, :except => :index
+  map.resources :repositories, :member => { :browse => :get, :changes => :get, :revision => :get, :revisions => :get, :entry => :get, :annotate => :get, :diff => :get, :stats => :get, :graph => :get, :committers => :any }, :except => :index
   
   map.resources :attachments, :member => { :download => :get }, :only => :show
 

@@ -223,6 +223,7 @@ setting_mail_handler_api_enabled: 啟用處理傳入電子郵件的服務
 setting_mail_handler_api_key: API 金鑰
 setting_sequential_project_identifiers: 循序產生專案識別碼
 setting_gravatar_enabled: 啟用 Gravatar 全球認證大頭像
+setting_diff_max_lines_displayed: 差異顯示行數之最大值
 
 permission_edit_project: 編輯專案
 permission_select_project_modules: 選擇專案模組
@@ -271,7 +272,7 @@ permission_add_messages: 新增訊息
 permission_edit_messages: 編輯訊息
 permission_edit_own_messages: 編輯自己的訊息
 permission_delete_messages: 刪除訊息
-permission_delete_won_messages: 刪除自己的訊息
+permission_delete_own_messages: 刪除自己的訊息
 
 project_module_issue_tracking: 項目追蹤
 project_module_time_tracking: 工時追蹤
@@ -344,6 +345,7 @@ label_last_updates_plural: %d 個最近更新
 label_registered_on: 註冊於
 label_activity: 活動
 label_overall_activity: 檢視所有活動
+label_user_activity: "%s 的活動"
 label_new: 建立新的...
 label_logged_as: 目前登入
 label_environment: 環境
@@ -543,6 +545,7 @@ label_send_test_email: 寄送測試郵件
 label_feeds_access_key_created_on: RSS 存取鍵建立於 %s 之前
 label_module_plural: 模組
 label_added_time_by: 是由 %s 於 %s 前加入
+label_updated_time_by: 是由 %s 於 %s 前更新
 label_updated_time: 於 %s 前更新
 label_jump_to_a_project: 選擇欲前往的專案...
 label_file_plural: 檔案清單
@@ -668,6 +671,7 @@ text_enumeration_destroy_question: '目前有 %d 個物件使用此列舉值。'
 text_enumeration_category_reassign_to: '重新設定其列舉值為：'
 text_email_delivery_not_configured: "您尚未設定電子郵件傳送方式，因此提醒選項已被停用。\n請在 config/email.yml 中設定 SMTP 之後，重新啟動 Redmine，以啟用電子郵件提醒選項。"
 text_repository_usernames_mapping: "選擇或更新 Redmine 使用者與版本庫使用者之對應關係。\n版本庫中之使用者帳號或電子郵件信箱，與 Redmine 設定相同者，將自動產生對應關係。"
+text_diff_truncated: '... 這份差異已被截短以符合顯示行數之最大值'
 
 default_role_manager: 管理人員
 default_role_developper: 開發人員
@@ -694,49 +698,3 @@ default_activity_development: 開發
 enumeration_issue_priorities: 項目優先權
 enumeration_doc_categories: 文件分類
 enumeration_activities: 活動 (時間追蹤)
-permission_view_files: View files
-permission_edit_issues: Edit issues
-permission_edit_own_time_entries: Edit own time logs
-permission_manage_public_queries: Manage public queries
-permission_add_issues: Add issues
-permission_log_time: Log spent time
-permission_view_changesets: View changesets
-permission_view_time_entries: View spent time
-permission_manage_versions: Manage versions
-permission_manage_wiki: Manage wiki
-permission_manage_categories: Manage issue categories
-permission_protect_wiki_pages: Protect wiki pages
-permission_comment_news: Comment news
-permission_delete_messages: Delete messages
-permission_select_project_modules: Select project modules
-permission_manage_documents: Manage documents
-permission_edit_wiki_pages: Edit wiki pages
-permission_add_issue_watchers: Add watchers
-permission_view_gantt: View gantt chart
-permission_move_issues: Move issues
-permission_manage_issue_relations: Manage issue relations
-permission_delete_wiki_pages: Delete wiki pages
-permission_manage_boards: Manage boards
-permission_delete_wiki_pages_attachments: Delete attachments
-permission_view_wiki_edits: View wiki history
-permission_add_messages: Post messages
-permission_view_messages: View messages
-permission_manage_files: Manage files
-permission_edit_issue_notes: Edit notes
-permission_manage_news: Manage news
-permission_view_calendar: View calendrier
-permission_manage_members: Manage members
-permission_edit_messages: Edit messages
-permission_delete_issues: Delete issues
-permission_view_issue_watchers: View watchers list
-permission_manage_repository: Manage repository
-permission_commit_access: Commit access
-permission_browse_repository: Browse repository
-permission_view_documents: View documents
-permission_edit_project: Edit project
-permission_add_issue_notes: Add notes
-permission_save_queries: Save queries
-permission_view_wiki_pages: View wiki
-permission_rename_wiki_pages: Rename wiki pages
-permission_edit_time_entries: Edit time logs
-permission_edit_own_issue_notes: Edit own notes

@@ -36,7 +36,7 @@ Redmine::AccessControl.map do |map|
                                   :queries => :index,
                                   :reports => :issue_report}, :public => true                    
     map.permission :add_issues, {:issues => [:new, :create]}
-    map.permission :edit_issues, {:issues => [:edit, :update, :reply, :bulk_edit, :destroy_attachment]}
+    map.permission :edit_issues, {:issues => [:edit, :update, :reply, :bulk_edit]}
     map.permission :manage_issue_relations, {:issue_relations => [:create, :destroy]}
     map.permission :add_issue_notes, {:issues => [:edit, :update, :reply]}
     map.permission :edit_issue_notes, {:journals => [:edit, :update]}, :require => :loggedin
@@ -68,12 +68,12 @@ Redmine::AccessControl.map do |map|
   end
 
   map.project_module :documents do |map|
-    map.permission :manage_documents, {:documents => [:new, :create, :edit, :update, :destroy, :add_attachment, :destroy_attachment]}, :require => :loggedin
+    map.permission :manage_documents, {:documents => [:new, :create, :edit, :update, :destroy, :add_attachment]}, :require => :loggedin
     map.permission :view_documents, :documents => [:index, :show, :download]
   end
   
   map.project_module :files do |map|
-    map.permission :manage_files, {:projects => :add_file, :versions => :destroy_file}, :require => :loggedin
+    map.permission :manage_files, {:projects => :add_file}, :require => :loggedin
     map.permission :view_files, :projects => :list_files, :versions => :download
   end
     
@@ -84,7 +84,7 @@ Redmine::AccessControl.map do |map|
     map.permission :view_wiki_pages, :wiki => [:index, :special]
     map.permission :view_wiki_edits, :wiki => [:history, :diff, :annotate]
     map.permission :edit_wiki_pages, :wiki => [:edit, :preview, :add_attachment]
-    map.permission :delete_wiki_pages_attachments, :wiki => :destroy_attachment
+    map.permission :delete_wiki_pages_attachments, {}
     map.permission :protect_wiki_pages, {:wiki => :protect}, :require => :member
   end
     
@@ -107,18 +107,18 @@ Redmine::AccessControl.map do |map|
 end
 
 Redmine::MenuManager.map :top_menu do |menu|
-  menu.push :home, :home_path, :html => { :class => 'home' }
-  menu.push :my_page, { :controller => 'my', :action => 'page' }, :html => { :class => 'mypage' }, :if => Proc.new { User.current.logged? }
-  menu.push :projects, { :controller => 'projects', :action => 'index' }, :caption => :label_project_plural, :html => { :class => 'projects' }
-  menu.push :administration, { :controller => 'admin', :action => 'index' }, :html => { :class => 'admin' }, :if => Proc.new { User.current.admin? }, :last => true
-  menu.push :help, Redmine::Info.help_url, :html => { :class => 'help' }, :last => true
+  menu.push :home, :home_path
+  menu.push :my_page, { :controller => 'my', :action => 'page' }, :if => Proc.new { User.current.logged? }
+  menu.push :projects, { :controller => 'projects', :action => 'index' }, :caption => :label_project_plural
+  menu.push :administration, { :controller => 'admin', :action => 'index' }, :if => Proc.new { User.current.admin? }, :last => true
+  menu.push :help, Redmine::Info.help_url, :last => true
 end
 
 Redmine::MenuManager.map :account_menu do |menu|
-  menu.push :login, :signin_path, :html => { :class => 'login' }, :if => Proc.new { !User.current.logged? }
-  menu.push :register, { :controller => 'account', :action => 'register' }, :html => { :class => 'register' }, :if => Proc.new { !User.current.logged? && Setting.self_registration? }
-  menu.push :my_account, { :controller => 'my', :action => 'account' }, :html => { :class => 'myaccount' }, :if => Proc.new { User.current.logged? }
-  menu.push :logout, :signout_path, :html => { :class => 'logout' }, :if => Proc.new { User.current.logged? }
+  menu.push :login, :signin_path, :if => Proc.new { !User.current.logged? }
+  menu.push :register, { :controller => 'account', :action => 'register' }, :if => Proc.new { !User.current.logged? && Setting.self_registration? }
+  menu.push :my_account, { :controller => 'my', :action => 'account' }, :if => Proc.new { User.current.logged? }
+  menu.push :logout, :signout_path, :if => Proc.new { User.current.logged? }
 end
 
 Redmine::MenuManager.map :application_menu do |menu|

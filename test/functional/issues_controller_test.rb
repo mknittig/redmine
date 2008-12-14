@@ -155,8 +155,25 @@ class IssuesControllerTest < Test::Unit::TestCase
     assert events.include?(i)
   end
 
+  def test_cross_project_gantt
+    get :gantt
+    assert_response :success
+    assert_template 'gantt.rhtml'
+    assert_not_nil assigns(:gantt)
+    events = assigns(:gantt).events
+    assert_not_nil events
+  end
+
   def test_gantt_export_to_pdf
     get :gantt, :project_id => 1, :format => 'pdf'
+    assert_response :success
+    assert_template 'gantt.rfpdf'
+    assert_equal 'application/pdf', @response.content_type
+    assert_not_nil assigns(:gantt)
+  end
+
+  def test_cross_project_gantt_export_to_pdf
+    get :gantt, :format => 'pdf'
     assert_response :success
     assert_template 'gantt.rfpdf'
     assert_equal 'application/pdf', @response.content_type
@@ -175,6 +192,13 @@ class IssuesControllerTest < Test::Unit::TestCase
   
   def test_calendar
     get :calendar, :project_id => 1
+    assert_response :success
+    assert_template 'calendar'
+    assert_not_nil assigns(:calendar)
+  end
+  
+  def test_cross_project_calendar
+    get :calendar
     assert_response :success
     assert_template 'calendar'
     assert_not_nil assigns(:calendar)
@@ -710,18 +734,5 @@ class IssuesControllerTest < Test::Unit::TestCase
     assert !(Issue.find_by_id(1) || Issue.find_by_id(3))
     assert_equal 2, TimeEntry.find(1).issue_id
     assert_equal 2, TimeEntry.find(2).issue_id
-  end
-  
-  def test_destroy_attachment
-    issue = Issue.find(3)
-    a = issue.attachments.size
-    @request.session[:user_id] = 2
-    post :destroy_attachment, :id => 3, :attachment_id => 1
-    assert_redirected_to 'issues/3'
-    assert_nil Attachment.find_by_id(1)
-    issue.reload
-    assert_equal((a-1), issue.attachments.size)
-    j = issue.journals.find(:first, :order => 'created_on DESC')
-    assert_equal 'attachment', j.details.first.property
   end
 end

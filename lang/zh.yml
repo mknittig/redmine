@@ -223,6 +223,7 @@ setting_mail_handler_api_enabled: 启用用于接收邮件的服务
 setting_mail_handler_api_key: API key
 setting_sequential_project_identifiers: 顺序产生项目标识
 setting_gravatar_enabled: 使用Gravatar用户头像
+setting_diff_max_lines_displayed: 查看差别页面上显示的最大行数
 
 permission_edit_project: 编辑项目
 permission_select_project_modules: 选择项目模块
@@ -344,6 +345,7 @@ label_last_updates_plural: %d 最后更新
 label_registered_on: 注册于
 label_activity: 活动
 label_overall_activity: 全部活动
+label_user_activity: "%s 的活动"
 label_new: 新建
 label_logged_as: 登录为
 label_environment: 环境
@@ -543,7 +545,8 @@ label_send_test_email: 发送测试邮件
 label_feeds_access_key_created_on: RSS 存取键是在 %s 之前建立的
 label_module_plural: 模块
 label_added_time_by: 由 %s 在 %s 之前添加
-label_updated_time:  更新于 %s 前
+label_updated_time:  更新于 %s 之前
+label_updated_time_by: 由 %s 更新于 %s 之前
 label_jump_to_a_project: 选择一个项目...
 label_file_plural: 文件
 label_changeset_plural: 变更
@@ -668,6 +671,7 @@ text_enumeration_category_reassign_to: '将它们关联到新的枚举值：'
 text_enumeration_destroy_question: '%d 个对象被关联到了这个枚举值。'
 text_email_delivery_not_configured: "邮件参数尚未配置，因此邮件通知功能已被禁用。\n请在config/email.yml中配置您的SMTP服务器信息并重新启动以使其生效。"
 text_repository_usernames_mapping: "选择或更新与版本库中的用户名对应的Redmine用户。\n版本库中与Redmine中的同名用户将被自动对应。"
+text_diff_truncated: '... 差别内容超过了可显示的最大行数并已被截断'
 
 default_role_manager: 管理人员
 default_role_developper: 开发人员

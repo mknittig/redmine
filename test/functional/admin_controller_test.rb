@@ -78,12 +78,42 @@ class AdminControllerTest < Test::Unit::TestCase
     user = User.find(1)
     assert_equal [user.mail], mail.bcc
   end
+  
+  def test_no_plugins
+    Redmine::Plugin.clear
+    
+    get :plugins
+    assert_response :success
+    assert_template 'plugins'
+  end
+  
+  def test_plugins
+    # Register a few plugins
+    Redmine::Plugin.register :foo do
+      name 'Foo plugin'
+      author 'John Smith'
+      description 'This is a test plugin'
+      version '0.0.1'
+      settings :default => {'sample_setting' => 'value', 'foo'=>'bar'}, :partial => 'foo/settings'
+    end
+    Redmine::Plugin.register :bar do
+    end
+  
+    get :plugins
+    assert_response :success
+    assert_template 'plugins'
+    
+    assert_tag :td, :child => { :tag => 'span', :content => 'Foo plugin' }
+    assert_tag :td, :child => { :tag => 'span', :content => 'Bar' }
+  end
 
   def test_info
     get :info
     assert_response :success
     assert_template 'info'
   end
+  
+  private
   
   def delete_configuration_data
     Role.delete_all('builtin = 0')

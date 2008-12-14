@@ -71,7 +71,11 @@ class MessagesController < ApplicationController
 
   # Edit a message
   def edit
-    render_403 and return false unless @message.editable_by?(User.current)
+    render_403 and return false unless render_403 and return false unless @message.editable_by?(User.current)
+  end
+  
+  def update
+    edit
     if params[:message]
       @message.locked = params[:message]['locked']
       @message.sticky = params[:message]['sticky']

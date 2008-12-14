@@ -18,6 +18,7 @@
 require 'coderay'
 require 'coderay/helpers/file_type'
 require 'forwardable'
+require 'cgi'
 
 module ApplicationHelper
   include Redmine::WikiFormatting::Macros::Definitions
@@ -47,8 +48,8 @@ module ApplicationHelper
   end
 
   # Display a link to user's account page
-  def link_to_user(user)
-    user ? link_to(user, :controller => 'account', :action => 'show', :id => user) : 'Anonymous'
+  def link_to_user(user, options={})
+    (user && !user.anonymous?) ? link_to(user.name(options[:format]), :controller => 'account', :action => 'show', :id => user) : 'Anonymous'
   end
 
   def link_to_issue(issue, options={})
@@ -105,6 +106,18 @@ module ApplicationHelper
     @time_format ||= (Setting.time_format.blank? ? l(:general_fmt_time) : Setting.time_format)
     include_date ? local.strftime("#{@date_format} #{@time_format}") : local.strftime(@time_format)
   end
+  
+  def format_activity_title(text)
+    h(truncate_single_line(text, 100))
+  end
+  
+  def format_activity_day(date)
+    date == Date.today ? l(:label_today).titleize : format_date(date)
+  end
+  
+  def format_activity_description(text)
+    h(truncate(text.to_s, 250).gsub(%r{<(pre|code)>.*$}m, '...'))
+  end
 
   def distance_of_date_in_words(from_date, to_date = 0)
     from_date = from_date.to_date if from_date.respond_to?(:to_date)
@@ -119,6 +132,22 @@ module ApplicationHelper
     end
   end
 
+  def render_page_hierarchy(pages, node=nil)
+    content = ''
+    if pages[node]
+      content << "<ul class=\"pages-hierarchy\">\n"
+      pages[node].each do |page|
+        content << "<li>"
+        content << link_to(h(page.pretty_title), {:controller => 'wiki', :action => 'index', :id => page.project, :page => page.title},
+                           :title => (page.respond_to?(:updated_on) ? l(:label_updated_time, distance_of_time_in_words(Time.now, page.updated_on)) : nil))
+        content << "\n" + render_page_hierarchy(pages, page.id) if pages[page.id]
+        content << "</li>\n"
+      end
+      content << "</ul>\n"
+    end
+    content
+  end
+
   # Truncates and returns the string as a single line
   def truncate_single_line(string, *args)
     truncate(string, *args).gsub(%r{[\r\n]+}m, ' ')
@@ -128,13 +157,13 @@ module ApplicationHelper
     text.gsub(%r{(\d+)\.(\d+)}, '<span class="hours hours-int">\1</span><span class="hours hours-dec">.\2</span>')
   end
 
-  def authoring(created, author)
+  def authoring(created, author, options={})
     time_tag = @project.nil? ? content_tag('acronym', distance_of_time_in_words(Time.now, created), :title => format_time(created)) :
                                link_to(distance_of_time_in_words(Time.now, created), 
                                        {:controller => 'projects', :action => 'activity', :id => @project, :from => created.to_date},
                                        :title => format_time(created))
     author_tag = (author.is_a?(User) && !author.anonymous?) ? link_to(h(author), :controller => 'account', :action => 'show', :id => author) : h(author || 'Anonymous')
-    l(:label_added_time_by, author_tag, time_tag)
+    l(options[:label] || :label_added_time_by, author_tag, time_tag)
   end
 
   def l_or_humanize(s, options={})
@@ -201,7 +230,7 @@ module ApplicationHelper
     url_param.clear if url_param.has_key?(:set_filter)
 
     links = Setting.per_page_options_array.collect do |n|
-      n == selected ? n : link_to_remote(n, {:update => "content", :url => params.dup.merge(:per_page => n), :method => :get},
+      n == selected ? n : link_to_remote(n, {:update => "content", :url => params.dup.merge(:per_page => n)},
                                             {:href => url_for(url_param.merge(:per_page => n))})
     end
     links.size > 1 ? l(:label_display_per_page, links.join(', ')) : nil
@@ -500,7 +529,7 @@ module ApplicationHelper
 
   def back_url_hidden_field_tag
     back_url = params[:back_url] || request.env['HTTP_REFERER']
-    hidden_field_tag('back_url', back_url) unless back_url.blank?
+    hidden_field_tag('back_url', CGI.escape(back_url)) unless back_url.blank?
   end
 
   def check_all_links(form_name)
@@ -517,9 +546,9 @@ module ApplicationHelper
     legend = options[:legend] || ''
     content_tag('table',
       content_tag('tr',
-        (pcts[0] > 0 ? content_tag('td', '', :width => "#{pcts[0].floor}%;", :class => 'closed') : '') +
-        (pcts[1] > 0 ? content_tag('td', '', :width => "#{pcts[1].floor}%;", :class => 'done') : '') +
-        (pcts[2] > 0 ? content_tag('td', '', :width => "#{pcts[2].floor}%;", :class => 'todo') : '')
+        (pcts[0] > 0 ? content_tag('td', '', :style => "width: #{pcts[0].floor}%;", :class => 'closed') : '') +
+        (pcts[1] > 0 ? content_tag('td', '', :style => "width: #{pcts[1].floor}%;", :class => 'done') : '') +
+        (pcts[2] > 0 ? content_tag('td', '', :style => "width: #{pcts[2].floor}%;", :class => 'todo') : '')
       ), :class => 'progress', :style => "width: #{width};") +
       content_tag('p', legend, :class => 'pourcent')
   end

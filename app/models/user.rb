@@ -42,6 +42,9 @@ class User < ActiveRecord::Base
   has_one :rss_token, :dependent => :destroy, :class_name => 'Token', :conditions => "action='feeds'"
   belongs_to :auth_source
   
+  # Active non-anonymous users scope
+  named_scope :active, :conditions => "#{User.table_name}.status = #{STATUS_ACTIVE}"
+  
   acts_as_customizable
   
   attr_accessor :password, :password_confirmation
@@ -75,18 +78,6 @@ class User < ActiveRecord::Base
   def reload(*args)
     @name = nil
     super
-  end
-
-  def self.active
-    with_scope :find => { :conditions => [ "status = ?", STATUS_ACTIVE ] } do 
-      yield 
-    end 
-  end
-  
-  def self.find_active(*args)
-    active do
-      find(*args)
-    end
   end
   
   # Returns the user that matches provided login and password, or nil
@@ -186,6 +177,11 @@ class User < ActiveRecord::Base
   def self.find_by_autologin_key(key)
     token = Token.find_by_action_and_value('autologin', key)
     token && (token.created_on > Setting.autologin.to_i.day.ago) && token.user.active? ? token.user : nil
+  end
+  
+  # Makes find_by_mail case-insensitive
+  def self.find_by_mail(mail)
+    find(:first, :conditions => ["LOWER(mail) = ?", mail.to_s.downcase])
   end
 
   # Sort users by their display names
