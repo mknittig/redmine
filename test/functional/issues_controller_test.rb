@@ -338,16 +338,17 @@ class IssuesControllerTest < Test::Unit::TestCase
     ActionMailer::Base.deliveries.clear
     
     assert_difference 'Watcher.count', 2 do
-      post :new, :project_id => 1, 
+      post :create, :project_id => 1, 
                  :issue => {:tracker_id => 1,
                             :subject => 'This is a new issue with watchers',
                             :description => 'This is the description',
                             :priority_id => 5,
                             :watcher_user_ids => ['2', '3']}
     end
-    assert_redirected_to 'issues/show'
     
     issue = Issue.find_by_subject('This is a new issue with watchers')
+    assert_redirected_to "issues/#{issue.id.to_s}"
+    
     # Watchers added
     assert_equal [2, 3], issue.watcher_user_ids.sort
     assert issue.watched_by?(User.find(3))

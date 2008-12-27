@@ -124,7 +124,7 @@ class ProjectsControllerTest < Test::Unit::TestCase
       post :add_file, :id => 1, :version_id => '',
            :attachments => {'1' => {'file' => test_uploaded_file('testfile.txt', 'text/plain')}}
     end
-    assert_redirected_to 'projects/list_files/ecookbook'
+    assert_redirected_to 'projects/ecookbook/list_files'
     a = Attachment.find(:first, :order => 'created_on DESC')
     assert_equal 'testfile.txt', a.filename
     assert_equal Project.find(1), a.container
@@ -144,7 +144,7 @@ class ProjectsControllerTest < Test::Unit::TestCase
       post :add_file, :id => 1, :version_id => '2',
            :attachments => {'1' => {'file' => test_uploaded_file('testfile.txt', 'text/plain')}}
     end
-    assert_redirected_to 'projects/list_files/ecookbook'
+    assert_redirected_to 'projects/ecookbook/list_files'
     a = Attachment.find(:first, :order => 'created_on DESC')
     assert_equal 'testfile.txt', a.filename
     assert_equal Version.find(2), a.container
