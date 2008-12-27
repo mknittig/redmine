@@ -408,7 +408,7 @@ class RedCloth3 < String
     #   [ /"(?=[#{PUNCT_Q}]*[\s#{PUNCT_NOQ}])/, '&#8221;' ], # double closing
     #   [ /"/, '&#8220;' ], # double opening
     #   [ /\b( )?\.{3}/, '\1&#8230;' ], # ellipsis
-        [ /\b([A-Z][A-Z0-9]{2,})\b(?:[(]([^)]*)[)])/, '<acronym title="\2">\1</acronym>' ], # 3+ uppercase acronym
+    #   [ /\b([A-Z][A-Z0-9]{2,})\b(?:[(]([^)]*)[)])/, '<acronym title="\2">\1</acronym>' ], # 3+ uppercase acronym
     #   [ /(^|[^"][>\s])([A-Z][A-Z0-9 ]+[A-Z0-9])([^<A-Za-z0-9]|$)/, '\1<span class="caps">\2</span>\3', :no_span_caps ], # 3+ uppercase caps
     #   [ /(\.\s)?\s?--\s?/, '\1&#8212;' ], # em dash
     #   [ /\s->\s/, ' &rarr; ' ], # right arrow
@@ -435,19 +435,25 @@ class RedCloth3 < String
     #
     # Flexible HTML escaping
     #
-    def htmlesc( str, mode )
+    def htmlesc( str, mode=:Quotes )
+      if str
         str.gsub!( '&', '&amp;' )
         str.gsub!( '"', '&quot;' ) if mode != :NoQuotes
         str.gsub!( "'", '&#039;' ) if mode == :Quotes
         str.gsub!( '<', '&lt;')
         str.gsub!( '>', '&gt;')
+      end
+      str
     end
 
     # Search and replace for Textile glyphs (quotes, dashes, other symbols)
     def pgl( text )
-        GLYPHS.each do |re, resub, tog|
-            next if tog and method( tog ).call
-            text.gsub! re, resub
+        #GLYPHS.each do |re, resub, tog|
+        #    next if tog and method( tog ).call
+        #    text.gsub! re, resub
+        #end
+        text.gsub!(/\b([A-Z][A-Z0-9]{2,})\b(?:[(]([^)]*)[)])/) do |m|
+          "<acronym title=\"#{htmlesc $2}\">#{$1}</acronym>"
         end
     end
 
@@ -464,7 +470,7 @@ class RedCloth3 < String
             style << "vertical-align:#{ v_align( $& ) };" if text =~ A_VLGN
         end
 
-        style << "#{ $1 };" if not filter_styles and
+        style << "#{ htmlesc $1 };" if not filter_styles and
             text.sub!( /\{([^}]*)\}/, '' )
 
         lang = $1 if
@@ -807,7 +813,7 @@ class RedCloth3 < String
             end
             atts = pba( atts )
             atts = " href=\"#{ url }#{ slash }\"#{ atts }"
-            atts << " title=\"#{ title }\"" if title
+            atts << " title=\"#{ htmlesc title }\"" if title
             atts = shelve( atts ) if atts
             
             external = (url =~ /^https?:\/\//) ? ' class="external"' : ''
@@ -914,6 +920,7 @@ class RedCloth3 < String
     def inline_textile_image( text ) 
         text.gsub!( IMAGE_RE )  do |m|
             stln,algn,atts,url,title,href,href_a1,href_a2 = $~[1..8]
+            htmlesc title
             atts = pba( atts )
             atts = " src=\"#{ url }\"#{ atts }"
             atts << " title=\"#{ title }\"" if title
