@@ -17,8 +17,8 @@
 
 class MessagesController < ApplicationController
   menu_item :boards
-  before_filter :find_board, :only => [:new, :create, :preview]
-  before_filter :find_message, :except => [:new, :create, :preview]
+  before_filter :find_board, :only => [:new, :update, :create, :preview]
+  before_filter :find_message, :except => [:new, :update, :create, :preview]
   before_filter :authorize, :except => [:preview, :edit, :update, :destroy]
 
   #verify :method => :post, :only => [ :reply, :destroy ], :redirect_to => { :action => :show }
