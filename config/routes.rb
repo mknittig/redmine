@@ -41,6 +41,7 @@ ActionController::Routing::Routes.draw do |map|
     project.resources :members
     project.resources :queries
     project.resources :wikis
+    project.resources :wiki, :member => { :rename => :any, :protect => :any, :history => :get, :diff => :get, :annotate => :get, :add_attachment => :post, :destroy => :post, :special => :get, :preview => :any }
   end
   
   map.resources :documents do |document|
@@ -90,8 +91,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :my, :collection => { :password => :any, :account => :any, :page => :get, :add_block => :post, :order_blocks => :post, :page_layout => :get, :page_layout_save => :post, :remove_block => :post, :reset_rss_key => :post }, :except => [:index, :show, :create, :update, :destroy]
   
   map.resources :watchers, :collection => { :watch => :post, :unwatch => :post }, :only => [:new, :create] 
-
-  map.resource :wiki
   
   map.resources :wikis, :only => [:edit, :update, :destroy] 
 
@@ -115,8 +114,8 @@ ActionController::Routing::Routes.draw do |map|
     board.resources :messages, :as => 'topics', :new => { :preview => :post }, :member => { :preview => :post, :reply => :post, :quote => :post }, :except => :index
   end
   
-  map.connect 'wiki/:id/:page/:action', :controller => 'wiki', :page => nil
-  map.connect 'roles/workflow/:id/:role_id/:tracker_id', :controller => 'roles', :action => 'workflow'
+  #map.connect 'wiki/:id/:page/:action', :controller => 'wiki', :page => nil
+  #map.connect 'roles/workflow/:id/:role_id/:tracker_id', :controller => 'roles', :action => 'workflow'
   map.connect 'help/:ctrl/:page', :controller => 'help'
   #map.connect ':controller/:action/:id/:sort_key/:sort_order'
   

@@ -24,7 +24,7 @@
     <td align="center"><%= format_time(ver.updated_on) %></td>
     <td><em><%= ver.author ? ver.author.name : "anonyme" %></em></td>
     <td><%=h ver.comments %></td>
-    <td align="center"><%= link_to l(:button_annotate), :action => 'annotate', :page => @page.title, :version => ver.version %></td>
+    <td align="center"><%= link_to l(:button_annotate), :action => 'annotate', :id => @page.title, :version => ver.version %></td>
 </tr>
 <% line_num += 1 %>
 <% end %>
