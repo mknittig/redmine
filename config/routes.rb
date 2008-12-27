@@ -44,8 +44,6 @@ ActionController::Routing::Routes.draw do |map|
     project.resources :wiki, :member => { :rename => :any, :protect => :any, :history => :get, :diff => :get, :annotate => :get, :add_attachment => :post, :destroy => :post, :special => :get, :preview => :any }
   end
   
-  #map.resources :wiki, :member_path => '/projects/:project_id/wiki/:page'
-  
   map.resources :documents do |document|
     document.resources :attachment
   end
@@ -93,8 +91,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :my, :collection => { :password => :any, :account => :any, :page => :get, :add_block => :post, :order_blocks => :post, :page_layout => :get, :page_layout_save => :post, :remove_block => :post, :reset_rss_key => :post }, :except => [:index, :show, :create, :update, :destroy]
   
   map.resources :watchers, :collection => { :watch => :post, :unwatch => :post }, :only => [:new, :create] 
-
-  #map.resource :wiki
   
   map.resources :wikis, :only => [:edit, :update, :destroy] 
 
