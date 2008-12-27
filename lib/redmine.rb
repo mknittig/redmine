@@ -80,9 +80,9 @@ Redmine::AccessControl.map do |map|
     map.permission :manage_wiki, {:wikis => [:edit, :update, :destroy]}, :require => :member
     map.permission :rename_wiki_pages, {:wiki => :rename}, :require => :member
     map.permission :delete_wiki_pages, {:wiki => :destroy}, :require => :member
-    map.permission :view_wiki_pages, :wiki => [:index, :special]
+    map.permission :view_wiki_pages, :wiki => [:index, :special, :show]
     map.permission :view_wiki_edits, :wiki => [:history, :diff, :annotate]
-    map.permission :edit_wiki_pages, :wiki => [:edit, :preview, :add_attachment]
+    map.permission :edit_wiki_pages, :wiki => [:edit, :update, :preview, :add_attachment]
     map.permission :delete_wiki_pages_attachments, {}
     map.permission :protect_wiki_pages, {:wiki => :protect}, :require => :member
   end
@@ -133,12 +133,12 @@ Redmine::MenuManager.map :project_menu do |menu|
   menu.push :activity, { :controller => 'projects', :action => 'activity' }
   menu.push :roadmap, { :controller => 'projects', :action => 'roadmap' }, 
               :if => Proc.new { |p| p.versions.any? }
-  menu.push :issues, { :controller => 'issues', :action => 'index' }, :param => :project_id, :caption => :label_issue_plural
+  menu.push :issues, { :controller => 'issues', :action => 'index' }, :caption => :label_issue_plural
   menu.push :new_issue, { :controller => 'issues', :action => 'new' }, :param => :project_id, :caption => :label_issue_new,
               :html => { :accesskey => Redmine::AccessKeys.key_for(:new_issue) }
   menu.push :news, { :controller => 'news', :action => 'index' }, :param => :project_id, :caption => :label_news_plural
   menu.push :documents, { :controller => 'documents', :action => 'index' }, :param => :project_id, :caption => :label_document_plural
-  menu.push :wiki, { :controller => 'wiki', :action => 'index', :page => nil }, 
+  menu.push :wiki, { :controller => 'wiki', :action => 'index' }, :param => :project_id,
               :if => Proc.new { |p| p.wiki && !p.wiki.new_record? }
   menu.push :boards, { :controller => 'boards', :action => 'index', :id => nil }, :param => :project_id,
               :if => Proc.new { |p| p.boards.any? }, :caption => :label_board_plural

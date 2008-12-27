@@ -138,7 +138,7 @@ module ApplicationHelper
       content << "<ul class=\"pages-hierarchy\">\n"
       pages[node].each do |page|
         content << "<li>"
-        content << link_to(h(page.pretty_title), {:controller => 'wiki', :action => 'index', :id => page.project, :page => page.title},
+        content << link_to(h(page.pretty_title), {:controller => 'wiki', :action => 'show', :project_id => page.project, :id => page.title},
                            :title => (page.respond_to?(:updated_on) ? l(:label_updated_time, distance_of_time_in_words(Time.now, page.updated_on)) : nil))
         content << "\n" + render_page_hierarchy(pages, page.id) if pages[page.id]
         content << "</li>\n"
@@ -310,7 +310,13 @@ module ApplicationHelper
       # used for single-file wiki export
       format_wiki_link = Proc.new {|project, title, anchor| "##{title}" }
     else
-      format_wiki_link = Proc.new {|project, title, anchor| url_for(:only_path => only_path, :controller => 'wiki', :action => 'index', :id => project, :page => title, :anchor => anchor) }
+      format_wiki_link = Proc.new {|project, title, anchor|
+        if title == ""
+          url_for(:only_path => only_path, :controller => 'wiki', :action => 'index', :project_id => project, :anchor => anchor)
+        else  
+          url_for(:only_path => only_path, :controller => 'wiki', :action => 'show', :project_id => project, :id => title, :anchor => anchor)
+        end
+      }
     end
 
     project = options[:project] || @project || (obj && obj.respond_to?(:project) ? obj.project : nil)

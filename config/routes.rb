@@ -41,7 +41,10 @@ ActionController::Routing::Routes.draw do |map|
     project.resources :members
     project.resources :queries
     project.resources :wikis
+    project.resources :wiki, :member => { :rename => :any, :protect => :any, :history => :get, :diff => :get, :annotate => :get, :add_attachment => :post, :destroy => :post, :special => :get, :preview => :any }
   end
+  
+  #map.resources :wiki, :member_path => '/projects/:project_id/wiki/:page'
   
   map.resources :documents do |document|
     document.resources :attachment
@@ -91,7 +94,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :watchers, :collection => { :watch => :post, :unwatch => :post }, :only => [:new, :create] 
 
-  map.resource :wiki
+  #map.resource :wiki
   
   map.resources :wikis, :only => [:edit, :update, :destroy] 
 
@@ -115,7 +118,7 @@ ActionController::Routing::Routes.draw do |map|
     board.resources :messages, :as => 'topics', :new => { :preview => :post }, :member => { :preview => :post, :reply => :post, :quote => :post }, :except => :index
   end
   
-  map.connect 'wiki/:id/:page/:action', :controller => 'wiki', :page => nil
+  #map.connect 'wiki/:id/:page/:action', :controller => 'wiki', :page => nil
   #map.connect 'roles/workflow/:id/:role_id/:tracker_id', :controller => 'roles', :action => 'workflow'
   map.connect 'help/:ctrl/:page', :controller => 'help'
   #map.connect ':controller/:action/:id/:sort_key/:sort_order'

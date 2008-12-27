@@ -32,7 +32,7 @@ class WikiControllerTest < Test::Unit::TestCase
   end
   
   def test_show_start_page
-    get :index, :id => 'ecookbook'
+    get :index, :project_id => 'ecookbook'
     assert_response :success
     assert_template 'show'
     assert_tag :tag => 'h1', :content => /CookBook documentation/
@@ -40,12 +40,12 @@ class WikiControllerTest < Test::Unit::TestCase
     # child_pages macro
     assert_tag :ul, :attributes => { :class => 'pages-hierarchy' },
                :child => { :tag => 'li',
-                           :child => { :tag => 'a', :attributes => { :href => '/wiki/ecookbook/Page_with_an_inline_image' },
+                           :child => { :tag => 'a', :attributes => { :href => '/projects/ecookbook/wiki/Page_with_an_inline_image' },
                                                     :content => 'Page with an inline image' } }
   end
   
   def test_show_page_with_name
-    get :index, :id => 1, :page => 'Another_page'
+    get :show, :project_id => 1, :id => 'Another_page'
     assert_response :success
     assert_template 'show'
     assert_tag :tag => 'h1', :content => /Another page/
@@ -56,25 +56,25 @@ class WikiControllerTest < Test::Unit::TestCase
   end
   
   def test_show_unexistent_page_without_edit_right
-    get :index, :id => 1, :page => 'Unexistent page'
+    get :show, :project_id => 1, :id => 'Unexistent page'
     assert_response 404
   end
   
   def test_show_unexistent_page_with_edit_right
     @request.session[:user_id] = 2
-    get :index, :id => 1, :page => 'Unexistent page'
+    get :show, :project_id => 1, :id => 'Unexistent page'
     assert_response :success
     assert_template 'edit'
   end
   
   def test_create_page
     @request.session[:user_id] = 2
-    post :edit, :id => 1,
-                :page => 'New page',
+    put :update, :project_id => 1,
+                :id => 'New page',
                 :content => {:comments => 'Created the page',
                              :text => "h1. New page\n\nThis is a new page",
                              :version => 0}
-    assert_redirected_to 'wiki/ecookbook/New_page'
+    assert_redirected_to 'projects/ecookbook/wiki/New_page'
     page = Project.find(1).wiki.find_page('New page')
     assert !page.new_record?
     assert_not_nil page.content
@@ -83,7 +83,7 @@ class WikiControllerTest < Test::Unit::TestCase
   
   def test_preview
     @request.session[:user_id] = 2
-    xhr :post, :preview, :id => 1, :page => 'CookBook_documentation',
+    xhr :post, :preview, :project_id => 1, :id => 'CookBook_documentation',
                                    :content => { :comments => '',
                                                  :text => 'this is a *previewed text*',
                                                  :version => 3 }
@@ -94,7 +94,7 @@ class WikiControllerTest < Test::Unit::TestCase
   
   def test_preview_new_page
     @request.session[:user_id] = 2
-    xhr :post, :preview, :id => 1, :page => 'New page',
+    xhr :post, :preview, :project_id => 1, :id => 'New page',
                                    :content => { :text => 'h1. New page',
                                                  :comments => '',
                                                  :version => 0 }
@@ -104,7 +104,7 @@ class WikiControllerTest < Test::Unit::TestCase
   end
   
   def test_history
-    get :history, :id => 1, :page => 'CookBook_documentation'
+    get :history, :project_id => 1, :id => 'CookBook_documentation'
     assert_response :success
     assert_template 'history'
     assert_not_nil assigns(:versions)
@@ -113,7 +113,7 @@ class WikiControllerTest < Test::Unit::TestCase
   end
 
   def test_history_with_one_version
-    get :history, :id => 1, :page => 'Another_page'
+    get :history, :project_id => 1, :id => 'Another_page'
     assert_response :success
     assert_template 'history'
     assert_not_nil assigns(:versions)
@@ -122,7 +122,7 @@ class WikiControllerTest < Test::Unit::TestCase
   end
 
   def test_diff
-    get :diff, :id => 1, :page => 'CookBook_documentation', :version => 2, :version_from => 1
+    get :diff, :project_id => 1, :id => 'CookBook_documentation', :version => 2, :version_from => 1
     assert_response :success
     assert_template 'diff'
     assert_tag :tag => 'span', :attributes => { :class => 'diff_in'},
@@ -130,7 +130,7 @@ class WikiControllerTest < Test::Unit::TestCase
   end
   
   def test_annotate
-    get :annotate, :id => 1, :page =>  'CookBook_documentation', :version => 2
+    get :annotate, :project_id => 1, :id =>  'CookBook_documentation', :version => 2
     assert_response :success
     assert_template 'annotate'
     # Line 1
@@ -145,10 +145,10 @@ class WikiControllerTest < Test::Unit::TestCase
   
   def test_rename_with_redirect
     @request.session[:user_id] = 2
-    post :rename, :id => 1, :page => 'Another_page',
+    post :rename, :project_id => 1, :id => 'Another_page',
                             :wiki_page => { :title => 'Another renamed page',
                                             :redirect_existing_links => 1 }
-    assert_redirected_to 'wiki/ecookbook/Another_renamed_page'
+    assert_redirected_to 'projects/ecookbook/wiki/Another_renamed_page'
     wiki = Project.find(1).wiki
     # Check redirects
     assert_not_nil wiki.find_page('Another page')
@@ -157,10 +157,10 @@ class WikiControllerTest < Test::Unit::TestCase
 
   def test_rename_without_redirect
     @request.session[:user_id] = 2
-    post :rename, :id => 1, :page => 'Another_page',
+    post :rename, :project_id => 1, :id => 'Another_page',
                             :wiki_page => { :title => 'Another renamed page',
                                             :redirect_existing_links => "0" }
-    assert_redirected_to 'wiki/ecookbook/Another_renamed_page'
+    assert_redirected_to 'projects/ecookbook/wiki/Another_renamed_page'
     wiki = Project.find(1).wiki
     # Check that there's no redirects
     assert_nil wiki.find_page('Another page')
@@ -168,12 +168,12 @@ class WikiControllerTest < Test::Unit::TestCase
   
   def test_destroy
     @request.session[:user_id] = 2
-    post :destroy, :id => 1, :page => 'CookBook_documentation'
-    assert_redirected_to 'wiki/ecookbook/Page_index/special'
+    post :destroy, :project_id => 1, :id => 'CookBook_documentation'
+    assert_redirected_to 'projects/ecookbook/wiki/Page_index/special'
   end
   
   def test_page_index
-    get :special, :id => 'ecookbook', :page => 'Page_index'
+    get :special, :project_id => 'ecookbook', :id => 'Page_index'
     assert_response :success
     assert_template 'special_page_index'
     pages = assigns(:pages)
@@ -181,18 +181,18 @@ class WikiControllerTest < Test::Unit::TestCase
     assert_equal Project.find(1).wiki.pages.size, pages.size
     
     assert_tag :ul, :attributes => { :class => 'pages-hierarchy' },
-                    :child => { :tag => 'li', :child => { :tag => 'a', :attributes => { :href => '/wiki/ecookbook/CookBook_documentation' },
+                    :child => { :tag => 'li', :child => { :tag => 'a', :attributes => { :href => '/projects/ecookbook/wiki/CookBook_documentation' },
                                               :content => 'CookBook documentation' },
                                 :child => { :tag => 'ul',
                                             :child => { :tag => 'li',
-                                                        :child => { :tag => 'a', :attributes => { :href => '/wiki/ecookbook/Page_with_an_inline_image' },
+                                                        :child => { :tag => 'a', :attributes => { :href => '/projects/ecookbook/wiki/Page_with_an_inline_image' },
                                                                                  :content => 'Page with an inline image' } } } },
-                    :child => { :tag => 'li', :child => { :tag => 'a', :attributes => { :href => '/wiki/ecookbook/Another_page' },
+                    :child => { :tag => 'li', :child => { :tag => 'a', :attributes => { :href => '/projects/ecookbook/wiki/Another_page' },
                                                                        :content => 'Another page' } }
   end
   
   def test_not_found
-    get :index, :id => 999
+    get :index, :project_id => 999
     assert_response 404
   end
   
@@ -200,8 +200,8 @@ class WikiControllerTest < Test::Unit::TestCase
     page = WikiPage.find_by_wiki_id_and_title(1, 'Another_page')
     assert !page.protected?
     @request.session[:user_id] = 2
-    post :protect, :id => 1, :page => page.title, :protected => '1'
-    assert_redirected_to 'wiki/ecookbook/Another_page'
+    post :protect, :project_id => 1, :id => page.title, :protected => '1'
+    assert_redirected_to 'projects/ecookbook/wiki/Another_page'
     assert page.reload.protected?
   end
   
@@ -209,31 +209,31 @@ class WikiControllerTest < Test::Unit::TestCase
     page = WikiPage.find_by_wiki_id_and_title(1, 'CookBook_documentation')
     assert page.protected?
     @request.session[:user_id] = 2
-    post :protect, :id => 1, :page => page.title, :protected => '0'
-    assert_redirected_to 'wiki/ecookbook'
+    post :protect, :project_id => 1, :id => page.title, :protected => '0'
+    assert_redirected_to 'projects/ecookbook/wiki/CookBook_documentation'
     assert !page.reload.protected?
   end
   
   def test_show_page_with_edit_link
     @request.session[:user_id] = 2
-    get :index, :id => 1
+    get :index, :project_id => 1
     assert_response :success
     assert_template 'show'
-    assert_tag :tag => 'a', :attributes => { :href => '/wiki/1/CookBook_documentation/edit' }
+    assert_tag :tag => 'a', :attributes => { :href => '/projects/1/wiki/CookBook_documentation/edit' }
   end
   
   def test_show_page_without_edit_link
     @request.session[:user_id] = 4
-    get :index, :id => 1
+    get :index, :project_id => 1
     assert_response :success
     assert_template 'show'
-    assert_no_tag :tag => 'a', :attributes => { :href => '/wiki/1/CookBook_documentation/edit' }
+    assert_no_tag :tag => 'a', :attributes => { :href => '/projects/1/wiki/CookBook_documentation/edit' }
   end  
   
   def test_edit_unprotected_page
     # Non members can edit unprotected wiki pages
     @request.session[:user_id] = 4
-    get :edit, :id => 1, :page => 'Another_page'
+    get :edit, :project_id => 1, :id => 'Another_page'
     assert_response :success
     assert_template 'edit'
   end
@@ -241,19 +241,19 @@ class WikiControllerTest < Test::Unit::TestCase
   def test_edit_protected_page_by_nonmember
     # Non members can't edit protected wiki pages
     @request.session[:user_id] = 4
-    get :edit, :id => 1, :page => 'CookBook_documentation'
+    get :edit, :project_id => 1, :id => 'CookBook_documentation'
     assert_response 403
   end
   
   def test_edit_protected_page_by_member
     @request.session[:user_id] = 2
-    get :edit, :id => 1, :page => 'CookBook_documentation'
+    get :edit, :project_id => 1, :id => 'CookBook_documentation'
     assert_response :success
     assert_template 'edit'    
   end
   
   def test_history_of_non_existing_page_should_return_404
-    get :history, :id => 1, :page => 'Unknown_page'
+    get :history, :project_id => 1, :id => 'Unknown_page'
     assert_response 404
   end
 end

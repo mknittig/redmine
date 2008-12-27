@@ -21,14 +21,14 @@ class WikiController < ApplicationController
   before_filter :find_wiki, :authorize
   before_filter :find_existing_page, :only => [:rename, :protect, :history, :diff, :annotate, :add_attachment, :destroy]
   
-  verify :method => :post, :only => [:destroy, :protect], :redirect_to => { :action => :index }
+  #verify :method => :post, :only => [:destroy, :protect], :redirect_to => { :action => :index }
 
   helper :attachments
   include AttachmentsHelper   
   
   # display a page (in editing mode if it doesn't exist)
-  def index
-    page_title = params[:page]
+  def show
+    page_title = params[:id]
     @page = @wiki.find_or_new_page(page_title)
     if @page.new_record?
       if User.current.allowed_to?(:edit_wiki_pages, @project)
@@ -57,11 +57,15 @@ class WikiController < ApplicationController
     render :action => 'show'
   end
   
+  def index
+    show
+  end
+  
   # edit an existing page or a new one
   def edit
-    @page = @wiki.find_or_new_page(params[:page])    
+    @page = @wiki.find_or_new_page(params[:id])    
     return render_403 unless editable?
-    @page.content = WikiContent.new(:page => @page) if @page.new_record?
+    @page.content = WikiContent.new(:id => @page) if @page.new_record?
     
     @content = @page.content_for_version(params[:version])
     @content.text = initial_page_content(@page) if @content.text.blank?
@@ -70,24 +74,27 @@ class WikiController < ApplicationController
     if request.get?
       # To prevent StaleObjectError exception when reverting to a previous version
       @content.version = @page.content.version
-    else
-      if !@page.new_record? && @content.text == params[:content][:text]
-        # don't save if text wasn't changed
-        redirect_to :action => 'index', :id => @project, :page => @page.title
-        return
-      end
-      #@content.text = params[:content][:text]
-      #@content.comments = params[:content][:comments]
-      @content.attributes = params[:content]
-      @content.author = User.current
-      # if page is new @page.save will also save content, but not if page isn't a new record
-      if (@page.new_record? ? @page.save : @content.save)
-        redirect_to :action => 'index', :id => @project, :page => @page.title
-      end
     end
-  rescue ActiveRecord::StaleObjectError
-    # Optimistic locking exception
-    flash[:error] = l(:notice_locking_conflict)
+  end
+  
+  def update
+    edit
+    if !@page.new_record? && @content.text == params[:content][:text]
+      # don't save if text wasn't changed
+      redirect_to :action => 'show', :project_id => @project, :id => @page.title
+      return
+    end
+    #@content.text = params[:content][:text]
+    #@content.comments = params[:content][:comments]
+    @content.attributes = params[:content]
+    @content.author = User.current
+    # if page is new @page.save will also save content, but not if page isn't a new record
+    if (@page.new_record? ? @page.save : @content.save)
+      redirect_to :action => 'show', :project_id => @project, :id => @page.title
+    end
+    rescue ActiveRecord::StaleObjectError
+      # Optimistic locking exception
+      flash[:error] = l(:notice_locking_conflict)
   end
   
   # rename a page
@@ -98,13 +105,13 @@ class WikiController < ApplicationController
     @original_title = @page.pretty_title
     if request.post? && @page.update_attributes(params[:wiki_page])
       flash[:notice] = l(:notice_successful_update)
-      redirect_to :action => 'index', :id => @project, :page => @page.title
+      redirect_to :action => 'show', :project_id => @project, :id => @page.title
     end
   end
   
   def protect
     @page.update_attribute :protected, params[:protected]
-    redirect_to :action => 'index', :id => @project, :page => @page.title
+    redirect_to :action => 'show', :project_id => @project, :id => @page.title
   end
 
   # show page history
@@ -135,12 +142,12 @@ class WikiController < ApplicationController
   def destroy
     return render_403 unless editable?
     @page.destroy
-    redirect_to :action => 'special', :id => @project, :page => 'Page_index'
+    redirect_to :action => 'special', :project_id => @project, :id => 'Page_index'
   end
 
   # display special pages
   def special
-    page_title = params[:page].downcase
+    page_title = params[:id].downcase
     case page_title
     # show pages index, sorted by title
     when 'page_index', 'date_index'
@@ -158,13 +165,13 @@ class WikiController < ApplicationController
       return      
     else
       # requested special page doesn't exist, redirect to default page
-      redirect_to :action => 'index', :id => @project, :page => nil and return
+      redirect_to :action => 'index', :project_id => @project, :id => nil and return
     end
     render :action => "special_#{page_title}"
   end
   
   def preview
-    page = @wiki.find_page(params[:page])
+    page = @wiki.find_page(params[:id])
     # page is nil when previewing a new page
     return render_403 unless page.nil? || editable?(page)
     if page
@@ -178,13 +185,13 @@ class WikiController < ApplicationController
   def add_attachment
     return render_403 unless editable?
     attach_files(@page, params[:attachments])
-    redirect_to :action => 'index', :page => @page.title
+    redirect_to :action => 'show', :id => @page.title
   end
 
 private
   
   def find_wiki
-    @project = Project.find(params[:id])
+    @project = Project.find(params[:project_id])
     @wiki = @project.wiki
     render_404 unless @wiki
   rescue ActiveRecord::RecordNotFound
@@ -193,7 +200,7 @@ private
   
   # Finds the requested page and returns a 404 error if it doesn't exist
   def find_existing_page
-    @page = @wiki.find_page(params[:page])
+    @page = @wiki.find_page(params[:id])
     render_404 if @page.nil?
   end
   
